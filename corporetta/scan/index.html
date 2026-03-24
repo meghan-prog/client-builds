@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rust in jouw Ruimte — Corporetta</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#c9a96e;--gold-light:#e2cca0;--gold-dark:#a07840;--navy:#1a2535;--cream:#faf8f3;--cream-dark:#f2ede3;--mid:#6b7a8d;}
+body{font-family:'Montserrat',sans-serif;background:var(--cream-dark);min-height:100vh;display:flex;flex-direction:column;}
+
+nav{background:var(--navy);padding:16px 40px;display:flex;justify-content:space-between;align-items:center;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;letter-spacing:5px;color:var(--gold);}
+.nav-sub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);}
+
+.page{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 24px;}
+.wrap{width:100%;max-width:720px;}
+
+.top-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:7px 18px;margin-bottom:24px;font-weight:500;}
+.main-title{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--navy);margin-bottom:10px;line-height:1.2;}
+.price-line{font-size:13px;color:var(--mid);margin-bottom:40px;line-height:1.8;}
+.price-line s{color:#b0a090;}
+.price-line strong{color:var(--gold);font-weight:500;}
+
+.scan-box{background:#fff;border:.5px solid var(--gold-light);padding:48px;}
+.form-step{display:none;}.form-step.active{display:block;}
+.step-bar{display:flex;gap:6px;margin-bottom:36px;}
+.step-seg{flex:1;height:2px;background:var(--gold-light);}.step-seg.done{background:var(--gold);}
+.q-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.q-text{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--navy);margin-bottom:28px;line-height:1.4;}
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px;}
+.ans-btn{padding:14px 18px;border:.5px solid var(--gold-light);background:transparent;font-size:12px;color:var(--mid);cursor:pointer;text-align:left;transition:all .2s;font-family:'Montserrat',sans-serif;}
+.ans-btn:hover,.ans-btn.sel{border-color:var(--gold);background:#fdf6ec;color:var(--navy);}
+.form-field{width:100%;border:0;border-bottom:1px solid var(--gold-light);padding:12px 0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:var(--navy);outline:none;margin-bottom:28px;}
+.form-field:focus{border-bottom-color:var(--gold);}
+.f-nav{display:flex;justify-content:space-between;align-items:center;}
+.btn-next{padding:13px 34px;border:1px solid var(--gold);background:var(--gold);color:var(--navy);font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:500;transition:all .2s;}
+.btn-next:hover{background:var(--gold-dark);}
+.btn-bk{font-size:11px;color:#9aabb8;cursor:pointer;background:none;border:none;font-family:'Montserrat',sans-serif;letter-spacing:1px;}
+.pg{font-size:11px;color:var(--gold-light);letter-spacing:1px;}
+.result-advice{background:#fdf6ec;border-left:2px solid var(--gold);padding:26px 30px;text-align:left;margin:24px 0;}
+.dots{display:flex;justify-content:center;gap:8px;padding:48px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--gold-light);animation:p 1.2s infinite;}
+.dot:nth-child(2){animation-delay:.2s;}.dot:nth-child(3){animation-delay:.4s;}
+@keyframes p{0%,100%{opacity:.25;}50%{opacity:1;}}
+.btn-gold{display:inline-block;padding:14px 38px;border:1px solid var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);background:transparent;cursor:pointer;transition:all .3s;font-family:'Montserrat',sans-serif;}
+.btn-gold:hover{background:var(--gold);color:var(--navy);}
+
+footer{background:var(--navy);padding:20px 40px;display:flex;justify-content:space-between;align-items:center;}
+.f-text{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:1px;}
+.f-gold{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;letter-spacing:3px;color:var(--gold);opacity:.7;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">CORPORETTA</div>
+  <div class="nav-sub">Rust in jouw Ruimte</div>
+</nav>
+
+<div class="page">
+  <div class="wrap">
+    <span class="top-badge">Tijdelijk gratis · Gepersonaliseerd</span>
+    <h1 class="main-title">Rust in jouw Ruimte —<br>persoonlijk advies</h1>
+    <p class="price-line">Je ontvangt binnen 48 uur een persoonlijk advies op maat.&nbsp;&nbsp;<s>Normaal: €97</s>&nbsp;&nbsp;<strong>Nu tijdelijk gratis</strong></p>
+
+    <div class="scan-box" id="scanBox"></div>
+  </div>
+</div>
+
+<footer>
+  <p class="f-text">© 2026 Corporetta · Hanan Aboulhadi</p>
+  <p class="f-gold">CORPORETTA</p>
+</footer>
+
+<script>
+const Q=["Welke ruimte geeft je de meeste stress als je er binnenloopt?","Wat is je eerste gevoel als je 's avonds thuiskomt?","Waar verlies je elke week minstens 15 minuten aan?","Als je eerlijk bent: wat houdt je tegen om het aan te pakken?","Als je huis écht op orde was — wat zou je doen met die extra ruimte en rust?"];
+const A=[["Slaapkamer / kledingkast","Werkkamer / bureau","Keuken / woonkamer","Bergruimte / schuur"],["Opgelucht, ik ben blij thuis","Neutraal, het is gewoon thuis","Licht gespannen door de rommel","Uitgeput en overweldigd"],["Iets zoeken wat ik niet kan vinden","Beslissen wat ik aantrek","Stapels die steeds groter worden","Schoonmaken in de rommel"],["Geen tijd en energie","Weet niet waar te beginnen","Ik begin maar maak het nooit af","Bang dat het toch niet blijft"],["Focussen op mijn business","Meer tijd voor mijn kinderen","Eindelijk lekker ontspannen","Nieuwe stap in mijn leven zetten"]];
+let ans=['','','','',''];
+
+function build(){
+  const steps=Q.map((q,i)=>`
+    <div class="form-step${i===0?' active':''}" id="fs${i}">
+      <div class="step-bar">${[0,1,2,3,4,5].map(s=>`<div class="step-seg${s<=i?' done':''}"></div>`).join('')}</div>
+      <p class="q-label">Vraag ${i+1} van 5</p>
+      <p class="q-text">${q}</p>
+      <div class="ans-grid">${A[i].map(a=>`<button class="ans-btn" onclick="pick(this,${i})">${a}</button>`).join('')}</div>
+      <div class="f-nav">
+        ${i>0?`<button class="btn-bk" onclick="go(${i-1})">← Terug</button>`:'<span></span>'}
+        <span class="pg">${i+1} / 5</span>
+        ${i<4?`<button class="btn-next" onclick="go(${i+1})">Volgende</button>`:`<button class="btn-next" onclick="go(5)">Naar mijn gegevens →</button>`}
+      </div>
+    </div>`).join('');
+  const detail=`
+    <div class="form-step" id="fs5">
+      <div class="step-bar">${Array(6).fill('<div class="step-seg done"></div>').join('')}</div>
+      <p class="q-label">Bijna klaar</p>
+      <p class="q-text">Waar stuur ik jouw persoonlijke advies naartoe?</p>
+      <input class="form-field" type="text" id="nm" placeholder="Jouw voornaam">
+      <input class="form-field" type="email" id="em" placeholder="jouw@email.nl">
+      <div class="f-nav"><button class="btn-bk" onclick="go(4)">← Terug</button><button class="btn-next" onclick="send()">Stuur mijn advies →</button></div>
+    </div>`;
+  const load=`<div class="form-step" id="fsLoad"><div style="text-align:center;padding:48px 0;"><p style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--navy);margin-bottom:8px;">Hanan kijkt mee...</p><p style="font-size:12px;color:#9aabb8;margin-bottom:36px;">Je persoonlijk advies wordt samengesteld</p><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>`;
+  const res=`<div class="form-step" id="fsRes"><div id="rc" style="text-align:center;"></div></div>`;
+  document.getElementById('scanBox').innerHTML=steps+detail+load+res;
+}
+
+function pick(btn,i){btn.closest('.ans-grid').querySelectorAll('.ans-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');ans[i]=btn.textContent;}
+function go(n){document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active'));document.getElementById('fs'+n).classList.add('active');}
+
+async function send(){
+  const nm=document.getElementById('nm').value.trim();
+  const em=document.getElementById('em').value.trim();
+  if(!nm||!em){alert('Vul je naam en e-mailadres in.');return;}
+  go('Load');
+  const p=`Je bent Hanan Aboulhadi, interieur- en organisatiespecialist bij Corporetta. Je helpt drukke vrouwen en ondernemers rust en structuur te brengen in hun thuis.\n\nKlant scan:\n- Naam: ${nm}\n- Stressvolle ruimte: ${ans[0]}\n- Gevoel thuiskomen: ${ans[1]}\n- Tijdverlies: ${ans[2]}\n- Belemmering: ${ans[3]}\n- Doel: ${ans[4]}\n\nSchrijf een persoonlijk, warm maar direct advies in het Nederlands. Begin met haar naam. Geef 5 concrete acties. Eindig met uitnodiging voor een ruimte-sessie. Eerste persoon als Hanan. Geen jargon. Max 300 woorden.`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:p}]})});
+    const d=await r.json();
+    const t=d.content.map(b=>b.text||'').join('');
+    document.getElementById('rc').innerHTML=`
+      <p style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;">Jouw persoonlijke advies</p>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--navy);margin-bottom:20px;">Hoi ${nm},</h3>
+      <div class="result-advice"><p style="font-size:13px;line-height:2.1;color:#5a6070;white-space:pre-wrap;">${t.replace(/^Hoi [A-Za-z]+[,.]?\s*/i,'')}</p></div>
+      <p style="font-size:11px;color:#9aabb8;margin-bottom:28px;">Dit advies is samengesteld op basis van jouw antwoorden.</p>
+      <button class="btn-gold" onclick="window.location='mailto:info@corporetta.nl?subject=Ruimte-sessie'">Plan een gesprek met Hanan</button>`;
+    go('Res');
+  }catch(e){
+    document.getElementById('rc').innerHTML=`
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--navy);margin-bottom:16px;">Bijna klaar, ${nm}!</h3>
+      <p style="font-size:13px;line-height:2;color:#5a6070;margin-bottom:28px;">Je scan is ontvangen. Hanan neemt binnen 48 uur contact op via ${em}.</p>
+      <button class="btn-gold" onclick="window.location='mailto:info@corporetta.nl'">Stuur Hanan een bericht</button>`;
+    go('Res');
+  }
+}
+build();
+</script>
+</body>
+</html>

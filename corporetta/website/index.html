@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corporetta — Interieur & Organisatie</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#c9a96e;--gold-light:#e2cca0;--gold-dark:#a07840;
+  --navy:#1a2535;--navy-mid:#243044;
+  --cream:#faf8f3;--cream-dark:#f2ede3;--mid:#6b7a8d;--text:#2c3345;
+}
+body{font-family:'Montserrat',sans-serif;background:var(--cream);color:var(--text);}
+nav{background:var(--navy);padding:18px 48px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;letter-spacing:5px;color:var(--gold);}
+.nav-right{display:flex;align-items:center;gap:36px;}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.6);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--gold);}
+.lang-switch{display:flex;gap:0;border:1px solid rgba(201,169,110,0.4);overflow:hidden;}
+.lang-btn{padding:6px 14px;font-size:10px;letter-spacing:2px;text-transform:uppercase;background:transparent;color:rgba(255,255,255,0.5);border:none;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;}
+.lang-btn.active{background:var(--gold);color:var(--navy);font-weight:500;}
+.lang-btn:hover:not(.active){color:var(--gold);}
+.hero{min-height:92vh;display:grid;grid-template-columns:1fr 1fr;background:var(--navy);}
+.hero-text{padding:80px 56px;display:flex;flex-direction:column;justify-content:center;}
+.eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:22px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:66px;font-weight:300;line-height:1.05;color:#f0e8d8;margin-bottom:24px;}
+.hero-title em{font-style:italic;color:var(--gold);}
+.hero-sub{font-size:13px;line-height:2.1;color:rgba(255,255,255,0.55);margin-bottom:14px;}
+.hero-author{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:44px;opacity:.85;}
+.btn-gold{display:inline-block;padding:14px 38px;border:1px solid var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);background:transparent;cursor:pointer;transition:all .3s;font-family:'Montserrat',sans-serif;}
+.btn-gold:hover{background:var(--gold);color:var(--navy);}
+.hero-img{position:relative;overflow:hidden;}
+.hero-img img{width:100%;height:100%;object-fit:cover;object-position:top;min-height:560px;}
+.hero-line{position:absolute;bottom:40px;left:40px;width:60px;height:1px;background:var(--gold);opacity:.6;}
+.section-light{padding:96px 56px;background:var(--cream);}
+.section-navy{padding:96px 56px;background:var(--navy);}
+.section-cream{padding:96px 56px;background:var(--cream-dark);}
+.serif-title{font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:300;line-height:1.2;margin-bottom:26px;}
+.on-dark{color:#f0e8d8;}.on-light{color:var(--navy);}
+.body-text{font-size:13px;line-height:2.2;max-width:520px;}
+.body-dark{color:#5a6070;}.body-light{color:rgba(255,255,255,.55);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.img-frame{position:relative;}
+.img-frame img{width:100%;height:520px;object-fit:cover;object-position:top;}
+.img-accent{position:absolute;bottom:-18px;right:-18px;width:140px;height:180px;border:1px solid var(--gold);opacity:.4;}
+.img-accent2{position:absolute;top:18px;left:18px;width:140px;height:180px;border:1px solid var(--gold);opacity:.25;}
+.quote-section{background:var(--navy-mid);padding:80px 56px;text-align:center;border-top:1px solid rgba(201,169,110,.2);border-bottom:1px solid rgba(201,169,110,.2);}
+.quote-line{width:48px;height:1px;background:var(--gold);margin:0 auto 32px;opacity:.6;}
+.quote-text{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:#f0e8d8;line-height:1.6;font-style:italic;max-width:660px;margin:0 auto 24px;}
+.quote-attr{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.8;}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,169,110,.2);margin-top:52px;}
+.service-card{background:var(--navy);padding:42px 32px;}
+.service-num{font-family:'Cormorant Garamond',serif;font-size:52px;color:rgba(201,169,110,.2);font-weight:300;line-height:1;}
+.service-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:#f0e8d8;margin:14px 0 12px;}
+.service-body{font-size:12px;line-height:1.9;color:rgba(255,255,255,.5);}
+.service-tag{font-size:10px;letter-spacing:2px;color:var(--gold);margin-top:18px;text-transform:uppercase;opacity:.8;}
+.paip-section{background:var(--cream-dark);padding:96px 56px;}
+.paip-inner{max-width:800px;margin:0 auto;}
+.paip-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:7px 18px;margin-bottom:28px;font-weight:500;}
+.paip-title{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--navy);margin-bottom:12px;line-height:1.2;}
+.paip-sub{font-size:13px;color:var(--mid);line-height:2.1;margin-bottom:48px;}
+.scan-form{background:#fff;border:.5px solid var(--gold-light);padding:48px;}
+.form-step{display:none;}.form-step.active{display:block;}
+.step-bar{display:flex;gap:6px;margin-bottom:38px;}
+.step-seg{flex:1;height:2px;background:var(--gold-light);}.step-seg.done{background:var(--gold);}
+.q-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.q-text{font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:300;color:var(--navy);margin-bottom:30px;line-height:1.4;}
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:34px;}
+.ans-btn{padding:14px 18px;border:.5px solid var(--gold-light);background:transparent;font-size:12px;color:var(--mid);cursor:pointer;text-align:left;transition:all .2s;font-family:'Montserrat',sans-serif;}
+.ans-btn:hover,.ans-btn.sel{border-color:var(--gold);background:#fdf6ec;color:var(--navy);}
+.form-field{width:100%;border:0;border-bottom:1px solid var(--gold-light);padding:12px 0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:var(--navy);outline:none;margin-bottom:28px;}
+.form-field:focus{border-bottom-color:var(--gold);}
+.f-nav{display:flex;justify-content:space-between;align-items:center;}
+.btn-submit{padding:13px 34px;border:1px solid var(--gold);background:var(--gold);color:var(--navy);font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:500;}
+.btn-submit:hover{background:var(--gold-dark);border-color:var(--gold-dark);}
+.btn-bk{font-size:11px;color:#9aabb8;cursor:pointer;background:none;border:none;font-family:'Montserrat',sans-serif;letter-spacing:1px;}
+.pg{font-size:11px;color:var(--gold-light);letter-spacing:1px;}
+.result-advice{background:#fdf6ec;border-left:2px solid var(--gold);padding:26px 30px;text-align:left;margin:24px 0;}
+.dots{display:flex;justify-content:center;gap:8px;padding:48px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--gold-light);animation:p 1.2s infinite;}
+.dot:nth-child(2){animation-delay:.2s;}.dot:nth-child(3){animation-delay:.4s;}
+@keyframes p{0%,100%{opacity:.25;}50%{opacity:1;}}
+.contact-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:4px;margin-top:20px;}
+footer{background:var(--navy);padding:52px 56px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;}
+.f-brand{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;letter-spacing:5px;color:var(--gold);margin-bottom:14px;}
+.f-text{font-size:12px;line-height:2;color:rgba(255,255,255,.45);}
+.f-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;opacity:.85;}
+.f-link{display:block;font-size:12px;color:rgba(255,255,255,.45);margin-bottom:9px;text-decoration:none;transition:color .2s;}
+.f-link:hover{color:var(--gold);}
+.f-bottom{background:var(--navy);border-top:.5px solid rgba(201,169,110,.2);padding:18px 56px;text-align:center;font-size:11px;color:rgba(255,255,255,.3);letter-spacing:1px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">CORPORETTA</div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#over" data-nl="Over" data-en="About">Over</a></li>
+      <li><a href="#diensten" data-nl="Diensten" data-en="Services">Diensten</a></li>
+      <li><a href="#scan" data-nl="Gratis scan" data-en="Free scan">Gratis scan</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('nl')">NL</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="eyebrow" data-nl="Interieur & Organisatie" data-en="Interior & Organisation">Interieur & Organisatie</p>
+    <h1 class="hero-title" data-nl="Rust begint<br>bij <em>jouw</em><br>ruimte." data-en="Calm begins<br>with <em>your</em><br>space.">Rust begint<br>bij <em>jouw</em><br>ruimte.</h1>
+    <p class="hero-sub" data-nl="Niet nog een interieurdesigner.<br>Iemand die de chaos weghaalt zodat jij je<br>kan focussen op wat er écht toe doet." data-en="Not just another interior designer.<br>Someone who removes the chaos so you<br>can focus on what truly matters.">Niet nog een interieurdesigner.<br>Iemand die de chaos weghaalt zodat jij je<br>kan focussen op wat er écht toe doet.</p>
+    <p class="hero-author">By Hanan Aboulhadi</p>
+    <button class="btn-gold" id="heroBtn" onclick="document.getElementById('scan').scrollIntoView({behavior:'smooth'})">Ontdek jouw ruimtestress</button>
+  </div>
+  <div class="hero-img">
+    <img id="heroImg" src="https://corporetta.nl/wp-content/uploads/2026/01/Hanan-Rev-8.jpg" alt="Hanan Aboulhadi">
+    <div class="hero-line"></div>
+    <label id="uploadLabel" style="position:absolute;bottom:16px;right:16px;background:var(--gold);color:var(--navy);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:500;">Foto vervangen ↑<input type="file" accept="image/*" style="display:none" onchange="loadImg(this)"></label>
+  </div>
+</section>
+
+<section class="section-light" id="over">
+  <div class="two-col">
+    <div>
+      <p class="eyebrow" data-nl="Het verhaal" data-en="The story">Het verhaal</p>
+      <h2 class="serif-title on-light" data-nl="Je huis is chaos.<br>Je hoofd ook.<br>Dat is geen toeval." data-en="Your home is chaos.<br>So is your head.<br>That is not a coincidence.">Je huis is chaos.<br>Je hoofd ook.<br>Dat is geen toeval.</h2>
+      <p class="body-text body-dark" data-nl="Op een dag ging ik gewoon strijken. Stapels was, één voor één. Niet omdat ik zin had, maar omdat ik verder moest. En precies dat moment — dat is waar alles begon.<br><br>Toen mijn kast op orde was, kreeg ik rust in mijn hoofd. Daarna ondernemen, verhuizen, een nieuw leven. Het klinkt klein. Maar het is groot.<br><br>Dát is wat ik voor jou doe. Ik breng systeem in jouw ruimte zodat jij ruimte krijgt in je leven." data-en="One day I just started ironing. Pile after pile. Not because I felt like it — because I needed to move forward. That moment is where everything began.<br><br>Once my wardrobe was in order, calm returned to my mind. Then I started my business. Then I moved. A new life. It sounds small. But it was everything.<br><br>That is what I do for you. I bring system to your space so you can find space in your life.">Op een dag ging ik gewoon strijken. Stapels was, één voor één. Niet omdat ik zin had, maar omdat ik verder moest. En precies dat moment — dat is waar alles begon.<br><br>Toen mijn kast op orde was, kreeg ik rust in mijn hoofd. Daarna ondernemen, verhuizen, een nieuw leven. Het klinkt klein. Maar het is groot.<br><br>Dát is wat ik voor jou doe. Ik breng systeem in jouw ruimte zodat jij ruimte krijgt in je leven.</p>
+      <p style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-top:32px;">Hanan Aboulhadi — Founder Corporetta</p>
+    </div>
+    <div class="img-frame">
+      <img id="aboutImg" src="https://corporetta.nl/wp-content/uploads/2026/02/Hanan-20.png" alt="Hanan">
+      <div class="img-accent"></div>
+      <label style="position:absolute;bottom:16px;right:16px;background:var(--gold);color:var(--navy);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:500;">Foto vervangen ↑<input type="file" accept="image/*" style="display:none" onchange="swapImg(this,'aboutImg',this.parentElement)"></label>
+    </div>
+  </div>
+</section>
+
+<section class="quote-section">
+  <div class="quote-line"></div>
+  <p class="quote-text" data-nl="&ldquo;Als je thuiskomt, een kast opentrekt en denkt — ja, dit klopt — dán pas begint echte ruimte.&rdquo;" data-en="&ldquo;When you come home, open a cupboard and think — yes, this is right — that is when real space begins.&rdquo;">&ldquo;Als je thuiskomt, een kast opentrekt en denkt — ja, dit klopt — dán pas begint echte ruimte.&rdquo;</p>
+  <p class="quote-attr">Hanan Aboulhadi</p>
+</section>
+
+<section class="section-navy" id="diensten">
+  <p class="eyebrow" style="opacity:.9;" data-nl="Diensten" data-en="Services">Diensten</p>
+  <h2 class="serif-title on-dark" data-nl="Van eerste stap<br>tot volledig traject." data-en="From first step<br>to full transformation.">Van eerste stap<br>tot volledig traject.</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <h3 class="service-title" data-nl="Ruimte-sessie" data-en="Space Session">Ruimte-sessie</h3>
+      <p class="service-body" data-nl="Eén ruimte. Kast, kantoor of keuken. Ik kom kijken, ruim op, structureer en laat je zien hoe je het bijhoudt." data-en="One room. A wardrobe, office or kitchen. I come in, clear it out, structure it and show you how to maintain it.">Eén ruimte. Kast, kantoor of keuken. Ik kom kijken, ruim op, structureer en laat je zien hoe je het bijhoudt.</p>
+      <p class="service-tag" data-nl="Laagdrempelig instap" data-en="Entry level">Laagdrempelig instap</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <h3 class="service-title" data-nl="Rust & Structuurplan" data-en="Calm & Structure Plan">Rust & Structuurplan</h3>
+      <p class="service-body" data-nl="Een volledig persoonlijk adviesplan voor jouw woning of werkruimte. Met moodboard, kleurenpalet en concrete aanpak." data-en="A fully personalised advice plan for your home or workspace. Including moodboard, colour palette and concrete action plan.">Een volledig persoonlijk adviesplan voor jouw woning of werkruimte. Met moodboard, kleurenpalet en concrete aanpak.</p>
+      <p class="service-tag" data-nl="Mid-tier traject" data-en="Mid-tier">Mid-tier traject</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <h3 class="service-title" data-nl="Signature Design" data-en="Signature Design">Signature Design</h3>
+      <p class="service-body" data-nl="Volledig interieurtraject van A tot Z. Van concept tot shopping, inrichting en styling. Mijn high-end handtekening in jouw ruimte." data-en="Full interior project from A to Z. Concept to shopping, styling and execution. My high-end signature in your space.">Volledig interieurtraject van A tot Z. Van concept tot shopping, inrichting en styling. Mijn high-end handtekening in jouw ruimte.</p>
+      <p class="service-tag" data-nl="High-end signature" data-en="High-end signature">High-end signature</p>
+    </div>
+  </div>
+</section>
+
+<section class="paip-section" id="scan">
+  <div class="paip-inner">
+    <span class="paip-badge" data-nl="Tijdelijk gratis · Gepersonaliseerd" data-en="Temporarily free · Personalised">Tijdelijk gratis · Gepersonaliseerd</span>
+    <h2 class="paip-title" data-nl="Rust in jouw Ruimte —<br>persoonlijk advies" data-en="Calm in your Space —<br>personal advice">Rust in jouw Ruimte —<br>persoonlijk advies</h2>
+    <p class="paip-sub" data-nl="Je ontvangt binnen 48 uur een persoonlijk advies op maat.<br><span style='text-decoration:line-through;color:#b0a090;'>Normaal: €97</span>&nbsp;&nbsp;<span style='color:var(--gold);font-weight:500;letter-spacing:1px;'>Nu tijdelijk gratis</span>" data-en="You will receive a personalised advice within 48 hours.<br><span style='text-decoration:line-through;color:#b0a090;'>Normally: €97</span>&nbsp;&nbsp;<span style='color:var(--gold);font-weight:500;letter-spacing:1px;'>Now temporarily free</span>">Je ontvangt binnen 48 uur een persoonlijk advies op maat.<br><span style='text-decoration:line-through;color:#b0a090;'>Normaal: €97</span>&nbsp;&nbsp;<span style='color:var(--gold);font-weight:500;letter-spacing:1px;'>Nu tijdelijk gratis</span></p>
+    <div class="scan-form" id="scanForm"></div>
+  </div>
+</section>
+
+<section class="section-light" id="contact">
+  <div class="two-col">
+    <div>
+      <p class="eyebrow">Contact</p>
+      <h2 class="serif-title on-light" data-nl="Een goed gesprek<br>begint hier." data-en="A good conversation<br>starts here.">Een goed gesprek<br>begint hier.</h2>
+      <p class="body-text body-dark" data-nl="Herken je jezelf in dit verhaal? Dan weet je al genoeg. Stuur me een bericht en we kijken samen waar de chaos zit — en hoe we die aanpakken." data-en="Do you recognise yourself in this story? Then you already know enough. Send me a message and together we find where the chaos lives — and how we remove it.">Herken je jezelf in dit verhaal? Dan weet je al genoeg. Stuur me een bericht en we kijken samen waar de chaos zit — en hoe we die aanpakken.</p>
+      <div style="margin-top:32px;font-size:12px;color:#5a6070;line-height:2.4;">
+        <span class="contact-label">Email</span>info@corporetta.nl
+        <span class="contact-label" data-nl="Telefoon" data-en="Phone">Telefoon</span>+31 (0)6 811 444 77
+        <span class="contact-label">Instagram</span>@corporetta.society
+      </div>
+    </div>
+    <div class="img-frame">
+      <img id="contactImg" src="https://corporetta.nl/wp-content/uploads/2026/02/WhatsApp-Image-2026-02-16-at-13.28.56.jpeg" style="height:480px;" alt="Corporetta">
+      <div class="img-accent2"></div>
+      <label style="position:absolute;bottom:16px;right:16px;background:var(--gold);color:var(--navy);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:500;">Foto vervangen ↑<input type="file" accept="image/*" style="display:none" onchange="swapImg(this,'contactImg',this.parentElement)"></label>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="f-brand">CORPORETTA</div>
+    <p class="f-text" data-nl="Interieur & Organisatie.<br>Rust in je ruimte.<br>Ruimte in je leven." data-en="Interior & Organisation.<br>Calm in your space.<br>Space in your life.">Interieur & Organisatie.<br>Rust in je ruimte.<br>Ruimte in je leven.</p>
+  </div>
+  <div>
+    <p class="f-label" data-nl="Navigatie" data-en="Navigation">Navigatie</p>
+    <a class="f-link" href="#over" data-nl="Over Hanan" data-en="About Hanan">Over Hanan</a>
+    <a class="f-link" href="#diensten" data-nl="Diensten" data-en="Services">Diensten</a>
+    <a class="f-link" href="#scan" data-nl="Gratis Ruimte-Stressscan" data-en="Free Space Stress Scan">Gratis Ruimte-Stressscan</a>
+    <a class="f-link" href="#contact">Contact</a>
+  </div>
+  <div>
+    <p class="f-label">Hanan Aboulhadi</p>
+    <p class="f-text">Founder & Creative Director<br>Corporetta<br><br>info@corporetta.nl</p>
+  </div>
+</footer>
+<div class="f-bottom">© 2026 Corporetta · All Rights Reserved · Hanan Aboulhadi</div>
+
+<script>
+const T = {
+  nl: {
+    scanQ: ["Welke ruimte geeft je de meeste stress als je er binnenloopt?","Wat is je eerste gevoel als je 's avonds thuiskomt?","Waar verlies je elke week minstens 15 minuten aan?","Als je eerlijk bent: wat houdt je tegen om het aan te pakken?","Als je huis écht op orde was — wat zou je doen met die extra ruimte en rust?"],
+    scanA: [["Slaapkamer / kledingkast","Werkkamer / bureau","Keuken / woonkamer","Bergruimte / schuur"],["Opgelucht, ik ben blij thuis","Neutraal, het is gewoon thuis","Licht gespannen door de rommel","Uitgeput en overweldigd"],["Iets zoeken wat ik niet kan vinden","Beslissen wat ik aantrek","Stapels die steeds groter worden","Schoonmaken in de rommel"],["Geen tijd en energie","Weet niet waar te beginnen","Ik begin maar maak het nooit af","Bang dat het toch niet blijft"],["Focussen op mijn business","Meer tijd voor mijn kinderen","Eindelijk lekker ontspannen","Nieuwe stap in mijn leven zetten"]],
+    qlabel:"Vraag",of:"van",details:"Bijna klaar",nameP:"Jouw voornaam",emailP:"jouw@email.nl",nextBtn:"Volgende",backBtn:"← Terug",detailBtn:"Naar mijn gegevens →",sendBtn:"Stuur mijn advies →",loading1:"Hanan kijkt mee...",loading2:"Je persoonlijk advies wordt samengesteld",resultLabel:"Jouw persoonlijke advies",resultHi:"Hoi",resultSub:"Dit advies is samengesteld op basis van jouw antwoorden.",ctaBtn:"Plan een gesprek met Hanan",fallback1:"Bijna klaar",fallback2:"Je scan is ontvangen. Hanan neemt binnen 24 uur contact op via",ctaEmail:"Stuur Hanan een bericht",
+    prompt:(nm,a)=>`Je bent Hanan Aboulhadi, interieur- en organisatiespecialist bij Corporetta. Je helpt drukke vrouwen en ondernemers rust en structuur te brengen in hun thuis.\n\nKlant scan:\n- Naam: ${nm}\n- Stressvolle ruimte: ${a[0]}\n- Gevoel thuiskomen: ${a[1]}\n- Tijdverlies: ${a[2]}\n- Belemmering: ${a[3]}\n- Doel: ${a[4]}\n\nSchrijf persoonlijk warm advies in het Nederlands. Begin met naam. Geef 5 concrete acties. Eindig met uitnodiging voor ruimte-sessie. Eerste persoon als Hanan. Geen jargon. Max 300 woorden.`
+  },
+  en: {
+    scanQ: ["Which room stresses you most when you walk in?","How do you feel when you arrive home in the evening?","Where do you lose at least 15 minutes every week?","Honestly — what stops you from tackling it?","If your home were truly in order — what would you do with that extra space and calm?"],
+    scanA: [["Bedroom / wardrobe","Home office / desk","Kitchen / living room","Storage room / garage"],["Relieved, happy to be home","Neutral, it's just home","Slightly tense from the mess","Exhausted and overwhelmed"],["Looking for things I can't find","Deciding what to wear","Piles that keep growing","Cleaning around the clutter"],["No time or energy","Don't know where to start","I start but never finish","Afraid it won't stay tidy"],["Focus on growing my business","More quality time with my children","Finally properly rest","Take the next step in my life"]],
+    qlabel:"Question",of:"of",details:"Almost there",nameP:"Your first name",emailP:"your@email.com",nextBtn:"Next",backBtn:"← Back",detailBtn:"My details →",sendBtn:"Send my advice →",loading1:"Hanan is looking...",loading2:"Your personal advice is being prepared",resultLabel:"Your personal advice",resultHi:"Hi",resultSub:"This advice was prepared based on your answers.",ctaBtn:"Book a conversation with Hanan",fallback1:"Almost ready",fallback2:"Your scan has been received. Hanan will reach out within 24 hours via",ctaEmail:"Send Hanan a message",
+    prompt:(nm,a)=>`You are Hanan Aboulhadi, interior and organisation specialist at Corporetta. You help busy women and entrepreneurs bring calm and structure to their home.\n\nClient scan:\n- Name: ${nm}\n- Stressful room: ${a[0]}\n- Feeling arriving home: ${a[1]}\n- Weekly time lost: ${a[2]}\n- What holds her back: ${a[3]}\n- Goal: ${a[4]}\n\nWrite a personal, warm but direct advice in English. Start with her name. Give 5 concrete actions. End with an invitation for a space session. First person as Hanan. No jargon. Max 300 words.`
+  }
+};
+
+let lang = 'nl';
+let ans = ['','','','',''];
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === l.toUpperCase()));
+  document.querySelectorAll('[data-nl]').forEach(el => {
+    el.innerHTML = el.getAttribute('data-' + l);
+  });
+  document.getElementById('heroBtn').textContent = l === 'nl' ? 'Ontdek jouw ruimtestress' : 'Discover your space stress';
+  buildForm();
+}
+
+function buildForm() {
+  const t = T[lang];
+  const steps = t.scanQ.map((q, i) => `
+    <div class="form-step${i===0?' active':''}" id="fs${i}">
+      <div class="step-bar">${[0,1,2,3,4,5].map(s=>`<div class="step-seg${s<=i?' done':''}"></div>`).join('')}</div>
+      <p class="q-label">${t.qlabel} ${i+1} ${t.of} 5</p>
+      <p class="q-text">${q}</p>
+      <div class="ans-grid">${t.scanA[i].map(a=>`<button class="ans-btn" onclick="pickA(this,${i})">${a}</button>`).join('')}</div>
+      <div class="f-nav">
+        ${i>0?`<button class="btn-bk" onclick="goF(${i-1})">${t.backBtn}</button>`:'<span></span>'}
+        <span class="pg">${i+1} / 5</span>
+        ${i<4?`<button class="btn-submit" onclick="goF(${i+1})">${t.nextBtn}</button>`:`<button class="btn-submit" onclick="goF(5)">${t.detailBtn}</button>`}
+      </div>
+    </div>`).join('');
+  const detailStep = `
+    <div class="form-step" id="fs5">
+      <div class="step-bar">${[0,1,2,3,4,5].map(()=>`<div class="step-seg done"></div>`).join('')}</div>
+      <p class="q-label">${t.details}</p>
+      <p class="q-text">${lang==='nl'?'Waar stuur ik jouw persoonlijke advies naartoe?':'Where shall I send your personal advice?'}</p>
+      <input class="form-field" type="text" id="nm" placeholder="${t.nameP}">
+      <input class="form-field" type="email" id="em" placeholder="${t.emailP}">
+      <div class="f-nav"><button class="btn-bk" onclick="goF(4)">${t.backBtn}</button><button class="btn-submit" onclick="sendAdvice()">${t.sendBtn}</button></div>
+    </div>`;
+  const loadStep = `<div class="form-step" id="fsLoad"><div style="text-align:center;padding:48px 0;"><p style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--navy);margin-bottom:8px;">${t.loading1}</p><p style="font-size:12px;color:#9aabb8;margin-bottom:36px;">${t.loading2}</p><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>`;
+  const resStep = `<div class="form-step" id="fsRes"><div id="rc" style="text-align:center;"></div></div>`;
+  document.getElementById('scanForm').innerHTML = steps + detailStep + loadStep + resStep;
+  ans = ['','','','',''];
+}
+
+function pickA(btn, i) {
+  btn.closest('.ans-grid').querySelectorAll('.ans-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  ans[i] = btn.textContent;
+}
+
+function goF(n) {
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('fs' + n).classList.add('active');
+}
+
+async function sendAdvice() {
+  const nm = document.getElementById('nm').value.trim();
+  const em = document.getElementById('em').value.trim();
+  if (!nm || !em) { alert(lang==='nl'?'Vul je naam en e-mailadres in.':'Please enter your name and email.'); return; }
+  goF('Load');
+  const t = T[lang];
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:t.prompt(nm,ans)}]})});
+    const d = await r.json();
+    const txt = d.content.map(b => b.text||'').join('');
+    document.getElementById('rc').innerHTML = `
+      <p style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;">${t.resultLabel}</p>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--navy);margin-bottom:20px;">${t.resultHi} ${nm},</h3>
+      <div class="result-advice"><p style="font-size:13px;line-height:2.1;color:#5a6070;white-space:pre-wrap;">${txt.replace(/^(Hoi|Hi) [A-Za-z]+[,.]?\s*/i,'')}</p></div>
+      <p style="font-size:11px;color:#9aabb8;margin-bottom:28px;">${t.resultSub}</p>
+      <button class="btn-gold" onclick="window.location='mailto:info@corporetta.nl?subject=Space session'">${t.ctaBtn}</button>`;
+    goF('Res');
+  } catch(e) {
+    document.getElementById('rc').innerHTML = `
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--navy);margin-bottom:16px;">${t.fallback1}, ${nm}!</h3>
+      <p style="font-size:13px;line-height:2;color:#5a6070;margin-bottom:28px;">${t.fallback2} ${em}.</p>
+      <button class="btn-gold" onclick="window.location='mailto:info@corporetta.nl'">${t.ctaEmail}</button>`;
+    goF('Res');
+  }
+}
+
+function swapImg(input, imgId, label) {
+  if (input.files && input.files[0]) {
+    const r = new FileReader();
+    r.onload = e => { document.getElementById(imgId).src = e.target.result; label.style.display='none'; };
+    r.readAsDataURL(input.files[0]);
+  }
+}
+function loadImg(input) {
+  if (input.files && input.files[0]) {
+    const r = new FileReader();
+    r.onload = e => { document.getElementById('heroImg').src = e.target.result; document.getElementById('uploadLabel').style.display='none'; };
+    r.readAsDataURL(input.files[0]);
+  }
+}
+
+buildForm();
+</script>
+</body>
+</html>
