@@ -12,81 +12,118 @@ jobs:
       CF_TOKEN: cfut_hxszV2bmi4AIdHoTn5OnIy4e3RWpLAFKvSIdjcMD7a2e2a8c
       CF_ACCOUNT: 179e5d05b1da4981ace975cd617faf40
       CF_ZONE: 8745d8b0ae278f5a31a0abca1ce2fc61
+      CLOUDFLARE_API_TOKEN: cfut_hxszV2bmi4AIdHoTn5OnIy4e3RWpLAFKvSIdjcMD7a2e2a8c
+      CLOUDFLARE_ACCOUNT_ID: 179e5d05b1da4981ace975cd617faf40
 
     steps:
-      - name: Create corporetta-scan
-        run: |
-          echo "--- Creating corporetta-scan ---"
-          curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects" \
-            -H "Authorization: Bearer $CF_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d '{"name":"corporetta-scan","production_branch":"main","source":{"type":"github","config":{"owner":"meghan-prog","repo_name":"client-builds","production_branch":"main","pr_comments_enabled":true,"deployments_enabled":true}},"build_config":{"build_command":"","destination_dir":"","root_dir":"corporetta/scan"}}'
+      - uses: actions/checkout@v4
 
-      - name: Create corporetta-website
-        run: |
-          echo "--- Creating corporetta-website ---"
-          curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects" \
-            -H "Authorization: Bearer $CF_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d '{"name":"corporetta-website","production_branch":"main","source":{"type":"github","config":{"owner":"meghan-prog","repo_name":"client-builds","production_branch":"main","pr_comments_enabled":true,"deployments_enabled":true}},"build_config":{"build_command":"","destination_dir":"","root_dir":"corporetta/website"}}'
+      - name: Install Wrangler
+        run: npm install -g wrangler@latest
 
-      - name: Create corporetta-voorstel
+      - name: Create Pages projects
         run: |
-          echo "--- Creating corporetta-voorstel ---"
-          curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects" \
-            -H "Authorization: Bearer $CF_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d '{"name":"corporetta-voorstel","production_branch":"main","source":{"type":"github","config":{"owner":"meghan-prog","repo_name":"client-builds","production_branch":"main","pr_comments_enabled":true,"deployments_enabled":true}},"build_config":{"build_command":"","destination_dir":"","root_dir":"corporetta/voorstel"}}'
+          for item in \
+            "corporetta-scan:corporetta/scan" \
+            "corporetta-website:corporetta/website" \
+            "corporetta-voorstel:corporetta/voorstel"
+          do
+            name="${item%%:*}"
+            root="${item##*:}"
+            echo "=== Creating $name (GitHub-connected) ==="
+            curl -s -X POST \
+              "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects" \
+              -H "Authorization: Bearer $CF_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"name\":\"$name\",\"production_branch\":\"main\",\"source\":{\"type\":\"github\",\"config\":{\"owner\":\"meghan-prog\",\"repo_name\":\"client-builds\",\"production_branch\":\"main\",\"pr_comments_enabled\":true,\"deployments_enabled\":true}},\"build_config\":{\"build_command\":\"\",\"destination_dir\":\"\",\"root_dir\":\"$root\"}}"
+            echo ""
+          done
+
+      - name: Deploy via Wrangler Direct Upload
+        run: |
+          echo "=== Deploying corporetta-scan ==="
+          npx wrangler pages deploy corporetta/scan \
+            --project-name=corporetta-scan \
+            --branch=main \
+            --commit-dirty=true
+
+          echo "=== Deploying corporetta-website ==="
+          npx wrangler pages deploy corporetta/website \
+            --project-name=corporetta-website \
+            --branch=main \
+            --commit-dirty=true
+
+          echo "=== Deploying corporetta-voorstel ==="
+          npx wrangler pages deploy corporetta/voorstel \
+            --project-name=corporetta-voorstel \
+            --branch=main \
+            --commit-dirty=true
 
       - name: Add custom domains to Pages projects
         run: |
-          sleep 10  # wait for projects to initialise
-          echo "--- Adding custom domain to corporetta-scan ---"
-          curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/corporetta-scan/domains" \
+          sleep 15
+          echo "=== scan.winst.ai -> corporetta-scan ==="
+          curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/corporetta-scan/domains" \
             -H "Authorization: Bearer $CF_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"name":"scan.winst.ai"}'
-          echo "--- Adding custom domain to corporetta-website ---"
-          curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/corporetta-website/domains" \
+          echo ""
+
+          echo "=== corporetta.winst.ai -> corporetta-website ==="
+          curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/corporetta-website/domains" \
             -H "Authorization: Bearer $CF_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"name":"corporetta.winst.ai"}'
-          echo "--- Adding custom domain to corporetta-voorstel ---"
-          curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/corporetta-voorstel/domains" \
+          echo ""
+
+          echo "=== voorstel.winst.ai -> corporetta-voorstel ==="
+          curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/corporetta-voorstel/domains" \
             -H "Authorization: Bearer $CF_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"name":"voorstel.winst.ai"}'
+          echo ""
 
       - name: Create DNS CNAME records
         run: |
-          echo "--- scan.winst.ai -> corporetta-scan.pages.dev ---"
-          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE/dns_records" \
+          echo "=== scan.winst.ai CNAME ==="
+          curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/zones/$CF_ZONE/dns_records" \
             -H "Authorization: Bearer $CF_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"type":"CNAME","name":"scan","content":"corporetta-scan.pages.dev","ttl":1,"proxied":true}'
-          echo "--- corporetta.winst.ai -> corporetta-website.pages.dev ---"
-          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE/dns_records" \
+          echo ""
+
+          echo "=== corporetta.winst.ai CNAME ==="
+          curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/zones/$CF_ZONE/dns_records" \
             -H "Authorization: Bearer $CF_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"type":"CNAME","name":"corporetta","content":"corporetta-website.pages.dev","ttl":1,"proxied":true}'
-          echo "--- voorstel.winst.ai -> corporetta-voorstel.pages.dev ---"
-          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE/dns_records" \
+          echo ""
+
+          echo "=== voorstel.winst.ai CNAME ==="
+          curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/zones/$CF_ZONE/dns_records" \
             -H "Authorization: Bearer $CF_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"type":"CNAME","name":"voorstel","content":"corporetta-voorstel.pages.dev","ttl":1,"proxied":true}'
-
-      - name: Print live URLs
-        run: |
           echo ""
-          echo "=========================================="
-          echo "  ALL DONE - LIVE URLS"
-          echo "=========================================="
+
+      - name: Verify and print live URLs
+        run: |
+          sleep 20
+          echo "=== HTTP status checks ==="
+          curl -sI https://corporetta-scan.pages.dev    | head -1
+          curl -sI https://corporetta-website.pages.dev | head -1
+          curl -sI https://corporetta-voorstel.pages.dev | head -1
+          echo ""
+          echo "================================================"
+          echo "  ALL DONE — LIVE URLS"
+          echo "================================================"
           echo "  https://scan.winst.ai"
           echo "  https://corporetta.winst.ai"
           echo "  https://voorstel.winst.ai"
-          echo "=========================================="
-          echo ""
-          echo "Pages.dev direct URLs:"
-          echo "  https://corporetta-scan.pages.dev"
-          echo "  https://corporetta-website.pages.dev"
-          echo "  https://corporetta-voorstel.pages.dev"
+          echo "================================================"
