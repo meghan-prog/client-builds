@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jouw voorstel — Monetize by Meg × Corporetta</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#c9a96e;--gold-light:#e2cca0;--navy:#1a2535;--navy-mid:#243044;--cream:#faf8f3;--cream-dark:#f2ede3;--mid:#6b7a8d;}
+body{font-family:'Montserrat',sans-serif;background:var(--cream);color:var(--navy);}
+
+header{background:var(--navy);padding:32px 56px;display:flex;justify-content:space-between;align-items:center;}
+.h-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;letter-spacing:4px;color:var(--gold);}
+.h-from{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);}
+
+.hero{background:var(--navy);padding:72px 56px 80px;border-top:1px solid rgba(201,169,110,.15);}
+.hero-eyebrow{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;opacity:.85;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:#f0e8d8;line-height:1.15;margin-bottom:20px;}
+.hero-title em{font-style:italic;color:var(--gold);}
+.hero-sub{font-size:13px;line-height:2.1;color:rgba(255,255,255,.5);max-width:560px;}
+
+.intro{padding:72px 56px;max-width:760px;}
+.intro-eyebrow{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.intro-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--navy);margin-bottom:20px;line-height:1.3;}
+.intro-body{font-size:13px;line-height:2.2;color:#5a6070;}
+
+.packages{padding:0 56px 80px;}
+.packages-title{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:300;color:var(--mid);letter-spacing:3px;text-transform:uppercase;margin-bottom:36px;}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,169,110,.2);}
+
+.card{background:var(--cream);padding:44px 36px;position:relative;cursor:pointer;transition:background .2s;}
+.card:hover{background:#fff;}
+.card.featured{background:var(--navy);}
+.card.featured:hover{background:var(--navy-mid);}
+.card-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;margin-bottom:20px;font-weight:500;}
+.card-num{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--gold-light);font-weight:300;margin-bottom:12px;opacity:.6;letter-spacing:2px;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;margin-bottom:8px;line-height:1.3;}
+.card-title.light{color:#f0e8d8;}
+.card-title.dark{color:var(--navy);}
+.card-tagline{font-size:11px;color:var(--mid);line-height:1.7;margin-bottom:28px;letter-spacing:.3px;}
+.card-tagline.light{color:rgba(255,255,255,.45);}
+.price-wrap{margin-bottom:28px;}
+.price-old{font-size:12px;color:#b0a090;text-decoration:line-through;display:block;margin-bottom:4px;letter-spacing:.5px;}
+.price-main{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--gold);line-height:1;}
+.price-note{font-size:10px;color:var(--mid);letter-spacing:1px;margin-top:4px;text-transform:uppercase;}
+.price-note.light{color:rgba(255,255,255,.35);}
+
+.inclusions{list-style:none;margin-bottom:32px;}
+.inclusions li{font-size:12px;line-height:1.8;color:#5a6070;padding:6px 0;border-bottom:.5px solid rgba(201,169,110,.15);display:flex;align-items:flex-start;gap:10px;}
+.inclusions li.light{color:rgba(255,255,255,.55);border-bottom-color:rgba(255,255,255,.08);}
+.check{color:var(--gold);font-size:14px;flex-shrink:0;margin-top:1px;}
+
+.expand-toggle{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);cursor:pointer;background:none;border:none;font-family:'Montserrat',sans-serif;padding:0;display:flex;align-items:center;gap:6px;margin-bottom:24px;}
+.expand-content{display:none;margin-bottom:24px;}
+.expand-content.open{display:block;}
+.expand-body{font-size:12px;line-height:2;color:#5a6070;padding:16px 0;}
+.expand-body.light{color:rgba(255,255,255,.45);}
+
+.card-cta{width:100%;padding:13px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;}
+.card-cta:hover{background:var(--gold);color:var(--navy);}
+.card-cta.solid{background:var(--gold);color:var(--navy);}
+.card-cta.solid:hover{background:#a07840;border-color:#a07840;}
+
+.timeline{background:var(--cream-dark);padding:72px 56px;}
+.tl-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--navy);margin-bottom:48px;}
+.tl-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(201,169,110,.2);}
+.tl-step{background:var(--cream);padding:32px 28px;}
+.tl-num{font-family:'Cormorant Garamond',serif;font-size:40px;color:rgba(201,169,110,.25);font-weight:300;line-height:1;margin-bottom:12px;}
+.tl-step-title{font-size:12px;font-weight:500;color:var(--navy);margin-bottom:8px;letter-spacing:.5px;}
+.tl-step-body{font-size:11px;line-height:1.9;color:var(--mid);}
+
+.closer{background:var(--navy);padding:72px 56px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.closer-title{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:300;color:#f0e8d8;line-height:1.2;margin-bottom:18px;}
+.closer-body{font-size:13px;line-height:2.1;color:rgba(255,255,255,.5);margin-bottom:32px;}
+.closer-sig{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--gold);}
+.closer-sig-sub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:6px;}
+.closer-right{text-align:center;}
+.closer-cta-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:20px;}
+.btn-big{display:block;width:100%;padding:18px;border:1px solid var(--gold);background:var(--gold);color:var(--navy);font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:500;margin-bottom:12px;transition:all .2s;}
+.btn-big:hover{background:#a07840;border-color:#a07840;}
+.btn-outline{display:block;width:100%;padding:18px;border:1px solid rgba(201,169,110,.4);background:transparent;color:rgba(255,255,255,.5);font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.btn-note{font-size:10px;color:rgba(255,255,255,.25);letter-spacing:1px;margin-top:10px;}
+
+footer{background:var(--navy);border-top:.5px solid rgba(201,169,110,.15);padding:24px 56px;display:flex;justify-content:space-between;align-items:center;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(10,16,28,.85);z-index:200;align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.overlay-box{background:#fff;width:92vw;max-width:1100px;height:88vh;display:flex;flex-direction:column;border:.5px solid var(--gold-light);}
+.overlay-bar{background:var(--navy);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.overlay-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.8;}
+.overlay-close{background:none;border:1px solid rgba(201,169,110,.4);color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;cursor:pointer;font-family:'Montserrat',sans-serif;}
+.overlay-close:hover{background:rgba(201,169,110,.1);}
+.overlay-frame{flex:1;border:none;width:100%;}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-box">
+    <div class="overlay-bar">
+      <span class="overlay-label" id="overlayLabel">Live voorbeeld</span>
+      <button class="overlay-close" onclick="closePreview()">✕ Sluiten</button>
+    </div>
+    <iframe class="overlay-frame" id="overlayFrame" src=""></iframe>
+  </div>
+</div>
+
+<header>
+  <div class="h-logo">CORPORETTA</div>
+  <div class="h-from">Voorstel door Meghan Eckenbach</div>
+</header>
+
+<div class="hero">
+  <p class="hero-eyebrow">Persoonlijk voorstel · Hanan Aboulhadi</p>
+  <h1 class="hero-title">Wat we samen<br>kunnen <em>bouwen.</em></h1>
+  <p class="hero-sub">Drie opties. Van eerste tool tot volledige website. Jij kiest waar je mee begint — alles is uitbreidbaar.</p>
+</div>
+
+<div class="intro">
+  <p class="intro-eyebrow">Het idee</p>
+  <h2 class="intro-title">Je expertise zit in jouw hoofd.<br>Wij zetten het om in een systeem dat voor je werkt.</h2>
+  <p class="intro-body">Tijdens ons gesprek werd één ding duidelijk: jij weet precies wat iemand nodig heeft zodra je hun ruimte binnenwandelt. Dat gevoel, die directheid, die rust die jij brengt — dat gaan we automatiseren. Zodat jij je tijd kan steken in de klanten die er écht toe doen, terwijl het systeem de rest voor je doet.</p>
+</div>
+
+<div class="packages">
+  <p class="packages-title">Kies jouw startpunt</p>
+  <div class="cards">
+
+    <div class="card">
+      <p class="card-num">01 / 03</p>
+      <h3 class="card-title dark">Rust in jouw Ruimte</h3>
+      <p class="card-tagline">De gepersonaliseerde AI-tool die voor jou leads kwalificeert en direct waarde levert.</p>
+      <div class="price-wrap">
+        <p class="price-main">€997</p>
+        <p class="price-note">eenmalig</p>
+      </div>
+      <ul class="inclusions">
+        <li><span class="check">✦</span>Gepersonaliseerde AI-adviesflow op jouw naam</li>
+        <li><span class="check">✦</span>5 gerichte vragen afgestemd op jouw expertise</li>
+        <li><span class="check">✦</span>Advies gegenereerd alsof jij het zelf schreef</li>
+        <li><span class="check">✦</span>Gebouwd in Corporetta-stijl, kant en klaar</li>
+        <li><span class="check">✦</span>Inzetbaar via link, website of DM</li>
+      </ul>
+      <button class="expand-toggle" onclick="toggle('d1',this)">Meer details <span>↓</span></button>
+      <div class="expand-content" id="d1">
+        <p class="expand-body">De tool vraagt 5 vragen aan jouw potentiële klant, verwerkt de antwoorden en stuurt hen een persoonlijk advies dat klinkt alsof jij er zelf naar hebt gekeken. Dit is jouw gratis weggever die leads verzamelt en vertrouwen bouwt — volledig geautomatiseerd. Jij hoeft er niets aan te doen.</p>
+      </div>
+      <button class="card-cta preview-btn" onclick="openPreview('scan')" style="margin-bottom:10px;">Bekijk live voorbeeld ↗</button>
+      <button class="card-cta" onclick="window.location='mailto:info@monetizebymeg.com?subject=Optie 1 - Rust in jouw Ruimte'">Ik kies optie 1</button>
+    </div>
+
+    <div class="card featured">
+      <div class="card-badge">Aanbevolen</div>
+      <p class="card-num" style="color:rgba(201,169,110,.4);">02 / 03</p>
+      <h3 class="card-title light">Rust in jouw Ruimte<br>+ Leadsysteem</h3>
+      <p class="card-tagline light">De tool én het systeem erachter. Leads komen binnen, worden opgevolgd en omgezet — zonder dat jij erbij hoeft te zijn.</p>
+      <div class="price-wrap">
+        <span class="price-old">Los: €1.494</span>
+        <p class="price-main">€1.297</p>
+        <p class="price-note light">eenmalig · samen voordeliger</p>
+      </div>
+      <ul class="inclusions">
+        <li class="light"><span class="check">✦</span>Alles van optie 1</li>
+        <li class="light"><span class="check">✦</span>E-mailfunnel ingericht (3 geautomatiseerde mails)</li>
+        <li class="light"><span class="check">✦</span>Leadopvang gekoppeld aan jouw mailsysteem</li>
+        <li class="light"><span class="check">✦</span>Follow-up flow richting jouw betaalde pakketten</li>
+        <li class="light"><span class="check">✦</span>Technische inrichting compleet verzorgd</li>
+      </ul>
+      <button class="expand-toggle" onclick="toggle('d2',this)">Meer details <span>↓</span></button>
+      <div class="expand-content" id="d2">
+        <p class="expand-body light">Na de tool ontvangen leads automatisch drie opvolgende e-mails — geschreven in jouw stem, gericht op jouw pakketten. De eerste mail bevestigt hun advies. De tweede verdiept de waarde. De derde nodigt uit voor een sessie. Jij ziet de leads binnenkomen en hoeft alleen maar ja te zeggen.</p>
+      </div>
+      <button class="card-cta preview-btn" onclick="openPreview('scan')" style="margin-bottom:10px;border-color:rgba(201,169,110,.5);color:rgba(201,169,110,.8);">Bekijk live voorbeeld ↗</button>
+      <button class="card-cta solid" onclick="window.location='mailto:info@monetizebymeg.com?subject=Optie 2 - Tool + Leadsysteem'">Ik kies optie 2</button>
+    </div>
+
+    <div class="card">
+      <p class="card-num">03 / 03</p>
+      <h3 class="card-title dark">Volledige Website<br>NL + EN</h3>
+      <p class="card-tagline">Jouw complete online aanwezigheid. Nederlandstalig én Engelstalig. Inclusief tool, leadsysteem en alles erop en eraan.</p>
+      <div class="price-wrap">
+        <span class="price-old">Waarde: €5.000</span>
+        <p class="price-main">€3.500</p>
+        <p class="price-note">eenmalig · compleet pakket</p>
+      </div>
+      <ul class="inclusions">
+        <li><span class="check">✦</span>Alles van optie 1 + 2</li>
+        <li><span class="check">✦</span>Volledige website in Corporetta-stijl</li>
+        <li><span class="check">✦</span>NL én EN versie met taalswitch</li>
+        <li><span class="check">✦</span>Alle secties, foto's en copy ingericht</li>
+        <li><span class="check">✦</span>Klaar voor Marokko-expansie</li>
+      </ul>
+      <button class="expand-toggle" onclick="toggle('d3',this)">Meer details <span>↓</span></button>
+      <div class="expand-content" id="d3">
+        <p class="expand-body">De volledige website die je hebt gezien — inclusief hero, verhaal, diensten, de Rust in jouw Ruimte tool, leadsysteem, contactpagina en footer — in zowel Nederlands als Engels. Gebouwd om internationaal te schalen. Klaar om live te zetten zodra jij akkoord geeft.</p>
+      </div>
+      <button class="card-cta preview-btn" onclick="openPreview('website')" style="margin-bottom:10px;">Bekijk live voorbeeld ↗</button>
+      <button class="card-cta" onclick="window.location='mailto:info@monetizebymeg.com?subject=Optie 3 - Volledige Website'">Ik kies optie 3</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="timeline">
+  <h2 class="tl-title">Hoe het werkt</h2>
+  <div class="tl-steps">
+    <div class="tl-step">
+      <div class="tl-num">01</div>
+      <p class="tl-step-title">Akkoord & intake</p>
+      <p class="tl-step-body">Je kiest een optie, we bevestigen en ik stuur een korte intake om de details vast te leggen.</p>
+    </div>
+    <div class="tl-step">
+      <div class="tl-num">02</div>
+      <p class="tl-step-title">Bouw</p>
+      <p class="tl-step-body">Ik bouw alles. Jij doet niets. Geen technische kennis nodig. Levertijd: 5–7 werkdagen.</p>
+    </div>
+    <div class="tl-step">
+      <div class="tl-num">03</div>
+      <p class="tl-step-title">Review & feedback</p>
+      <p class="tl-step-body">Jij bekijkt het resultaat. Eén feedbackronde inbegrepen. Aanpassingen worden direct verwerkt.</p>
+    </div>
+    <div class="tl-step">
+      <div class="tl-num">04</div>
+      <p class="tl-step-title">Live & verdienen</p>
+      <p class="tl-step-body">Het systeem staat. Jij deelt de link. Leads komen binnen. Jij focust op je echte werk.</p>
+    </div>
+  </div>
+</div>
+
+<div class="closer">
+  <div>
+    <h2 class="closer-title">Klaar als jij<br>er klaar voor bent.</h2>
+    <p class="closer-body">Dit voorstel staat open tot 7 april. Heb je vragen of wil je eerst even bellen? Dat kan altijd. Stuur me een berichtje en we plannen een kort gesprek in.</p>
+    <p class="closer-sig">Meghan Eckenbach</p>
+    <p class="closer-sig-sub">AI Business Builder</p>
+  </div>
+  <div class="closer-right">
+    <p class="closer-cta-label">Maak een keuze</p>
+    <button class="btn-big" onclick="window.location='mailto:info@monetizebymeg.com?subject=Ik ga akkoord'">Ja, ik ga akkoord</button>
+    <button class="btn-outline" onclick="window.location='mailto:info@monetizebymeg.com?subject=Ik heb nog een vraag'">Ik heb nog een vraag</button>
+    <p class="btn-note">Of bel / WhatsApp direct</p>
+  </div>
+</div>
+
+<footer>
+  <p class="f-text">© 2026 Meghan Eckenbach · Voorstel voor Corporetta</p>
+  <p class="f-gold">Geldig t/m 7 april 2026</p>
+</footer>
+
+<script>
+function toggle(id, btn) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+  const arrow = btn.querySelector('span');
+  arrow.textContent = el.classList.contains('open') ? '↑' : '↓';
+}
+</script>
+</body>
+</html>
