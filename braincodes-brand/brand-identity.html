@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BrainCodes™ — Brand Identity Directions</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #0f0f0f; color: white; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #0f0f0f; border-bottom: 1px solid #222;
+    display: flex; gap: 0; height: 56px;
+  }
+  nav a {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    color: #666; text-decoration: none; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s;
+    border-right: 1px solid #222;
+  }
+  nav a:last-child { border-right: none; }
+  nav a:hover { color: white; background: #1a1a1a; }
+  nav a.active { color: white; }
+
+  /* SECTIONS */
+  section { min-height: 100vh; padding-top: 56px; display: none; }
+  section.active { display: block; }
+
+  /* ============================================
+     RICHTING 1 — DARK INTELLIGENCE
+  ============================================ */
+  #dir1 { background: #111111; }
+
+  .d1-hero {
+    background: #111; padding: 80px 60px 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    min-height: 100vh;
+  }
+  .d1-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 13px; letter-spacing: 0.25em;
+    color: #FF4D3A; text-transform: uppercase; margin-bottom: 40px;
+  }
+  .d1-headline {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(48px, 6vw, 88px); font-weight: 700;
+    line-height: 0.95; color: #F5F2EE; letter-spacing: -0.03em;
+  }
+  .d1-headline span { color: #FF4D3A; }
+  .d1-sub {
+    font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 300;
+    color: #888; line-height: 1.7; margin-top: 32px; max-width: 400px;
+  }
+  .d1-cta {
+    display: inline-block; margin-top: 40px;
+    background: #FF4D3A; color: #111; padding: 16px 36px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; cursor: pointer;
+  }
+  .d1-visual {
+    display: flex; flex-direction: column; gap: 20px; align-items: flex-end;
+  }
+
+  /* Instagram post mockup D1 */
+  .insta-post {
+    width: 260px; height: 260px;
+    display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 24px;
+    position: relative; overflow: hidden;
+  }
+  .d1-post {
+    background: #1A1A1A; border: 1px solid #2a2a2a;
+  }
+  .d1-post-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+    color: #FF4D3A; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .d1-post-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px; font-weight: 700; line-height: 1.1;
+    color: #F5F2EE; letter-spacing: -0.02em;
+  }
+  .d1-neural {
+    position: absolute; top: 20px; right: 20px;
+    width: 80px; height: 80px; opacity: 0.15;
+  }
+
+  /* Story mockup */
+  .story-mock {
+    width: 140px; height: 260px;
+    background: #1A1A1A; border: 1px solid #2a2a2a;
+    display: flex; flex-direction: column;
+    justify-content: space-between; padding: 20px 16px;
+  }
+  .story-tag {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+    color: #FF4D3A; text-transform: uppercase;
+  }
+  .story-main {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px; font-weight: 700; line-height: 1.1;
+    color: #F5F2EE;
+  }
+  .story-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; color: #666; line-height: 1.5;
+  }
+
+  /* Color palette */
+  .palette-row {
+    display: flex; gap: 12px; margin-top: 40px; padding: 0 60px;
+  }
+  .swatch {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .swatch-color {
+    width: 60px; height: 60px; border-radius: 50%;
+  }
+  .swatch-name {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #666;
+  }
+  .swatch-hex { font-size: 10px; color: #444; }
+
+  /* Typography showcase */
+  .type-section {
+    padding: 60px; border-top: 1px solid #1e1e1e;
+  }
+  .type-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase; color: #444; margin-bottom: 20px;
+  }
+  .type-sample-xl {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 72px; font-weight: 700; line-height: 1;
+    color: #F5F2EE; letter-spacing: -0.04em;
+  }
+  .type-sample-body {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px; font-weight: 300; line-height: 1.8;
+    color: #888; margin-top: 24px; max-width: 500px;
+  }
+
+  /* Bio preview */
+  .bio-preview {
+    padding: 40px 60px; border-top: 1px solid #1e1e1e;
+    display: flex; align-items: flex-start; gap: 20px;
+  }
+  .bio-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: linear-gradient(135deg, #FF4D3A, #ff8c7f);
+    flex-shrink: 0;
+  }
+  .bio-text { flex: 1; }
+  .bio-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px; font-weight: 700; color: #F5F2EE;
+  }
+  .bio-handle { font-size: 13px; color: #666; margin-bottom: 10px; }
+  .bio-body { font-size: 13px; line-height: 1.6; color: #aaa; }
+  .bio-link { font-size: 13px; color: #FF4D3A; margin-top: 6px; }
+
+
+  /* ============================================
+     RICHTING 2 — WARM AUTHORITY
+  ============================================ */
+  #dir2 { background: #FAF7F2; color: #1a1a1a; }
+
+  .d2-hero {
+    background: #FAF7F2; padding: 80px 60px 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    min-height: 100vh;
+  }
+  .d2-logo {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400; font-size: 13px; letter-spacing: 0.25em;
+    color: #C4714A; text-transform: uppercase; margin-bottom: 40px;
+  }
+  .d2-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(44px, 5vw, 76px); font-weight: 700;
+    line-height: 1.05; color: #1E3A2F; letter-spacing: -0.02em;
+  }
+  .d2-headline em { color: #C4714A; font-style: italic; }
+  .d2-sub {
+    font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 300;
+    color: #5a5a5a; line-height: 1.8; margin-top: 32px; max-width: 400px;
+  }
+  .d2-cta {
+    display: inline-block; margin-top: 40px;
+    background: #1E3A2F; color: #FAF7F2; padding: 16px 36px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; cursor: pointer;
+  }
+  .d2-visual { display: flex; flex-direction: column; gap: 16px; align-items: flex-end; }
+
+  .d2-post {
+    background: #E8D5B7; width: 260px; height: 260px;
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 24px;
+  }
+  .d2-post-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px; letter-spacing: 0.2em;
+    color: #C4714A; text-transform: uppercase; margin-bottom: 8px;
+    font-style: italic;
+  }
+  .d2-post-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; line-height: 1.15;
+    color: #1E3A2F; letter-spacing: -0.01em;
+  }
+  .d2-story {
+    width: 140px; height: 260px;
+    background: #C4714A;
+    display: flex; flex-direction: column;
+    justify-content: space-between; padding: 20px 16px;
+  }
+  .d2-story-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+    color: #FAF7F2; text-transform: uppercase; opacity: 0.7;
+  }
+  .d2-story-main {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; line-height: 1.1;
+    color: #FAF7F2;
+  }
+  .d2-story-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; color: #FAF7F2; line-height: 1.5; opacity: 0.8;
+  }
+
+  .d2-palette { background: #FAF7F2; }
+  .d2-swatch-name { color: #aaa; }
+  .d2-swatch-hex { color: #ccc; }
+
+  .d2-type-section { background: #FAF7F2; border-top: 1px solid #e8d5b7; }
+  .d2-type-label { color: #ccc; }
+  .d2-type-xl {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px; font-weight: 700; line-height: 1;
+    color: #1E3A2F; letter-spacing: -0.02em;
+  }
+  .d2-type-xl em { color: #C4714A; font-style: italic; }
+  .d2-type-body {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px; font-weight: 300; line-height: 1.8;
+    color: #5a5a5a; margin-top: 24px; max-width: 500px;
+  }
+  .d2-bio-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: linear-gradient(135deg, #C4714A, #e8a87c);
+    flex-shrink: 0;
+  }
+  .d2-bio-name { color: #1E3A2F; }
+  .d2-bio-handle { color: #aaa; }
+  .d2-bio-body { color: #5a5a5a; }
+  .d2-bio-link { color: #C4714A; }
+  .d2-bio-section { border-top: 1px solid #e8d5b7; }
+
+
+  /* ============================================
+     RICHTING 3 — EDITORIAL MINIMAL
+  ============================================ */
+  #dir3 { background: #ffffff; color: #0A0A0A; }
+
+  .d3-hero {
+    background: #fff; padding: 80px 60px 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    min-height: 100vh;
+  }
+  .d3-logo {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900; font-size: 11px; letter-spacing: 0.4em;
+    color: #0A0A0A; text-transform: uppercase; margin-bottom: 40px;
+  }
+  .d3-headline {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(52px, 6vw, 96px); font-weight: 900;
+    line-height: 0.9; color: #0A0A0A; letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+  .d3-headline span { color: #6B1F2A; }
+  .d3-sub {
+    font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 300;
+    color: #666; line-height: 1.8; margin-top: 32px; max-width: 400px;
+    letter-spacing: 0.01em;
+  }
+  .d3-cta {
+    display: inline-block; margin-top: 40px;
+    border: 2px solid #0A0A0A; color: #0A0A0A; padding: 16px 36px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 900; letter-spacing: 0.25em;
+    text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+  }
+  .d3-cta:hover { background: #0A0A0A; color: white; }
+  .d3-visual { display: flex; flex-direction: column; gap: 16px; align-items: flex-end; }
+
+  .d3-post {
+    background: #0A0A0A; width: 260px; height: 260px;
+    display: flex; flex-direction: column; justify-content: space-between; padding: 24px;
+  }
+  .d3-post-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; font-weight: 900; letter-spacing: 0.3em;
+    color: #6B1F2A; text-transform: uppercase;
+  }
+  .d3-post-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px; font-weight: 900; line-height: 1;
+    color: #ffffff; letter-spacing: -0.03em; text-transform: uppercase;
+  }
+  .d3-post-sub {
+    font-size: 11px; color: #555; font-weight: 300; letter-spacing: 0.05em;
+  }
+  .d3-story {
+    width: 140px; height: 260px;
+    background: #ffffff; border: 2px solid #0A0A0A;
+    display: flex; flex-direction: column;
+    justify-content: space-between; padding: 20px 16px;
+  }
+  .d3-story-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px; font-weight: 900; letter-spacing: 0.3em;
+    color: #0A0A0A; text-transform: uppercase;
+  }
+  .d3-story-main {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px; font-weight: 900; line-height: 1;
+    color: #0A0A0A; text-transform: uppercase; letter-spacing: -0.03em;
+  }
+  .d3-story-accent { color: #6B1F2A; }
+  .d3-story-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px; color: #888; line-height: 1.5; letter-spacing: 0.05em;
+  }
+
+  .d3-type-xl {
+    font-family: 'Inter', sans-serif;
+    font-size: 96px; font-weight: 900; line-height: 0.9;
+    color: #0A0A0A; letter-spacing: -0.05em; text-transform: uppercase;
+  }
+  .d3-type-xl span { color: #6B1F2A; }
+  .d3-type-body {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px; font-weight: 300; line-height: 1.8;
+    color: #666; margin-top: 24px; max-width: 500px;
+  }
+  .d3-type-section { border-top: 2px solid #0A0A0A; }
+  .d3-bio-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: #0A0A0A; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 20px; color: #6B1F2A; letter-spacing: -0.05em;
+  }
+  .d3-bio-name { color: #0A0A0A; font-weight: 900; letter-spacing: -0.02em; }
+  .d3-bio-handle { color: #aaa; }
+  .d3-bio-body { color: #444; }
+  .d3-bio-link { color: #6B1F2A; }
+  .d3-bio-section { border-top: 2px solid #0A0A0A; }
+
+  /* SECTION LABELS */
+  .section-intro {
+    text-align: center; padding: 40px 60px 0;
+  }
+  .direction-number {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.3em;
+    text-transform: uppercase; opacity: 0.4; margin-bottom: 8px;
+  }
+  .direction-title {
+    font-size: 28px; font-weight: 700; margin-bottom: 8px;
+  }
+  .direction-desc { font-size: 15px; opacity: 0.5; font-weight: 300; }
+
+  /* SHARED UTILS */
+  .grid-row {
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .caption {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+    text-transform: uppercase; opacity: 0.4; margin-bottom: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .d1-hero, .d2-hero, .d3-hero { grid-template-columns: 1fr; padding: 80px 24px 40px; }
+    .insta-post { width: 200px; height: 200px; }
+    .palette-row { padding: 0 24px; }
+    .type-section, .d2-type-section, .d3-type-section { padding: 40px 24px; }
+    .bio-preview { padding: 24px; }
+    .type-sample-xl, .d2-type-xl, .d3-type-xl { font-size: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="active" onclick="show('dir1', this)">01 Dark Intelligence</a>
+  <a href="#" onclick="show('dir2', this)">02 Warm Authority</a>
+  <a href="#" onclick="show('dir3', this)">03 Editorial Minimal</a>
+</nav>
+
+<!-- ============ RICHTING 1 ============ -->
+<section id="dir1" class="active">
+  <div class="d1-hero">
+    <div>
+      <div class="d1-logo">BrainCodes™ — by Meghan Eckenbach</div>
+      <div class="d1-headline">
+        Je leeft<br>jouw<br><span>brein</span><br>code.
+      </div>
+      <div class="d1-sub">
+        Je gedrag is niet wie je bent. Het is een neuraal patroon. Aangeleerd. Herschrijfbaar. Neural Alignment gaat naar de oorzaak.
+      </div>
+      <div class="d1-cta">UNMASKED™ — Start hier</div>
+    </div>
+    <div class="d1-visual">
+      <div class="caption" style="color:#444;align-self:flex-end">Instagram Post</div>
+      <div class="insta-post d1-post">
+        <svg class="d1-neural" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="20" r="4" fill="#FF4D3A"/>
+          <circle cx="20" cy="50" r="4" fill="#FF4D3A"/>
+          <circle cx="80" cy="50" r="4" fill="#FF4D3A"/>
+          <circle cx="50" cy="80" r="4" fill="#FF4D3A"/>
+          <circle cx="35" cy="35" r="3" fill="#FF4D3A"/>
+          <circle cx="65" cy="35" r="3" fill="#FF4D3A"/>
+          <circle cx="35" cy="65" r="3" fill="#FF4D3A"/>
+          <circle cx="65" cy="65" r="3" fill="#FF4D3A"/>
+          <line x1="50" y1="20" x2="35" y2="35" stroke="#FF4D3A" stroke-width="0.5"/>
+          <line x1="50" y1="20" x2="65" y2="35" stroke="#FF4D3A" stroke-width="0.5"/>
+          <line x1="20" y1="50" x2="35" y2="35" stroke="#FF4D3A" stroke-width="0.5"/>
+          <line x1="20" y1="50" x2="35" y2="65" stroke="#FF4D3A" stroke-width="0.5"/>
+          <line x1="80" y1="50" x2="65" y2="35" stroke="#FF4D3A" stroke-width="0.5"/>
+          <line x1="80" y1="50" x2="65" y2="65" stroke="#FF4D3A" stroke-width="0.5"/>
+          <line x1="50" y1="80" x2="35" y2="65" stroke="#FF4D3A" stroke-width="0.5"/>
+          <line x1="50" y1="80" x2="65" y2="65" stroke="#FF4D3A" stroke-width="0.5"/>
+          <line x1="35" y1="35" x2="65" y2="35" stroke="#FF4D3A" stroke-width="0.5"/>
+          <line x1="35" y1="65" x2="65" y2="65" stroke="#FF4D3A" stroke-width="0.5"/>
+        </svg>
+        <div class="d1-post-label">BC-04 — Pijn-Dominantie</div>
+        <div class="d1-post-text">Één woord.<br>Dertig jaar<br>later.</div>
+      </div>
+      <div class="grid-row">
+        <div>
+          <div class="caption" style="color:#444">Story</div>
+          <div class="story-mock">
+            <div class="story-tag">BrainCodes™</div>
+            <div class="story-main">Je bent<br>niet je<br>gedrag.</div>
+            <div class="story-sub">Je bent geconditioneerd. UNMASKED™ ↓</div>
+          </div>
+        </div>
+        <div>
+          <div class="caption" style="color:#444">Post 2</div>
+          <div class="story-mock" style="background:#FF4D3A">
+            <div class="story-tag" style="color:#111">RECODED™</div>
+            <div class="story-main" style="color:#111">Jij eet<br>de code.</div>
+            <div class="story-sub" style="color:#1114">Niet wat je wilt. Wat je bent geconditioneerd te eten.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Palette -->
+  <div class="palette-row" style="padding: 40px 60px; border-top: 1px solid #1e1e1e;">
+    <div class="caption" style="width:100%; color:#444">Kleurpalet</div>
+  </div>
+  <div class="palette-row" style="padding: 0 60px 60px;">
+    <div class="swatch">
+      <div class="swatch-color" style="background:#1A1A1A; border: 1px solid #333"></div>
+      <div class="swatch-name" style="color:#666">Carbon</div>
+      <div class="swatch-hex" style="color:#444">#1A1A1A</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#F5F2EE"></div>
+      <div class="swatch-name" style="color:#666">Ivory</div>
+      <div class="swatch-hex" style="color:#444">#F5F2EE</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#FF4D3A"></div>
+      <div class="swatch-name" style="color:#666">Electric Coral</div>
+      <div class="swatch-hex" style="color:#444">#FF4D3A</div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#2A2A2A; border: 1px solid #333"></div>
+      <div class="swatch-name" style="color:#666">Graphite</div>
+      <div class="swatch-hex" style="color:#444">#2A2A2A</div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="type-section">
+    <div class="type-label">Typografie — Space Grotesk Bold + Inter Light</div>
+    <div class="type-sample-xl">UNMASKED™</div>
+    <div class="type-sample-body">Je leeft niet jouw leven. Je leeft jouw breincode. Jouw gedrag is het eindpunt van een keten die begint bij de biologie.</div>
+  </div>
+
+  <!-- Bio -->
+  <div class="bio-preview" style="border-top: 1px solid #1e1e1e;">
+    <div class="bio-avatar"></div>
+    <div class="bio-text">
+      <div class="bio-name">meghan.eckenbach</div>
+      <div class="bio-handle" style="color:#555">BrainCodes™ — Neural Alignment</div>
+      <div class="bio-body" style="color:#777; margin-top: 8px;">
+        Je leeft niet jouw leven.<br>
+        Je leeft jouw breincode.<br>
+        Neurobiologisch identiteitscoach 🧠<br>
+        UNMASKED™ | RECODED™ ↓
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ RICHTING 2 ============ -->
+<section id="dir2">
+  <div class="d2-hero">
+    <div>
+      <div class="d2-logo">BrainCodes™ — by Meghan Eckenbach</div>
+      <div class="d2-headline">
+        Je bent niet<br>geconditioneerd<br>om <em>klein</em><br>te blijven.
+      </div>
+      <div class="d2-sub">
+        Neurobiologische methode die de patronen ontrafelt die bepalen wie jij denkt te zijn — en je terugbrengt naar wie je biologisch bent.
+      </div>
+      <div class="d2-cta">UNMASKED™ — Begin hier</div>
+    </div>
+    <div class="d2-visual">
+      <div class="caption" style="color:#c4a882;align-self:flex-end">Instagram Post</div>
+      <div class="d2-post">
+        <div class="d2-post-label">BrainCodes™</div>
+        <div class="d2-post-text">Het masker<br>beschermde je.<br>Het hield<br>je ook klein.</div>
+      </div>
+      <div class="grid-row">
+        <div>
+          <div class="caption" style="color:#c4a882">Story</div>
+          <div class="d2-story">
+            <div class="d2-story-tag">BrainCodes</div>
+            <div class="d2-story-main">Je bent niet je gedrag.</div>
+            <div class="d2-story-sub">UNMASKED™ — Ontdek jouw breincode ↓</div>
+          </div>
+        </div>
+        <div>
+          <div class="caption" style="color:#c4a882">Story 2</div>
+          <div class="d2-story" style="background:#1E3A2F">
+            <div class="d2-story-tag" style="color:#E8D5B7; opacity:0.7">RECODED™</div>
+            <div class="d2-story-main" style="color:#E8D5B7">Voeden,<br>niet<br>vullen.</div>
+            <div class="d2-story-sub" style="color:#E8D5B7; opacity:0.7">Alles rondom eten herschrijven.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Palette -->
+  <div style="padding: 0 60px 60px; border-top: 1px solid #e8d5b7; padding-top: 40px;">
+    <div class="caption" style="color:#c4a882; margin-bottom: 20px;">Kleurpalet</div>
+    <div style="display:flex; gap:12px;">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#C4714A"></div>
+        <div class="swatch-name" style="color:#aaa">Terracotta</div>
+        <div class="swatch-hex" style="color:#ccc">#C4714A</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#E8D5B7"></div>
+        <div class="swatch-name" style="color:#aaa">Zand</div>
+        <div class="swatch-hex" style="color:#ccc">#E8D5B7</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1E3A2F"></div>
+        <div class="swatch-name" style="color:#aaa">Bosgroen</div>
+        <div class="swatch-hex" style="color:#ccc">#1E3A2F</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#FAF7F2; border: 1px solid #e8d5b7"></div>
+        <div class="swatch-name" style="color:#aaa">Linnen</div>
+        <div class="swatch-hex" style="color:#ccc">#FAF7F2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="type-section d2-type-section" style="background:#FAF7F2;">
+    <div class="type-label" style="color:#c4a882;">Typografie — Playfair Display + Inter Light</div>
+    <div class="d2-type-xl">Jij bent<br>niet je <em>code.</em></div>
+    <div class="d2-type-body">Je gedrag is het eindpunt van een keten. Die keten begint bij de biologie — en is grotendeels herschrijfbaar.</div>
+  </div>
+
+  <!-- Bio -->
+  <div class="bio-preview d2-bio-section" style="background:#FAF7F2; border-top: 1px solid #e8d5b7;">
+    <div class="d2-bio-avatar"></div>
+    <div class="bio-text">
+      <div class="bio-name d2-bio-name">meghan.eckenbach</div>
+      <div class="bio-handle d2-bio-handle">BrainCodes™ — Neural Alignment</div>
+      <div class="bio-body d2-bio-body" style="margin-top: 8px;">
+        Je leeft niet jouw leven.<br>
+        Je leeft jouw breincode.<br>
+        Neurobiologisch identiteitscoach 🧠<br>
+        UNMASKED™ | RECODED™ ↓
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ RICHTING 3 ============ -->
+<section id="dir3">
+  <div class="d3-hero">
+    <div>
+      <div class="d3-logo">BrainCodes™ — Meghan Eckenbach</div>
+      <div class="d3-headline">
+        BRAIN<br>CODES<br><span>UN</span><br>MASKED
+      </div>
+      <div class="d3-sub">
+        Je gedrag is niet wie je bent. Het is een neuraal patroon. Aangeleerd. Herschrijfbaar. Wij gaan naar de oorzaak.
+      </div>
+      <div class="d3-cta">UNMASKED™</div>
+    </div>
+    <div class="d3-visual">
+      <div class="caption" style="color:#aaa;align-self:flex-end">Instagram Post</div>
+      <div class="d3-post">
+        <div class="d3-post-label">BrainCodes™</div>
+        <div class="d3-post-text">JE BENT<br>NIET JE<br>GEDRAG.</div>
+        <div class="d3-post-sub">UNMASKED™ — Neural Alignment</div>
+      </div>
+      <div class="grid-row">
+        <div>
+          <div class="caption" style="color:#aaa">Story</div>
+          <div class="d3-story">
+            <div class="d3-story-tag">BrainCodes</div>
+            <div class="d3-story-main">UN<br><span class="d3-story-accent">MASK</span><br>ED.</div>
+            <div class="d3-story-sub">Ontdek de breincode die jouw leven stuurt ↓</div>
+          </div>
+        </div>
+        <div>
+          <div class="caption" style="color:#aaa">Story 2</div>
+          <div class="d3-story" style="background:#6B1F2A; border-color:#6B1F2A;">
+            <div class="d3-story-tag" style="color:#FAF7F2; opacity:0.6;">RECODED™</div>
+            <div class="d3-story-main" style="color:#FAF7F2;">RE<br>CODE<br>D.</div>
+            <div class="d3-story-sub" style="color:#FAF7F2; opacity:0.7;">Eten herschrijven op neurologisch niveau.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Palette -->
+  <div style="padding: 0 60px 60px; border-top: 2px solid #0A0A0A; padding-top: 40px; background:#fff;">
+    <div class="caption" style="color:#aaa; margin-bottom: 20px;">Kleurpalet</div>
+    <div style="display:flex; gap:12px;">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0A0A0A"></div>
+        <div class="swatch-name" style="color:#aaa">Zwart</div>
+        <div class="swatch-hex" style="color:#ccc">#0A0A0A</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#FFFFFF; border: 1px solid #0A0A0A"></div>
+        <div class="swatch-name" style="color:#aaa">Wit</div>
+        <div class="swatch-hex" style="color:#ccc">#FFFFFF</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#6B1F2A"></div>
+        <div class="swatch-name" style="color:#aaa">Burgundy</div>
+        <div class="swatch-hex" style="color:#ccc">#6B1F2A</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#C17D2B"></div>
+        <div class="swatch-name" style="color:#aaa">Amber</div>
+        <div class="swatch-hex" style="color:#ccc">#C17D2B</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="type-section d3-type-section" style="background:#fff;">
+    <div class="type-label" style="color:#aaa;">Typografie — Inter Black + Inter Light</div>
+    <div class="d3-type-xl">UN<span>MASK</span>ED</div>
+    <div class="d3-type-body">Je gedrag is het eindpunt van een keten. Die keten begint bij de biologie — en is grotendeels herschrijfbaar.</div>
+  </div>
+
+  <!-- Bio -->
+  <div class="bio-preview d3-bio-section" style="background:#fff; border-top: 2px solid #0A0A0A;">
+    <div class="d3-bio-avatar">ME</div>
+    <div class="bio-text">
+      <div class="bio-name d3-bio-name" style="font-family:'Inter',sans-serif; font-weight:900; letter-spacing:-0.02em; color:#0A0A0A;">meghan.eckenbach</div>
+      <div class="bio-handle d3-bio-handle" style="color:#aaa;">BrainCodes™</div>
+      <div class="bio-body d3-bio-body" style="margin-top: 8px; color:#444;">
+        Je leeft niet jouw leven.<br>
+        Je leeft jouw breincode.<br>
+        Neurobiologisch identiteitscoach 🧠<br>
+        UNMASKED™ | RECODED™ ↓
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function show(id, el) {
+  document.querySelectorAll('section').forEach(s => { s.style.display = 'none'; s.classList.remove('active'); });
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById(id).style.display = 'block';
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  event.preventDefault();
+}
+</script>
+</body>
+</html>
