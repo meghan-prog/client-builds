@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BrainCodes™ Story Templates — Media Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #F0EDE8;
+    font-family: 'Inter', sans-serif;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+
+  h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #6B1F2A;
+  }
+
+  .label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #888;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  /* Story frame: 9:16 ratio, max 390px wide */
+  .story {
+    width: 390px;
+    height: 693px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+  }
+
+  /* ─── STORY 1: The Reveal ─── */
+  .s1 {
+    background: #0A0A0A;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 52px 36px 48px;
+  }
+
+  .s1 .top-tag {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #6B1F2A;
+  }
+
+  .s1 .badge {
+    display: inline-block;
+    background: #6B1F2A;
+    color: #fff;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+  }
+
+  .s1 .headline {
+    font-weight: 900;
+    font-size: 42px;
+    line-height: 1.05;
+    color: #FFFFFF;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+
+  .s1 .headline em {
+    font-style: normal;
+    color: #6B1F2A;
+  }
+
+  .s1 .body-text {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 32px;
+  }
+
+  .s1 .divider {
+    width: 40px;
+    height: 2px;
+    background: #6B1F2A;
+    margin-bottom: 32px;
+  }
+
+  .s1 .swipe-cta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .s1 .swipe-cta::after {
+    content: '↑';
+    font-size: 18px;
+    color: #fff;
+    animation: bounce 1.6s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .s1 .brand-mark {
+    font-weight: 900;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* ─── STORY 2: The Proof ─── */
+  .s2 {
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 52px 36px 48px;
+  }
+
+  .s2 .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .s2 .top-tag {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #0A0A0A;
+    opacity: 0.35;
+  }
+
+  .s2 .brand-mark {
+    font-weight: 900;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #6B1F2A;
+  }
+
+  .s2 .number-block {
+    text-align: center;
+  }
+
+  .s2 .number {
+    font-weight: 900;
+    font-size: 88px;
+    line-height: 1;
+    color: #0A0A0A;
+    letter-spacing: -0.04em;
+  }
+
+  .s2 .number span {
+    color: #6B1F2A;
+  }
+
+  .s2 .number-sub {
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.4);
+    margin-top: 6px;
+  }
+
+  .s2 .arrow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .s2 .stat {
+    text-align: center;
+  }
+
+  .s2 .stat-num {
+    font-weight: 900;
+    font-size: 28px;
+    color: #0A0A0A;
+    letter-spacing: -0.02em;
+  }
+
+  .s2 .stat-label {
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.35);
+    margin-top: 4px;
+  }
+
+  .s2 .arrow {
+    font-size: 24px;
+    color: #6B1F2A;
+    font-weight: 900;
+  }
+
+  .s2 .headline {
+    font-weight: 900;
+    font-size: 30px;
+    line-height: 1.15;
+    color: #0A0A0A;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .s2 .headline em {
+    font-style: normal;
+    color: #6B1F2A;
+  }
+
+  .s2 .body-text {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: rgba(0,0,0,0.55);
+    margin-bottom: 28px;
+  }
+
+  .s2 .bc-tag {
+    display: inline-block;
+    border: 1.5px solid #0A0A0A;
+    color: #0A0A0A;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 2px;
+  }
+
+  .s2 .swipe-cta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.3);
+    justify-content: center;
+  }
+
+  .s2 .swipe-cta::after {
+    content: '↑';
+    font-size: 18px;
+    color: #0A0A0A;
+  }
+
+  /* ─── STORY 3: The Poll ─── */
+  .s3 {
+    background: #0A0A0A;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 52px 36px 48px;
+  }
+
+  .s3 .top-tag {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .s3 .brand-mark {
+    font-weight: 900;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+  }
+
+  .s3 .question-block {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px 0;
+  }
+
+  .s3 .question-label {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #6B1F2A;
+    margin-bottom: 20px;
+  }
+
+  .s3 .question {
+    font-weight: 900;
+    font-size: 34px;
+    line-height: 1.1;
+    color: #FFFFFF;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  .s3 .question em {
+    font-style: normal;
+    color: #6B1F2A;
+  }
+
+  .s3 .question-sub {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 36px;
+  }
+
+  .s3 .poll-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .s3 .poll-title {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 16px;
+  }
+
+  .s3 .poll-options {
+    display: flex;
+    gap: 12px;
+  }
+
+  .s3 .poll-option {
+    flex: 1;
+    padding: 14px 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .s3 .poll-option.yes {
+    background: #6B1F2A;
+    color: #fff;
+  }
+
+  .s3 .poll-option.no {
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .s3 .poll-box-2 {
+    background: rgba(107,31,42,0.12);
+    border: 1px solid rgba(107,31,42,0.3);
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+
+  .s3 .poll-options-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .s3 .poll-option-sm {
+    padding: 12px 8px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .s3 .poll-option-sm.hl {
+    color: #fff;
+    background: rgba(107,31,42,0.35);
+    border-color: #6B1F2A;
+  }
+
+  .s3 .bottom-note {
+    font-weight: 400;
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  /* layout wrapper */
+  .story-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>BrainCodes™ — Story Templates · Media Training</h1>
+
+<!-- STORY 1 -->
+<div class="story-wrapper">
+  <div class="label">Story 1 — De Reveal</div>
+  <div class="story s1">
+    <div>
+      <div class="top-tag">Niemand weet dit</div>
+    </div>
+
+    <div>
+      <div class="badge">Mijn verborgen achtergrond</div>
+      <div class="headline">
+        Mijn carrière<br>begon bij <em>één van<br>de grootste<br>PR-bureaus<br>ter wereld.</em>
+      </div>
+      <div class="divider"></div>
+      <div class="body-text">
+        Ik leerde daar hoe het media­spel écht gespeeld wordt.<br><br>
+        Niet wat ze jou vertellen. Wat er werkelijk werkt.
+      </div>
+    </div>
+
+    <div>
+      <div class="swipe-cta">Swipe omhoog</div>
+      <div style="margin-top:16px" class="brand-mark">BRAINCODES™ by Meghan Eckenbach</div>
+    </div>
+  </div>
+</div>
+
+<!-- STORY 2 -->
+<div class="story-wrapper">
+  <div class="label">Story 2 — De Bewijs</div>
+  <div class="story s2">
+    <div class="top-bar">
+      <div class="top-tag">Wat ik daarna deed</div>
+      <div class="brand-mark">BC™</div>
+    </div>
+
+    <div class="number-block">
+      <div class="number">7K<span>+</span></div>
+      <div class="number-sub">volgers in 3 maanden</div>
+    </div>
+
+    <div class="arrow-row">
+      <div class="stat">
+        <div class="stat-num">350</div>
+        <div class="stat-label">start</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="stat">
+        <div class="stat-num">7K+</div>
+        <div class="stat-label">3 maanden</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="stat">
+        <div class="stat-num">M+</div>
+        <div class="stat-label">views</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="headline">
+        Zodra ik <em>BrainCodes</em><br>toepaste op content<br>ging alles door het dak.
+      </div>
+      <div class="body-text">
+        Niet meer gokken. Niet meer trends kopiëren.<br>
+        Gewoon begrijpen hoe het brein van je volger reageert — en daar op inspelen.
+      </div>
+      <div class="bc-tag">Breincodes · Aandacht · Algoritme</div>
+    </div>
+
+    <div class="swipe-cta">Volgende story</div>
+  </div>
+</div>
+
+<!-- STORY 3 -->
+<div class="story-wrapper">
+  <div class="label">Story 3 — De Poll</div>
+  <div class="story s3">
+    <div>
+      <div class="top-tag">Ik overweeg iets...</div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-label">Vertel mij eerlijk</div>
+      <div class="question">
+        Zou jij de <em>media­training</em><br>willen hebben?
+      </div>
+      <div class="question-sub">
+        Waarin ik het spel van aandacht uitleg — vanuit de breincodes waarmee we allemaal leven. Zodat jij het zelf toepast.
+      </div>
+
+      <div class="poll-box">
+        <div class="poll-title">Poll 1 — Heb jij interesse?</div>
+        <div class="poll-options">
+          <div class="poll-option yes">JA, doe het!</div>
+          <div class="poll-option no">Nee, niet voor mij</div>
+        </div>
+      </div>
+
+      <div class="poll-box-2">
+        <div class="poll-title">Poll 2 — Als ik het maak, wat is jouw investerings­bereidheid?</div>
+        <div class="poll-options-4">
+          <div class="poll-option-sm">€0–97</div>
+          <div class="poll-option-sm hl">€97–197</div>
+          <div class="poll-option-sm hl">€197–297</div>
+          <div class="poll-option-sm">€297+</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-note">BRAINCODES™ by Meghan Eckenbach</div>
+  </div>
+</div>
+
+</body>
+</html>
