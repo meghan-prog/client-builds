@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Attention Codes™ — BrainCodes by Meghan Eckenbach</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0A0A0A;
+    --white: #FFFFFF;
+    --burgundy: #6B1F2A;
+    --grey: #888888;
+    --light: #F5F5F5;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--black);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-brand {
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .nav-brand span { color: var(--burgundy); }
+
+  .nav-cta {
+    background: var(--burgundy);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+  }
+
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 100px 40px; }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .container-wide {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--black);
+    padding: 180px 40px 120px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-tag {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--burgundy);
+    margin-bottom: 32px;
+  }
+
+  .hero h1 {
+    font-weight: 900;
+    font-size: clamp(42px, 7vw, 80px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    margin-bottom: 32px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--burgundy);
+  }
+
+  .hero-sub {
+    font-size: 19px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.6);
+    max-width: 560px;
+    margin-bottom: 48px;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--white);
+    color: var(--black);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 18px 36px;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: var(--burgundy);
+    color: var(--white);
+  }
+
+  .btn-burgundy {
+    display: inline-block;
+    background: var(--burgundy);
+    color: var(--white);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 18px 36px;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+  }
+
+  .btn-burgundy:hover { opacity: 0.85; }
+
+  .price-note {
+    margin-top: 16px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── PROBLEM ─── */
+  .problem {
+    background: var(--white);
+  }
+
+  .section-tag {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--burgundy);
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+
+  h2 em {
+    font-style: normal;
+    color: var(--burgundy);
+  }
+
+  p {
+    margin-bottom: 20px;
+    color: rgba(0,0,0,0.75);
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  .divider {
+    width: 40px;
+    height: 3px;
+    background: var(--burgundy);
+    margin: 48px 0;
+  }
+
+  /* ─── PROOF ─── */
+  .proof {
+    background: var(--black);
+  }
+
+  .proof h2 { color: var(--white); }
+
+  .proof p { color: rgba(255,255,255,0.6); }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin: 60px 0;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .stat-box {
+    padding: 40px 32px;
+    background: rgba(255,255,255,0.03);
+    text-align: center;
+  }
+
+  .stat-number {
+    font-weight: 900;
+    font-size: 52px;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-number span { color: var(--burgundy); }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .proof-quote {
+    border-left: 3px solid var(--burgundy);
+    padding-left: 32px;
+    margin: 48px 0;
+  }
+
+  .proof-quote p {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--white);
+    font-style: italic;
+  }
+
+  /* ─── INTRO ─── */
+  .intro { background: var(--light); }
+
+  /* ─── PRODUCT ─── */
+  .product { background: var(--white); }
+
+  .product-header {
+    border-top: 3px solid var(--black);
+    padding-top: 48px;
+    margin-bottom: 80px;
+  }
+
+  .product-header h2 {
+    font-size: clamp(36px, 5vw, 60px);
+  }
+
+  .codes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--black);
+    border: 2px solid var(--black);
+    margin: 60px 0;
+  }
+
+  .code-item {
+    background: var(--white);
+    padding: 32px;
+    position: relative;
+  }
+
+  .code-number {
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--burgundy);
+    margin-bottom: 12px;
+  }
+
+  .code-name {
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+
+  .code-desc {
+    font-size: 14px;
+    color: var(--grey);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .module-includes {
+    background: var(--black);
+    padding: 48px;
+    margin: 48px 0;
+    border-radius: 4px;
+  }
+
+  .module-includes h3 {
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 32px;
+  }
+
+  .includes-list {
+    list-style: none;
+    display: grid;
+    gap: 16px;
+  }
+
+  .includes-list li {
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 500;
+    padding-left: 24px;
+    position: relative;
+  }
+
+  .includes-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--burgundy);
+    font-weight: 900;
+  }
+
+  /* ─── BONUSES ─── */
+  .bonuses { background: var(--light); }
+
+  .bonus-item {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding: 48px 0;
+  }
+
+  .bonus-item:last-child { border-bottom: 1px solid rgba(0,0,0,0.1); }
+
+  .bonus-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    gap: 24px;
+  }
+
+  .bonus-number {
+    font-weight: 900;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--burgundy);
+    margin-bottom: 8px;
+  }
+
+  .bonus-name {
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: var(--black);
+  }
+
+  .bonus-value {
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: rgba(0,0,0,0.3);
+    white-space: nowrap;
+    text-decoration: line-through;
+  }
+
+  /* ─── FOR YOU ─── */
+  .for-you { background: var(--white); }
+
+  .check-list {
+    list-style: none;
+    display: grid;
+    gap: 20px;
+    margin: 40px 0;
+  }
+
+  .check-list li {
+    font-size: 17px;
+    padding-left: 28px;
+    position: relative;
+    color: var(--black);
+  }
+
+  .check-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--burgundy);
+    font-weight: 900;
+  }
+
+  .not-list li::before {
+    content: '✗';
+    color: rgba(0,0,0,0.25);
+  }
+
+  .not-list li {
+    color: rgba(0,0,0,0.4);
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin: 48px 0;
+  }
+
+  .col-label {
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    color: var(--black);
+  }
+
+  /* ─── PRICING ─── */
+  .pricing {
+    background: var(--black);
+  }
+
+  .pricing h2 { color: var(--white); }
+  .pricing p { color: rgba(255,255,255,0.6); }
+
+  .price-box {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 60px;
+    margin: 60px 0;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .price-tag {
+    font-weight: 900;
+    font-size: 80px;
+    letter-spacing: -0.04em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .price-tag span { color: var(--burgundy); }
+
+  .price-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+
+  .value-stack {
+    margin: 40px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 40px;
+  }
+
+  .value-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 15px;
+  }
+
+  .value-row .item { color: rgba(255,255,255,0.6); }
+  .value-row .val { color: rgba(255,255,255,0.3); text-decoration: line-through; }
+
+  .value-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+    font-weight: 900;
+  }
+
+  .value-total .item { color: var(--white); font-size: 16px; }
+  .value-total .val { color: rgba(255,255,255,0.3); font-size: 16px; text-decoration: line-through; }
+
+  .scarcity {
+    margin-top: 24px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+
+  /* ─── CLOSING ─── */
+  .closing { background: var(--white); }
+
+  .closing-big {
+    font-weight: 900;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+
+  .closing-big em {
+    font-style: normal;
+    color: var(--burgundy);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--black);
+    padding: 40px;
+    text-align: center;
+  }
+
+  .footer-brand {
+    font-weight: 900;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    section { padding: 80px 24px; }
+    nav { padding: 14px 24px; }
+    .hero { padding: 140px 24px 100px; }
+    .stats-row { grid-template-columns: 1fr; }
+    .codes-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; gap: 40px; }
+    .price-box { padding: 40px 28px; }
+    .price-tag { font-size: 56px; }
+    .module-includes { padding: 32px 24px; }
+    .bonus-header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">BRAIN<span>CODES</span>™</div>
+  <a href="#pricing" class="nav-cta">Ja, ik doe mee — €77</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag">The Attention Codes™ · Masterclass</div>
+    <h1>Je maakt al<br>maanden content.<br>En je publiek<br>groeit <em>niet.</em></h1>
+    <p class="hero-sub">Dat is niet omdat je saai bent. Niet omdat je niche te klein is. Niet omdat je niet consistent genoeg post. Het is omdat niemand je heeft verteld hoe het brein van je kijker écht werkt.</p>
+    <a href="#pricing" class="btn-primary">Ik wil leren hoe het brein werkt — €77</a>
+    <p class="price-note">Presale prijs · gaat omhoog bij lancering</p>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="container">
+    <div class="section-tag">Het echte probleem</div>
+    <h2>Je kent het gevoel.</h2>
+    <p>Je hebt uren in een post gestoken. De tekst herschreven. De thumbnail goed gemaakt. Gepost op het "beste moment." En dan: veertig likes. Voornamelijk van mensen die je al kennen.</p>
+    <p>Terwijl iemand anders een wazige video vanuit de auto opneemt en vijftigduizend views haalt.</p>
+    <p>Je vraagt jezelf af wat zij weet dat jij niet weet.</p>
+    <div class="divider"></div>
+    <p>Het antwoord is geen geheim format. Geen trending sound. Geen magische posting-tijd.</p>
+    <p>Het is dit: zij activeert onbewust iets in het brein van haar kijker dat jij nog niet kent. Een neurologische code die bepaalt of iemand stopt of doorscrollt. Of iemand kijkt of wegklipt. Of iemand volgt of vergeet.</p>
+    <p><strong>Die codes bestaan. Ze zijn biologisch. Ze werken op iedereen. Altijd. En ze zijn te leren.</strong></p>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section class="proof">
+  <div class="container">
+    <div class="section-tag" style="color: rgba(107,31,42,0.8)">Bewijs dat het werkt</div>
+    <h2>Ik leerde het spel van binnenuit.</h2>
+    <p>Voordat ik ondernemer werd werkte ik bij één van de grootste media- en PR-bureaus ter wereld. Daar leerde ik iets wat me nooit meer heeft losgelaten: aandacht is geen toeval. Het is neurobiologie.</p>
+    <p>Jaren later paste ik die kennis bewust toe op mijn eigen Instagram.</p>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-number">38<span>K</span></div>
+        <div class="stat-label">Views start</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" style="color: var(--burgundy)">→</div>
+        <div class="stat-label">2,5 maanden later</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">1,2<span>M</span></div>
+        <div class="stat-label">Views resultaat</div>
+      </div>
+    </div>
+
+    <div class="proof-quote">
+      <p>"Niet door meer te posten. Door te begrijpen wat er in het brein van mijn kijker gebeurde."</p>
+    </div>
+
+    <p>Dat systeem geef ik je nu.</p>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="intro">
+  <div class="container">
+    <div class="section-tag">Waarom hooks en scripts je niet redden</div>
+    <h2>Iedereen leert je <em>wat</em> je moet zeggen. Niemand leert je <em>waarom</em> het werkt.</h2>
+    <p>De afgelopen jaren heeft de hele contentmarkt je hetzelfde verteld: schrijf betere hooks. Post consistenter. Gebruik deze template. Kopieer dit format.</p>
+    <p>Je hebt het geprobeerd. Misschien werkte het even. Daarna niet meer.</p>
+    <p>Hooks en scripts zijn symptoombestrijding. Ze vertellen je wat je moet zeggen maar niet waarom het werkt. En wat je niet begrijpt, kun je niet herhalen. Kun je niet aanpassen. Kun je niet van jou maken.</p>
+    <p><strong>Wie het waarom kent heeft nooit meer een script nodig.</strong></p>
+  </div>
+</section>
+
+<!-- PRODUCT -->
+<section class="product">
+  <div class="container-wide">
+    <div class="container">
+      <div class="product-header">
+        <div class="section-tag">The Attention Codes™</div>
+        <h2>De 7 neurologische codes die bepalen of jouw content aandacht krijgt.</h2>
+        <p>Een vooropgenomen masterclass. Zeven modules. Elk één code. Per module leer je de wetenschap, zie je echte analyses, ontdek je wat er misging bij content die faalde — en hoe diezelfde content scoort als de juiste code erop zit.</p>
+      </div>
+    </div>
+
+    <div class="codes-grid">
+      <div class="code-item">
+        <div class="code-number">Code 01</div>
+        <div class="code-name">Verwachtingsbreuk</div>
+        <p class="code-desc">Het brein voorspelt constant. Zodra de realiteit afwijkt van de voorspelling, verplicht het zich tot aandacht.</p>
+      </div>
+      <div class="code-item">
+        <div class="code-number">Code 02</div>
+        <div class="code-name">Identiteit</div>
+        <p class="code-desc">Het brein evalueert in milliseconden: hoor ik bij deze groep of niet? Die vraag stopt elke scroll.</p>
+      </div>
+      <div class="code-item">
+        <div class="code-number">Code 03</div>
+        <div class="code-name">Vergelijking</div>
+        <p class="code-desc">Het brein is gebouwd om verschillen te detecteren. Links vs rechts. Vroeger vs nu. Het kan er niet omheen.</p>
+      </div>
+      <div class="code-item">
+        <div class="code-number">Code 04</div>
+        <div class="code-name">Verborgen Waarheid</div>
+        <p class="code-desc">"Dit weet jij nog niet" activeert twee codes tegelijk: relevantie én anticipatie. Een open loop die dwingt tot kijken.</p>
+      </div>
+      <div class="code-item">
+        <div class="code-number">Code 05</div>
+        <div class="code-name">Groepsvorming</div>
+        <p class="code-desc">De oerdrang om erbij te horen is sterker dan logica. Content die een tribe definieert zorgt dat mensen het doorsturen.</p>
+      </div>
+      <div class="code-item">
+        <div class="code-number">Code 06</div>
+        <div class="code-name">Nieuwsgierigheid</div>
+        <p class="code-desc">Een open loop die het brein niet kan sluiten zonder verder te kijken. Een onafgemaakte gedachte voelt als lichte stress.</p>
+      </div>
+      <div class="code-item" style="grid-column: 1 / -1; border-top: 2px solid var(--burgundy);">
+        <div class="code-number">Code 07</div>
+        <div class="code-name">Transformatie</div>
+        <p class="code-desc">Voor vs na is het meest primitieve verhaalformat dat bestaat. Het brein herkent verandering als overlevingsinformatie. Altijd.</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="module-includes">
+        <h3>Elke module bevat</h3>
+        <ul class="includes-list">
+          <li>De neurologische verklaring — waarom het brein hier niet omheen kan</li>
+          <li>Echte reel-analyses — wat werkte en waarom</li>
+          <li>Voor en na — dezelfde content herschreven met de juiste code</li>
+          <li>Fill-in-the-blank format — direct toepasbaar op jouw niche</li>
+          <li>AI-prompt — zodat je nooit meer voor een leeg scherm zit</li>
+        </ul>
+      </div>
+
+      <a href="#pricing" class="btn-burgundy">Geef mij het waarom — €77</a>
+    </div>
+  </div>
+</section>
+
+<!-- BONUSES -->
+<section class="bonuses">
+  <div class="container">
+    <div class="section-tag">Zit er ook bij</div>
+    <h2>Drie bonussen die het compleet maken.</h2>
+
+    <div class="bonus-item">
+      <div class="bonus-number">Bonus 01</div>
+      <div class="bonus-header">
+        <div class="bonus-name">De Attention Audit</div>
+        <div class="bonus-value">€47</div>
+      </div>
+      <p>Breng je bestaande content mee. Met dit werkboek analyseer je in tien minuten welke codes je al gebruikt en welke je mist. Je ziet direct waarom sommige posts wel werkten en andere niet. Geen giswerk meer, nooit meer.</p>
+    </div>
+
+    <div class="bonus-item">
+      <div class="bonus-number">Bonus 02</div>
+      <div class="bonus-header">
+        <div class="bonus-name">50 Openingszinnen Die Stoppen</div>
+        <div class="bonus-value">€37</div>
+      </div>
+      <p>Vijftig bewezen openingszinnen gesorteerd per code. Niet om te kopiëren maar om te begrijpen. Zodat je daarna je eigen versie schrijft die past bij jouw stem, jouw doelgroep, jouw aanbod.</p>
+    </div>
+
+    <div class="bonus-item">
+      <div class="bonus-number">Bonus 03</div>
+      <div class="bonus-header">
+        <div class="bonus-name">Achter de Schermen: Hoe Ik Dit Heb Gelanceerd</div>
+        <div class="bonus-value">€97</div>
+      </div>
+      <p>De exacte story-reeks, de teksten en de strategie waarmee ik The Attention Codes heb gelanceerd. Welke codes ik gebruikte, waarom in die volgorde en wat het resultaat was. Jouw blauwdruk voor je eigen lancering.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOR YOU -->
+<section class="for-you">
+  <div class="container">
+    <div class="section-tag">Is dit voor jou?</div>
+    <h2>Dit is voor jou als.</h2>
+
+    <div class="two-col">
+      <div>
+        <div class="col-label">Ja, dit ben ik</div>
+        <ul class="check-list">
+          <li>Je maakt al een tijdje content maar amper nieuwe mensen bereikt</li>
+          <li>Je weet dat je iets waardevols hebt maar het gevoel hebt dat je schreeuwt in een lege ruimte</li>
+          <li>Je klaar bent met gokken en wil begrijpen wat er écht achter zit</li>
+          <li>Je content wil maken die past bij wie jij bent — niet bij een trend</li>
+        </ul>
+      </div>
+      <div>
+        <div class="col-label">Niet voor jou</div>
+        <ul class="check-list not-list">
+          <li>Je op zoek bent naar een trucje dat je niet hoeft te begrijpen</li>
+          <li>Je denkt dat meer posten het antwoord is</li>
+          <li>Je niet bereid bent 90 minuten te investeren om voorgoed anders te kijken</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-tag" style="color: rgba(107,31,42,0.8)">De investering</div>
+    <h2>Eén keer betalen.<br>Voor altijd begrijpen.</h2>
+
+    <div class="price-box">
+      <div class="price-tag">€<span>77</span></div>
+      <div class="price-sub">Presale · Prijs gaat omhoog bij lancering</div>
+
+      <a href="#" class="btn-primary">Ja — The Attention Codes voor €77</a>
+
+      <div class="value-stack">
+        <div class="value-row">
+          <span class="item">The Attention Codes™ — 7 modules</span>
+          <span class="val">€127</span>
+        </div>
+        <div class="value-row">
+          <span class="item">Bonus 01 — De Attention Audit</span>
+          <span class="val">€47</span>
+        </div>
+        <div class="value-row">
+          <span class="item">Bonus 02 — 50 Openingszinnen</span>
+          <span class="val">€37</span>
+        </div>
+        <div class="value-row">
+          <span class="item">Bonus 03 — Lanceringsreeks</span>
+          <span class="val">€97</span>
+        </div>
+        <div class="value-total">
+          <span class="item">Totale waarde</span>
+          <span class="val">€308</span>
+        </div>
+      </div>
+
+      <a href="#" class="btn-primary" style="width: 100%; text-align: center; display: block;">Ja — The Attention Codes voor €77</a>
+      <p class="scarcity">Levenslange toegang · Direct beschikbaar na lancering · Prijs gaat omhoog</p>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <div class="container">
+    <p class="closing-big">Je bent deze pagina niet <em>toevallig</em> tegengekomen.</p>
+    <p>Iets in mijn content zorgde dat jij stopte. Las. Doorklikte. En nu hier bent.</p>
+    <p>Dat was geen geluk.</p>
+    <p>Dat was een code.</p>
+    <p>Je hebt ze al zien werken op jezelf.</p>
+    <p>De vraag is alleen of jij ze ook gaat gebruiken.</p>
+    <div class="divider"></div>
+    <a href="#pricing" class="btn-burgundy">Ja — The Attention Codes voor €77</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-brand">The Attention Codes™ · BrainCodes™ by Meghan Eckenbach · breincodes.nl</p>
+</footer>
+
+</body>
+</html>
