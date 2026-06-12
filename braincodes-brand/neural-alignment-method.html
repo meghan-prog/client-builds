@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BrainCodes™ — De Neural Alignment Method</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #F0EDE8;
+    font-family: 'Inter', sans-serif;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .post {
+    width: 1080px;
+    max-width: 100%;
+    aspect-ratio: 1080 / 1350;
+    background: #0A0A0A;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 70px;
+  }
+
+  /* subtle background texture */
+  .post::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -10%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(circle, rgba(107,31,42,0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .date-tag {
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 50px;
+    z-index: 1;
+  }
+
+  .title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 48px;
+    color: #FFFFFF;
+    text-align: center;
+    margin-bottom: 14px;
+    z-index: 1;
+  }
+
+  .title em {
+    color: #B5495B;
+  }
+
+  .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 19px;
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    margin-bottom: 50px;
+    max-width: 760px;
+    z-index: 1;
+  }
+
+  /* venn diagram */
+  .venn {
+    position: relative;
+    width: 760px;
+    height: 560px;
+    margin-bottom: 50px;
+    z-index: 1;
+  }
+
+  .circle {
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    mix-blend-mode: normal;
+  }
+
+  .circle.brein {
+    top: 0;
+    left: 0;
+    opacity: 0.97;
+  }
+
+  .circle.identiteit {
+    top: 0;
+    right: 0;
+    opacity: 0.97;
+  }
+
+  .circle.vrijheid {
+    bottom: 0;
+    left: 190px;
+    opacity: 0.97;
+  }
+
+  .circle-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 18px;
+  }
+
+  .circle-label {
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #0A0A0A;
+    margin-bottom: 8px;
+  }
+
+  .circle-sub {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.5;
+    color: rgba(0,0,0,0.55);
+    max-width: 220px;
+  }
+
+  /* center overlap mark */
+  .center-mark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    height: 90px;
+    background: #6B1F2A;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 0 0 8px #0A0A0A;
+  }
+
+  .center-mark svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* statement block */
+  .statement {
+    text-align: center;
+    z-index: 1;
+    margin-bottom: 36px;
+  }
+
+  .statement .line1 {
+    font-weight: 700;
+    font-size: 30px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.35;
+    margin-bottom: 14px;
+  }
+
+  .statement .line2 {
+    font-weight: 900;
+    font-size: 34px;
+    color: #FFFFFF;
+    line-height: 1.3;
+  }
+
+  .statement .line2 em {
+    font-style: normal;
+    color: #B5495B;
+  }
+
+  /* tagline */
+  .tagline {
+    font-weight: 900;
+    font-size: 36px;
+    letter-spacing: 0.02em;
+    color: #FFFFFF;
+    text-align: center;
+    border: 2px solid #6B1F2A;
+    padding: 18px 40px;
+    border-radius: 4px;
+    z-index: 1;
+    margin-bottom: auto;
+  }
+
+  /* footer row */
+  .footer-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    z-index: 1;
+  }
+
+  .brand-mark {
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+  }
+
+  .arrow {
+    font-size: 30px;
+    color: rgba(255,255,255,0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="post">
+  <div class="date-tag">Donderdag 25 juni om 20:00</div>
+
+  <div class="title">De <em>Neural Alignment</em> Method</div>
+  <div class="subtitle">3 lagen. 1 systeem. Geen stappenplan, maar een spiraal. Iedere keer dieper.</div>
+
+  <div class="venn">
+    <div class="circle brein">
+      <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#6B1F2A" stroke-width="1.5">
+        <path d="M9.5 2A3.5 3.5 0 0 0 6 5.5v.6A3 3 0 0 0 4 9v1a3 3 0 0 0 1 2.236V14a4 4 0 0 0 4 4h.5"/>
+        <path d="M14.5 2A3.5 3.5 0 0 1 18 5.5v.6A3 3 0 0 1 20 9v1a3 3 0 0 1-1 2.236V14a4 4 0 0 1-4 4h-.5"/>
+        <path d="M9.5 2v18M14.5 2v18"/>
+      </svg>
+      <div class="circle-label">Brein</div>
+      <div class="circle-sub">(voel eerst welk patroon je brein nu aanstuurt)</div>
+    </div>
+
+    <div class="circle identiteit">
+      <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#6B1F2A" stroke-width="1.5">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/>
+        <path d="M12 1v2M3 4l1.5 1.5M21 4l-1.5 1.5"/>
+      </svg>
+      <div class="circle-label">Identiteit</div>
+      <div class="circle-sub">(zie dan welke versie van jezelf je nog vasthoudt)</div>
+    </div>
+
+    <div class="circle vrijheid">
+      <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#6B1F2A" stroke-width="1.5">
+        <path d="M12 2v6M12 22v-6M2 12h6M22 12h-6"/>
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M5 5l3 3M19 19l-3-3M5 19l3-3M19 5l-3 3"/>
+      </svg>
+      <div class="circle-label">Autonomie</div>
+      <div class="circle-sub">(bouw van daaruit een leven dat echt van jou is)</div>
+    </div>
+
+    <div class="center-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2">
+        <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="statement">
+    <div class="line1">De meeste programma's beginnen bij gedrag.</div>
+    <div class="line2">Ik begin altijd bij <em>het brein.</em></div>
+  </div>
+
+  <div class="tagline">Herprogrammeer je brein. Leef als wie je werkelijk bent.</div>
+
+  <div class="footer-row">
+    <div class="brand-mark">BrainCodes™</div>
+    <div class="arrow">→</div>
+  </div>
+</div>
+
+</body>
+</html>
