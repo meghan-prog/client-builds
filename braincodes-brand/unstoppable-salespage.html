@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNSTOPPABLE — Meghan Eckenbach</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0A0A0A;
+    --white: #FFFFFF;
+    --red: #6B1F2A;
+    --red-light: #8B2535;
+    --grey: rgba(255,255,255,0.55);
+    --grey-dark: rgba(255,255,255,0.15);
+  }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  nav .logo {
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  nav .logo span { color: var(--red); }
+
+  nav a.nav-cta {
+    background: var(--red);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+
+  nav a.nav-cta:hover { background: var(--red-light); }
+
+  /* SECTIONS */
+  section {
+    width: 100%;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 100px 40px;
+  }
+
+  section.full {
+    max-width: 100%;
+    padding: 100px 0;
+  }
+
+  section.full .inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* HERO */
+  .hero {
+    padding-top: 180px;
+    padding-bottom: 120px;
+    text-align: center;
+  }
+
+  .hero .pre-tag {
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 28px;
+  }
+
+  .hero h1 {
+    font-weight: 900;
+    font-size: clamp(56px, 8vw, 88px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 32px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--red);
+  }
+
+  .hero .sub {
+    font-size: 20px;
+    line-height: 1.6;
+    color: var(--grey);
+    max-width: 640px;
+    margin: 0 auto 48px;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--red);
+    color: var(--white);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 20px 44px;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--red-light); }
+
+  .btn-sub {
+    display: block;
+    margin-top: 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+    font-style: italic;
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 48px;
+    height: 2px;
+    background: var(--red);
+    margin: 0 auto 48px;
+  }
+
+  /* QUOTE BLOCKS */
+  .quote-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 64px;
+  }
+
+  .quote-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 4px;
+    padding: 36px;
+  }
+
+  .quote-card p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  .quote-card .author {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--white);
+  }
+
+  .quote-card .role {
+    font-size: 12px;
+    color: var(--red);
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+  }
+
+  /* SECTION HEADERS */
+  h2 {
+    font-weight: 900;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+
+  h2 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--red);
+  }
+
+  h3 {
+    font-weight: 900;
+    font-size: clamp(22px, 3vw, 32px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+
+  h3 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--red);
+  }
+
+  p {
+    color: var(--grey);
+    margin-bottom: 20px;
+  }
+
+  p strong {
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  /* BELIEF BLOCKS */
+  .belief-blocks {
+    margin: 48px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .belief {
+    border-left: 3px solid var(--red);
+    padding: 20px 28px;
+    background: rgba(107,31,42,0.08);
+    font-size: 18px;
+    color: rgba(255,255,255,0.7);
+    font-style: italic;
+  }
+
+  /* PATTERN LIST */
+  .pattern-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 48px 0;
+  }
+
+  .pattern-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 4px;
+  }
+
+  .pattern-item .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .pattern-item span {
+    font-size: 15px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+  }
+
+  /* RESULT LIST */
+  .result-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 48px 0;
+  }
+
+  .result-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .result-item .check {
+    font-size: 20px;
+    color: var(--red);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .result-item .text strong {
+    display: block;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .result-item .text span {
+    font-size: 15px;
+    color: var(--grey);
+  }
+
+  /* METHOD BOX */
+  .method-box {
+    background: rgba(107,31,42,0.1);
+    border: 1px solid rgba(107,31,42,0.3);
+    border-radius: 8px;
+    padding: 56px;
+    margin: 48px 0;
+    text-align: center;
+  }
+
+  .method-box .method-tag {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+  }
+
+  .method-box h3 {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+
+  .method-box p {
+    max-width: 600px;
+    margin: 0 auto 32px;
+    font-size: 16px;
+  }
+
+  .method-pillars {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+    text-align: left;
+  }
+
+  .pillar {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 4px;
+    padding: 28px;
+  }
+
+  .pillar .num {
+    font-weight: 900;
+    font-size: 40px;
+    color: rgba(107,31,42,0.4);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .pillar .pillar-title {
+    font-weight: 900;
+    font-size: 16px;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .pillar p {
+    font-size: 14px;
+    color: var(--grey);
+    margin: 0;
+  }
+
+  /* PRICING */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin: 48px 0;
+    align-items: start;
+  }
+
+  .pricing-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 40px 32px;
+  }
+
+  .pricing-card.featured {
+    background: rgba(107,31,42,0.12);
+    border-color: rgba(107,31,42,0.4);
+  }
+
+  .pricing-card .pack-tag {
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+  }
+
+  .pricing-card .pack-name {
+    font-weight: 900;
+    font-size: 28px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .pricing-card .pack-sub {
+    font-size: 14px;
+    color: var(--grey);
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+
+  .pricing-card .price {
+    font-weight: 900;
+    font-size: 42px;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+
+  .pricing-card .price-note {
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 36px;
+  }
+
+  .pricing-card ul {
+    list-style: none;
+    margin-bottom: 40px;
+  }
+
+  .pricing-card ul li {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .pricing-card ul li::before {
+    content: '✓';
+    color: var(--red);
+    font-weight: 900;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .btn-card {
+    display: block;
+    text-align: center;
+    background: var(--red);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 16px;
+    text-decoration: none;
+    border-radius: 2px;
+  }
+
+  .btn-card.outline {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* STORY BLOCK */
+  .story-block {
+    border-left: 3px solid var(--red);
+    padding: 40px 48px;
+    margin: 48px 0;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .story-block blockquote {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.35;
+    color: var(--white);
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  .story-block p {
+    font-size: 16px;
+  }
+
+  .story-block .attribution {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--white);
+    margin-top: 24px;
+    margin-bottom: 0;
+  }
+
+  .story-block .attribution span {
+    font-weight: 400;
+    color: var(--red);
+  }
+
+  /* FAQ */
+  .faq-list {
+    margin: 48px 0;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 32px 0;
+  }
+
+  .faq-item h4 {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+
+  .faq-item p {
+    font-size: 15px;
+    margin: 0;
+  }
+
+  /* NOT FOR / IS FOR */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 48px 0;
+  }
+
+  .col-box {
+    padding: 36px;
+    border-radius: 4px;
+  }
+
+  .col-box.not {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .col-box.is {
+    background: rgba(107,31,42,0.1);
+    border: 1px solid rgba(107,31,42,0.25);
+  }
+
+  .col-box h4 {
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    color: var(--grey);
+  }
+
+  .col-box.is h4 { color: var(--red); }
+
+  .col-box ul {
+    list-style: none;
+  }
+
+  .col-box ul li {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    gap: 12px;
+  }
+
+  .col-box ul li::before {
+    content: '×';
+    color: rgba(255,255,255,0.25);
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  .col-box.is ul li::before {
+    content: '✓';
+    color: var(--red);
+  }
+
+  /* CLOSING */
+  .closing {
+    text-align: center;
+    padding: 120px 40px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .closing h2 {
+    font-size: clamp(36px, 6vw, 64px);
+    margin-bottom: 16px;
+  }
+
+  .closing h3 {
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 400;
+    color: var(--grey);
+    margin-bottom: 48px;
+  }
+
+  /* STAT ROW */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 80px 0 0;
+  }
+
+  .stat-box {
+    background: var(--black);
+    padding: 40px;
+    text-align: center;
+  }
+
+  .stat-box .num {
+    font-weight: 900;
+    font-size: 48px;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-box .num span { color: var(--red); }
+
+  .stat-box .label {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 40px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    section { padding: 80px 20px; }
+    .quote-grid, .pattern-list, .pricing-grid, .two-col, .method-pillars, .stat-row { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Meghan Eckenbach <span>™</span></div>
+  <a href="#matchcall" class="nav-cta">Plan je matchcall</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="pre-tag">Neural Alignment™ by Meghan Eckenbach</div>
+  <h1>UN<em>STOP</em><br>PABLE</h1>
+  <p class="sub">Voor hoogopgeleide vrouwen die alles hebben opgebouwd, maar ergens vasthouden. Niet aan hun strategie. Aan hun brein.</p>
+  <a href="#matchcall" class="btn-primary">Plan je matchcall</a>
+  <span class="btn-sub">Gratis. Zonder verplichtingen.</span>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="num">12<span>+</span></div>
+      <div class="label">Breincodes per vrouw</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">30<span>–90</span></div>
+      <div class="label">Dagen voor een nieuw patroon</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">1<span>x</span></div>
+      <div class="label">Echt leven. Bouw het nu.</div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTES 1 -->
+<section>
+  <div class="divider"></div>
+  <h2 style="text-align:center">Dit zeggen vrouwen<br>die je voor gingen</h2>
+
+  <div class="quote-grid">
+    <div class="quote-card">
+      <p>"Meghan raakt de laag die onder je strategie zit. Ik begreep voor het eerst waarom ik steeds op hetzelfde punt bleef hangen. En dat veranderde alles."</p>
+      <div class="author">Sarah M.</div>
+      <div class="role">Consultant & Founder</div>
+    </div>
+    <div class="quote-card">
+      <p>"Ik verwachtte inzicht. Wat ik kreeg was een fundamentele verschuiving in hoe ik naar mezelf kijk en wat ik mezelf toesta. Mijn omzet volgde vanzelf."</p>
+      <div class="author">Lisa V.</div>
+      <div class="role">Executive Coach</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY SECTION -->
+<section>
+  <div class="divider"></div>
+  <p style="font-weight:700;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:20px">Dit is waarom je vastloopt</p>
+  <h2>Je strategie klopt.<br>Jij staat <em>jezelf</em> in de weg.</h2>
+
+  <p>Waarom slagen maar weinig vrouwen er echt in door te breken, ook al hebben ze de opleiding, de intelligentie en het plan?</p>
+  <p>Het is simpel. Zolang er ergens in je nog leeft, al is het fluisterend:</p>
+
+  <div class="belief-blocks">
+    <div class="belief">ik moet het eerst bewijzen voordat ik groter mag denken</div>
+    <div class="belief">als ik te zichtbaar word, verlies ik iets</div>
+    <div class="belief">succes zoals ik het wil, is niet voor iemand als ik</div>
+  </div>
+
+  <p>Dan maakt het niet uit hoeveel kennis je toevoegt. Je brein saboteert elke stap voorwaarts. Niet omdat je zwak bent. Maar omdat het precies doet waarvoor het geprogrammeerd werd, voor je zevende.</p>
+  <p><strong>UNSTOPPABLE haalt die rem eraf. Van binnenuit.</strong></p>
+</section>
+
+<!-- PERSONAL STORY -->
+<section>
+  <div class="divider"></div>
+  <p style="font-weight:700;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:20px">Mijn verhaal</p>
+  <h2>Ik weet hoe het voelt om<br>jezelf <em>in de weg te staan.</em></h2>
+
+  <p>Ik heb het van binnenuit gevoeld. Jarenlang. Slim genoeg. Hard genoeg. En toch steeds op hetzelfde plafond stoten.</p>
+  <p>Totdat ik een neurowetenschappelijk opleidingstraject volgde en voor het eerst zag wat er werkelijk speelde. Niet mijn strategie. Niet mijn aanbod. Mijn breincodes.</p>
+  <p><strong>De conditioneringen die voor mijn zevende waren ingeprent, stuurden nog steeds elke zakelijke beslissing aan die ik op mijn vijfendertigste nam.</strong></p>
+  <p>Vanaf dat moment bestudeerde ik hoe het brein verandert. Echt verandert. Niet op inzichtsniveau, maar op het niveau van gedrag, emotie en identiteit. En ik ontwikkelde een methode die doet wat de meeste coaching niet doet: direct werken met de patronen die het diepst zitten.</p>
+  <p><strong>Dit werd Neural Alignment™.</strong></p>
+</section>
+
+<!-- WHAT HOLDS THEM BACK -->
+<section>
+  <div class="divider"></div>
+  <h2>Patronen die we doorbreken<br>in <em>UNSTOPPABLE</em></h2>
+
+  <div class="pattern-list">
+    <div class="pattern-item"><div class="dot"></div><span>Twijfel op beslissende momenten</span></div>
+    <div class="pattern-item"><div class="dot"></div><span>Zichtbaarheid voelt als te veel</span></div>
+    <div class="pattern-item"><div class="dot"></div><span>Ongemak bij grote bedragen noemen</span></div>
+    <div class="pattern-item"><div class="dot"></div><span>Altijd AAN staan en energie verliezen</span></div>
+    <div class="pattern-item"><div class="dot"></div><span>Imposter gevoelens ondanks bewijs van het tegendeel</span></div>
+    <div class="pattern-item"><div class="dot"></div><span>Pleasen in plaats van leiden</span></div>
+    <div class="pattern-item"><div class="dot"></div><span>Angst om verder te komen dan je omgeving</span></div>
+    <div class="pattern-item"><div class="dot"></div><span>Resultaten afhankelijk stellen van externe bevestiging</span></div>
+    <div class="pattern-item"><div class="dot"></div><span>Rem op ontvangen terwijl je hard geeft</span></div>
+    <div class="pattern-item"><div class="dot"></div><span>Weten wat slim is, maar het niet doen</span></div>
+  </div>
+
+  <h3 style="margin-top:60px">Je neemt hier afscheid van. Zodat jij…</h3>
+
+  <div class="result-list">
+    <div class="result-item">
+      <div class="check">→</div>
+      <div class="text">
+        <strong>Beslissingen neemt vanuit helderheid</strong>
+        <span>Geen endloze twijfelcyclus meer. Je weet wat je wil en je doet het.</span>
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="check">→</div>
+      <div class="text">
+        <strong>Zichtbaar bent zonder dat het energie kost</strong>
+        <span>Zichtbaarheid wordt een vanzelfsprekendheid, geen opgave.</span>
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="check">→</div>
+      <div class="text">
+        <strong>Prijzen noemt zonder schuldgevoel</strong>
+        <span>Je staat in je waarde. Gesprekken worden gelijkwaardiger en je klanten merken het.</span>
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="check">→</div>
+      <div class="text">
+        <strong>Groeit in omzet zonder harder te werken</strong>
+        <span>Omdat je jezelf niet langer saboteert op de momenten die ertoe doen.</span>
+      </div>
+    </div>
+    <div class="result-item">
+      <div class="check">→</div>
+      <div class="text">
+        <strong>Een business bouwt die past bij wie je werkelijk bent</strong>
+        <span>Niet de versie die anderen van je verwachten. De versie die van jou is.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section>
+  <div class="divider"></div>
+  <div class="method-box">
+    <div class="method-tag">De methode</div>
+    <h3>Neural Alignment™</h3>
+    <p>De meeste coaching werkt op inzichtsniveau. Je begrijpt wat je tegenhoudt. Maar gedrag en emotie veranderen niet door begrip. Ze veranderen als het patroon in je brein geen reden meer heeft om zo te reageren.</p>
+    <p>Neural Alignment™ werkt direct met de geconditioneerde patronen in je onderbewuste, de breincodes die voor je zevende werden geïnstalleerd en die tot vandaag je zakelijke beslissingen aansturen. Via een combinatie van neurowetenschappelijke inzichten, dieptewerk en gerichte herprogrammeringstechnieken veranderen we het systeem dat jou vasthoudt.</p>
+    <p><strong style="color:var(--white)">Niet als tijdelijk inzicht. Als permanente verschuiving.</strong></p>
+
+    <div class="method-pillars">
+      <div class="pillar">
+        <div class="num">01</div>
+        <div class="pillar-title">Ontmaskeren</div>
+        <p>Welke breincodes sturen jou aan zonder dat je het doorhebt? We maken het onzichtbare zichtbaar.</p>
+      </div>
+      <div class="pillar">
+        <div class="num">02</div>
+        <div class="pillar-title">Begrijpen</div>
+        <p>Waarom reageert jouw brein zo? Niet als excuus, maar als sleutel tot echte verandering.</p>
+      </div>
+      <div class="pillar">
+        <div class="num">03</div>
+        <div class="pillar-title">Herprogrammeren</div>
+        <p>Nieuwe neurale paden bouwen die jou niet tegenhouden, maar vooruitbrengen. Duurzaam. Van binnenuit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="aanbod">
+  <div class="divider"></div>
+  <p style="font-weight:700;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--red);margin-bottom:20px">Kies je niveau</p>
+  <h2>UNSTOPPABLE<br>in drie varianten</h2>
+  <p>De kern is hetzelfde. De diepte van begeleiding verschilt.</p>
+
+  <div class="pricing-grid">
+
+    <div class="pricing-card">
+      <div class="pack-tag">Unstoppable</div>
+      <div class="pack-name">AWAKEN</div>
+      <div class="pack-sub">12 maanden groepstraject</div>
+      <div class="price">€1.497</div>
+      <div class="price-note">excl. btw — direct starten mogelijk</div>
+      <ul>
+        <li>Live groepsdoorbraakdag (keuze uit meerdere per jaar)</li>
+        <li>Tweewekelijkse online groepscall met hotseat sessies</li>
+        <li>Wekelijkse herprogrammeeringsaudio's op maat</li>
+        <li>Wekelijkse practices en reflectieopdrachten</li>
+        <li>WhatsApp-community met begeleiding</li>
+        <li>Levenslange toegang tot de Neural Alignment™ Academy</li>
+      </ul>
+      <a href="#matchcall" class="btn-card outline">Plan je matchcall</a>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="pack-tag">Unstoppable — meest gekozen</div>
+      <div class="pack-name">ALIGN</div>
+      <div class="pack-sub">12 maanden met persoonlijke verdieping</div>
+      <div class="price">€2.997</div>
+      <div class="price-note">excl. btw — beperkt beschikbaar</div>
+      <ul>
+        <li>Alles uit AWAKEN</li>
+        <li>3 persoonlijke 1-op-1 sessies online (verspreid over het jaar)</li>
+        <li>1 exclusieve live privésessie</li>
+        <li>Persoonlijke verdieping op jouw patronen en beslismomenten</li>
+        <li>Extra begeleiding rondom zichtbaarheid, leiderschap en keuzes</li>
+      </ul>
+      <a href="#matchcall" class="btn-card">Plan je matchcall</a>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pack-tag">Unstoppable</div>
+      <div class="pack-name">ASCEND</div>
+      <div class="pack-sub">Volledig 1 op 1. Zeer beperkt.</div>
+      <div class="price">€4.997</div>
+      <div class="price-note">excl. btw — maximaal 4 plekken per jaar</div>
+      <ul>
+        <li>6 maanden intensieve 1-op-1 begeleiding</li>
+        <li>1-op-1 live doorbraakdag op locatie</li>
+        <li>6 persoonlijke online sessies (maandelijks)</li>
+        <li>Persoonlijke voice notes op beslissende momenten</li>
+        <li>Directe toegang tussen sessies</li>
+        <li>Levenslange toegang tot de Neural Alignment™ Academy</li>
+      </ul>
+      <a href="#matchcall" class="btn-card outline">Plan je matchcall</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- RESULT STORY -->
+<section>
+  <div class="divider"></div>
+  <div class="story-block">
+    <blockquote>"Ik draaide in drie weken meer dan de twee maanden ervoor samen."</blockquote>
+    <p>Ik ging op reis. Echt op reis, niet half aanwezig terwijl ik mijn telefoon in de gaten hield. Voor het eerst had ik het vertrouwen dat het goed zou zijn. En het was niet alleen goed. Het was het beste kwartaal dat ik ooit had gedraaid.</p>
+    <p class="attribution">Client naam <span>— Business Coach</span></p>
+  </div>
+</section>
+
+<!-- NOT FOR / IS FOR -->
+<section>
+  <div class="divider"></div>
+  <h2>Dit is <em>niet</em> voor<br>elke vrouw</h2>
+  <p>UNSTOPPABLE is geen plek voor vrouwen die op zoek zijn naar motivatie of een schouderklopje. Het is een plek voor vrouwen die bereid zijn om op te dagen voor zichzelf.</p>
+
+  <div class="two-col">
+    <div class="col-box not">
+      <h4>Niet voor jou als je</h4>
+      <ul>
+        <li>Alleen over je patronen wil praten zonder ze aan te kijken</li>
+        <li>Hoopt dat iemand anders jou komt redden</li>
+        <li>Bevestiging zoekt in plaats van duurzame verandering</li>
+        <li>Niet bereid bent om ongemak aan te gaan</li>
+      </ul>
+    </div>
+    <div class="col-box is">
+      <h4>Wel voor jou als je</h4>
+      <ul>
+        <li>Snapt dat je patronen niet verdwijnen door er alleen over te praten</li>
+        <li>Genoeg hebt van goed terwijl je weet dat je meer kunt</li>
+        <li>Bereid bent elke dag voor jezelf te kiezen</li>
+        <li>Wil begrijpen hoe jouw brein werkt zodat je het kunt veranderen</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="divider"></div>
+  <h2>Vragen over<br><em>UNSTOPPABLE</em></h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <h4>Kan ik direct starten?</h4>
+      <p>Ja. Na je aanmelding kun je direct starten met de online onderdelen, audio's en opdrachten. Live sessies en 1-op-1 momenten plannen we samen in. Sommige plekken zijn bewust beperkt gehouden voor maximale diepgang.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Wat maakt Neural Alignment™ anders dan andere coaching?</h4>
+      <p>De meeste coaching werkt op inzichtsniveau. Je snapt wat je tegenhoudt, maar je doet het daarna toch weer. Neural Alignment™ werkt op het niveau waar het patroon echt zit: in de geconditioneerde breincodes die voor je zevende werden geïnstalleerd. We veranderen niet je overtuiging. We veranderen de grond waarop die overtuiging staat.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Ik heb al zoveel geïnvesteerd in coaching. Waarom zou dit anders zijn?</h4>
+      <p>Goede vraag. En eerlijk antwoord: als je bij elke vorige investering op hetzelfde punt bleef hangen, dan lag het niet aan de coach. Dan lag het aan de laag die niet werd aangeraakt. UNSTOPPABLE werkt precies op die laag. Niet als vervanging van wat je al deed, maar als de fundament eronder.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Moet ik op 10K+ per maand zitten om mee te doen?</h4>
+      <p>Niet per se. De doelgroep is hoogopgeleide vrouwen die vastlopen in hun business. Of je nu op 5K of 20K zit, als je merkt dat jijzelf de rem bent, dan is dit voor jou. We kijken samen in de matchcall of het moment klopt.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Kan je een doorbraak garanderen?</h4>
+      <p>Ik kan geen specifieke uitkomst garanderen. Wat ik wel kan garanderen: volledige aanwezigheid, wetenschappelijk onderbouwde methodes en werk dat verder gaat dan inzicht. Elke vrouw die volledig instapte heeft iets veranderd dat ze daarvoor niet voor mogelijk hield.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<div class="closing" id="matchcall">
+  <h2>Stop jezelf niet<br><em>langer</em> tegen.</h2>
+  <h3>Je weet al lang dat er meer mogelijk is.</h3>
+  <p style="max-width:520px;margin:0 auto 48px;color:var(--grey);font-size:18px">Je hoeft niet nog een jaar lang te weten wat je zou moeten doen zonder het te doen. Plan je matchcall. We kijken samen of UNSTOPPABLE het juiste moment voor jou is.</p>
+  <a href="https://calendly.com/" class="btn-primary">Plan je gratis matchcall</a>
+  <span class="btn-sub">Beschikbaarheid is beperkt.</span>
+</div>
+
+<footer>
+  © 2026 Meghan Eckenbach — Neural Alignment™ &nbsp;·&nbsp; Alle rechten voorbehouden
+</footer>
+
+</body>
+</html>
