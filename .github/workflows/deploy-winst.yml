@@ -18,10 +18,18 @@ jobs:
       - name: Install Wrangler
         run: npm install -g wrangler@latest
 
+      - name: Create Pages project
+        run: |
+          curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CF_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"winstaiwebsite","production_branch":"main"}' || true
+
       - name: Deploy winst.ai
         run: |
           npx wrangler pages deploy winst \
-            --project-name=websitenl \
+            --project-name=winstaiwebsite \
             --branch=main \
             --commit-dirty=true
 
