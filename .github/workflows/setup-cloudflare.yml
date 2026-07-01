@@ -9,11 +9,11 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     env:
-      CF_TOKEN: cfut_hxszV2bmi4AIdHoTn5OnIy4e3RWpLAFKvSIdjcMD7a2e2a8c
-      CF_ACCOUNT: 179e5d05b1da4981ace975cd617faf40
-      CF_ZONE: 8745d8b0ae278f5a31a0abca1ce2fc61
-      CLOUDFLARE_API_TOKEN: cfut_hxszV2bmi4AIdHoTn5OnIy4e3RWpLAFKvSIdjcMD7a2e2a8c
-      CLOUDFLARE_ACCOUNT_ID: 179e5d05b1da4981ace975cd617faf40
+      CF_TOKEN: ${{ secrets.CF_TOKEN }}
+      CF_ACCOUNT: ${{ secrets.CF_ACCOUNT }}
+      CF_ZONE: ${{ secrets.CF_ZONE }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT }}
 
     steps:
       - uses: actions/checkout@v4

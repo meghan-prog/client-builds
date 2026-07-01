@@ -1,0 +1,48 @@
+name: Deploy paips.io
+
+on:
+  push:
+    branches: [main]
+    paths: ['paips/**']
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Wrangler
+        run: npm install -g wrangler@latest
+
+      - name: Create Pages project
+        run: |
+          curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CF_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"paipbuilder","production_branch":"main"}' || true
+
+      - name: Deploy paips.io
+        run: |
+          npx wrangler pages deploy paips \
+            --project-name=paipbuilder \
+            --branch=main \
+            --commit-dirty=true
+
+      - name: Add custom domain
+        run: |
+          curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT }}/pages/projects/paipbuilder/domains" \
+            -H "Authorization: Bearer ${{ secrets.CF_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"paips.io"}' || true
+
+      - name: Done
+        run: |
+          echo "================================================"
+          echo "  LIVE: https://paips.io"
+          echo "================================================"
