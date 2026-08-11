@@ -81,11 +81,73 @@ events: `landing_view`, `scan_started`, `question_answered`,
 `scan_completed`, `result_viewed`, `lead_submitted`, `academy_cta_clicked`,
 `result_shared`.
 
-## Deployen (Vercel)
+## Deployen (Cloudflare)
 
-1. Importeer deze map (`ai-income-scan/`) als project in Vercel.
-2. Zet de environment variables hierboven.
-3. Deploy.
+Dit is geen statische site zoals de andere projecten in deze repo (Corporetta,
+winst.ai) — die worden met `wrangler pages deploy` als kale HTML-map
+gehost. Deze app heeft server-functionaliteit nodig (API routes, admin
+Basic Auth), dus die draait als **Cloudflare Worker** via de
+[`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare) adapter
+(al geïnstalleerd, zie `wrangler.jsonc` en `open-next.config.ts`).
+
+**Eenmalig, lokaal:**
+
+```bash
+npx wrangler login
+```
+
+**Let op het verschil tussen build-time en runtime env vars:**
+
+- Alles dat met `NEXT_PUBLIC_` begint (`NEXT_PUBLIC_SUPABASE_URL`,
+  `NEXT_PUBLIC_ACADEMY_URL`, `NEXT_PUBLIC_LEAD_CAPTURE_ENABLED`) wordt door
+  Next.js tijdens `next build` in de client-bundle gebakken. Die moeten dus
+  in een `.env.local` staan (kopieer `.env.example`) **vóórdat** je
+  `npm run cf:deploy` draait — zetten in `wrangler.jsonc` is voor deze drie
+  te laat.
+- Server-only vars (`SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_USER`,
+  `ADMIN_PASSWORD`) worden pas op het moment zelf door de Worker gelezen, dus
+  die horen thuis in Wrangler, niet in `.env.local`.
+
+**Server-only secrets zetten** (niet in `wrangler.jsonc` — die staat in git):
+
+```bash
+npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+npx wrangler secret put ADMIN_PASSWORD
+```
+
+**Server-only, niet-geheime var** zet je wél in `wrangler.jsonc` onder `"vars"`:
+
+```jsonc
+"vars": {
+  "ADMIN_USER": "admin"
+}
+```
+
+**Deployen:**
+
+```bash
+npm run cf:deploy
+```
+
+Dit bouwt de Next.js-app, bundelt 'm met OpenNext naar een Worker, en
+deployt met Wrangler. Lokaal een keer preview draaien op de echte
+Workers-runtime kan met `npm run cf:preview`.
+
+Het domein staat al klaar in `wrangler.jsonc` (`aiincomescan.winst.ai` —
+`scan.winst.ai` was al in gebruik door Corporetta). Omdat `winst.ai` al in
+hetzelfde Cloudflare-account zit, provisioned Wrangler de DNS voor dat
+custom domain automatisch bij de eerste deploy. Wil je een andere naam,
+pas dan `routes` in `wrangler.jsonc` aan vóór je deployt.
+
+Er staat bewust nog geen GitHub Action die automatisch deployt bij een
+push — dat voegen we toe zodra je een keer handmatig hebt gedeployd en
+tevreden bent met het resultaat.
+
+### Alternatief: Vercel
+
+De app is standaard Next.js, dus Vercel werkt ook zonder aanpassingen:
+importeer `ai-income-scan/` als project, zet dezelfde environment variables
+(zonder de Wrangler-secrets-stap), en deploy.
 
 ## Wat bewust niet gebouwd is (V2+)
 
