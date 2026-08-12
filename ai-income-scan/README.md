@@ -90,6 +90,29 @@ Basic Auth), dus die draait als **Cloudflare Worker** via de
 [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare) adapter
 (al geïnstalleerd, zie `wrangler.jsonc` en `open-next.config.ts`).
 
+### Optie A: via GitHub Actions (geen lokale setup nodig)
+
+`.github/workflows/deploy-ai-income-scan.yml` deployt op aanvraag — hij
+draait **niet** automatisch bij een push, alleen als je 'm zelf start:
+GitHub → repo → **Actions** → "Deploy AI Income Scan (Cloudflare)" → **Run
+workflow**. Je kunt daarbij de Academy-URL en lead-capture-instelling
+invullen.
+
+Hij hergebruikt de `CF_TOKEN`/`CF_ACCOUNT` secrets die al in deze repo
+staan (dezelfde die `deploy-winst.yml` gebruikt). Optioneel — voor volledige
+functionaliteit (opslag + admin-stats) — zet je in **Settings → Secrets and
+variables → Actions** ook:
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `ADMIN_PASSWORD`
+
+Zonder die drie deployt hij gewoon door — de scan werkt dan volledig,
+`/admin` blijft alleen op slot totdat je ze toevoegt en de workflow opnieuw
+draait.
+
+### Optie B: lokaal, handmatig
+
 **Eenmalig, lokaal:**
 
 ```bash

@@ -1,0 +1,61 @@
+name: Deploy AI Income Scan (Cloudflare)
+
+on:
+  workflow_dispatch:
+    inputs:
+      academy_url:
+        description: "AI Income Academy CTA-URL (NEXT_PUBLIC_ACADEMY_URL)"
+        required: false
+        default: "https://example.com/ai-income-academy"
+      lead_capture_enabled:
+        description: "Naam+e-mail vragen vóór het resultaat?"
+        required: false
+        default: "true"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-income-scan
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set build-time env vars
+        run: |
+          {
+            echo "NEXT_PUBLIC_ACADEMY_URL=${{ inputs.academy_url }}"
+            echo "NEXT_PUBLIC_LEAD_CAPTURE_ENABLED=${{ inputs.lead_capture_enabled }}"
+          } >> .env.local
+          if [ -n "${{ secrets.SUPABASE_URL }}" ]; then
+            echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env.local
+          fi
+
+      - name: Deploy to Cloudflare Workers
+        run: npm run cf:deploy
+
+      - name: Set/refresh server-only Worker secrets
+        run: |
+          if [ -n "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" | npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+          fi
+          if [ -n "${{ secrets.ADMIN_PASSWORD }}" ]; then
+            echo "${{ secrets.ADMIN_PASSWORD }}" | npx wrangler secret put ADMIN_PASSWORD
+          fi
+
+      - name: Done
+        run: |
+          echo "================================================"
+          echo "  LIVE: https://aiincomescan.winst.ai"
+          echo "================================================"

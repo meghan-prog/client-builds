@@ -9,6 +9,9 @@
     "binding": "ASSETS"
   },
   "routes": [{ "pattern": "aiincomescan.winst.ai", "custom_domain": true }],
+  "vars": {
+    "ADMIN_USER": "admin"
+  },
   "observability": {
     "enabled": true
   }
