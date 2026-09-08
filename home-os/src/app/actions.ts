@@ -13,6 +13,7 @@ import {
 import { reportSchoolCancellation, uploadAndParseSchoolCalendar } from "@/lib/data/school";
 import { toggleRoutineCompletion } from "@/lib/data/kids";
 import { createWorkProfile, setDefaultWorkProfile } from "@/lib/data/settings";
+import { applyAgentAction, dismissAgentAction, sendUserMessage } from "@/lib/data/agent";
 import type { DocumentParseInput } from "@/lib/ai/document-parser";
 
 export async function regenerateWeekPlanAction(weekStart: string) {
@@ -110,6 +111,27 @@ export async function addShoppingItemAction(name: string) {
   if (name.trim().length === 0) return;
   await addManualShoppingItem(familyId, name.trim());
   revalidatePath("/shopping");
+}
+
+export async function sendAgentMessageAction(text: string) {
+  const familyId = await getPrimaryFamilyId();
+  await sendUserMessage(familyId, text);
+  revalidatePath("/assistant");
+}
+
+export async function applyAgentActionAction(messageId: string) {
+  const result = await applyAgentAction(messageId);
+  revalidatePath("/assistant");
+  if (result.applied && "weekStart" in result) {
+    revalidatePath(`/week/${result.weekStart}`);
+    revalidatePath("/learning");
+  }
+  return result;
+}
+
+export async function dismissAgentActionAction(messageId: string) {
+  await dismissAgentAction(messageId);
+  revalidatePath("/assistant");
 }
 
 export async function reportSchoolCancellationAction(dateISO: string, childId: string | null, reason: string) {

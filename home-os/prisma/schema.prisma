@@ -32,6 +32,7 @@ model Family {
   weeklyIntentions WeeklyIntention[]
   weekPlans       WeekPlan[]
   scheduleBlocks  ScheduleBlock[]
+  agentMessages   AgentMessage[]
 }
 
 model Parent {
@@ -482,6 +483,26 @@ model Deviation {
   icon       String   @default("✨")
   title      String
   description String?
+
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// ASSISTANT — one ongoing conversation thread per family
+// ---------------------------------------------------------------------------
+
+model AgentMessage {
+  id       String @id @default(cuid())
+  familyId String
+  family   Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  role    String // user | assistant
+  content String
+
+  // Present on an assistant message that proposes (or asks about) an action.
+  actionType    String? // clarify_child | cancel_school | create_learning_focus | add_activities
+  actionPayload String? // JSON, shape depends on actionType
+  actionStatus  String? // proposed | applied | dismissed | resolved
 
   createdAt DateTime @default(now())
 }

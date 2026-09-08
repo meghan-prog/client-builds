@@ -24,6 +24,14 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
           <span className="font-semibold tracking-tight text-ink">Home OS</span>
         </Link>
 
+        <Link
+          href="/assistant"
+          className="mb-1 flex shrink-0 items-center gap-3 rounded-full bg-accent-soft px-3 py-2.5 text-sm font-semibold text-accent md:mb-4 md:rounded-xl"
+        >
+          <span className="text-lg">💬</span>
+          <span className="hidden md:inline">Assistent</span>
+        </Link>
+
         <nav className="flex flex-row gap-1 overflow-x-auto md:flex-col md:gap-1 md:overflow-visible">
           {NAV_ITEMS.map((item) => (
             <Link

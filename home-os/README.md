@@ -5,7 +5,10 @@ gezinsroutine (**Base**) met variabele gebeurtenissen (school, werk,
 afspraken) en wekelijkse intenties (**Sunday Intentions**), en laat een
 **Planning Engine** daar automatisch een haalbare weekplanning van maken —
 inclusief conflictdetectie, materiaal-/boodschappenlogica en leerdoelen die
-per week worden uitgewerkt tot concrete middagactiviteiten.
+per week worden uitgewerkt tot concrete middagactiviteiten. Een chat-
+**Assistent** (`/assistant`) zit er bovenop: praat er dingen naartoe zoals
+"school is morgen afgelast" of "focus deze week op tandenpoetsen", en hij
+zet dat om in een concreet voorstel dat je met één klik toepast.
 
 ## Snel starten
 
@@ -30,12 +33,15 @@ src/
     planning-engine/   Pure domain logic — GEEN afhankelijkheid van Prisma of UI.
                         generateWeekPlan(input) => { blocks, conflicts, deviations, unscheduled }
     ai/                Abstractielaag voor AI-taken, met mock-implementaties:
-                        - document-parser.ts   (schoolkalender-extractie)
-                        - intention-parser.ts  (zondagse vrije tekst -> gestructureerde items)
-                        Beide zijn achter een interface + factory-functie verstopt
-                        (getDocumentParsingService / getIntentionParsingService),
-                        zodat een echte LLM-integratie later zonder UI-wijzigingen
-                        kan worden aangesloten.
+                        - document-parser.ts     (schoolkalender-extractie)
+                        - intention-parser.ts    (zondagse vrije tekst -> gestructureerde items)
+                        - agent.ts               (chat-assistent: NLU -> AgentReply)
+                        - activity-suggester.ts  (activiteitideeën voor een onderwerp)
+                        Allemaal achter een interface + factory-functie verstopt
+                        (getDocumentParsingService / getIntentionParsingService /
+                        getHomeAgentService / getActivitySuggesterService), zodat een
+                        echte LLM-integratie later zonder UI-wijzigingen kan worden
+                        aangesloten.
     themes/            Statische catalogus van culturele/seizoensgebonden thema's
                         (NL- en Spaanse feestdagen, seizoenen, Spaanse oogsttijden).
                         getThemesForRange/getUpcomingThemes berekenen wat er deze
@@ -103,6 +109,17 @@ aanpassen in `prisma/schema.prisma`, niet een herontwerp.
   abstractie. Herkent een vaste set trefwoorden (tandarts, boodschappen,
   strand, zwemles, werk(en), verjaardag, oudergesprek, bezoek, sport) en
   weekdagnamen; geen tijdsherkenning uit vrije tekst.
+- **Assistent** (`src/lib/ai/agent.ts` + `src/lib/ai/activity-suggester.ts`):
+  een regel-gebaseerde NLU die schoolafmeldingen, "focus deze week op X" en
+  activiteiten-verzoeken herkent (incl. een "voor wie?"-vervolgvraag als er
+  meerdere kinderen zijn), en een activiteitenbibliotheek die voor
+  "tandenpoetsen" met curated content komt en voor elk ander onderwerp met
+  plausibele generieke ideeën. Achter dezelfde soort interface + factory-
+  functie (`getHomeAgentService`) — een echte implementatie zou hier de
+  Claude Messages API met tool use aanroepen (elke `AgentActionType` wordt
+  een tool-definitie) en dezelfde `AgentReply`-vorm teruggeven; de chat-UI
+  en de actie-uitvoering (`src/lib/data/agent.ts`) hoeven dan niet te
+  veranderen.
 - **Authenticatie**: er is één gezin (`getPrimaryFamilyId`), geen
   login/sessiebeheer. Dat is bewust de enige plek die je hoeft aan te
   passen om echte multi-tenant auth (bv. NextAuth) aan te sluiten.
@@ -144,6 +161,12 @@ Zie `scripts/test-plan.ts`, `scripts/test-intentions.ts` en
   (`LearningActivity.themeKey`) — het voorbeeldgezin heeft zo een
   herfst-geknutseld ("Herfstcollage maken") voor Milo, die ook meteen de
   material→boodschappenlijst-logica laat zien (lijm ontbreekt).
+- **Assistent-gesprek** (`/assistant`, zie `scripts/test-agent.ts` en
+  `scripts/e2e-assistant.ts`): "school is morgen afgelast" → voorstel →
+  toepassen → schoolroutine weg, leeractiviteiten blijven staan. "Focus
+  deze week op tandenpoetsen" → vraagt voor wie (bij >1 kind) → voorstel
+  met 4 activiteiten → toepassen → leerdoel + activiteiten aangemaakt en
+  ingepland, zichtbaar in de weekplanning en op `/learning`.
 
 ## Deployment
 
