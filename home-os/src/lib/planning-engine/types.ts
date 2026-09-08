@@ -50,7 +50,8 @@ export interface SchoolEventInput {
     | "school_trip"
     | "parent_evening"
     | "free_day"
-    | "school_activity";
+    | "school_activity"
+    | "school_cancelled";
   title: string;
   startDate: string; // ISO date, yyyy-MM-dd
   endDate: string;

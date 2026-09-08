@@ -6,6 +6,7 @@ const TYPE_LABEL_NL: Record<string, string> = {
   parent_evening: "Ouderavond",
   free_day: "Vrije dag",
   school_activity: "Schoolactiviteit",
+  school_cancelled: "Afgelast",
 };
 
 const TYPE_ICON: Record<string, string> = {
@@ -16,6 +17,7 @@ const TYPE_ICON: Record<string, string> = {
   parent_evening: "🗣️",
   free_day: "🌤️",
   school_activity: "🎭",
+  school_cancelled: "🚫",
 };
 
 export function schoolEventTypeLabel(type: string): string {

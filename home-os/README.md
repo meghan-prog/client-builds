@@ -36,6 +36,11 @@ src/
                         (getDocumentParsingService / getIntentionParsingService),
                         zodat een echte LLM-integratie later zonder UI-wijzigingen
                         kan worden aangesloten.
+    themes/            Statische catalogus van culturele/seizoensgebonden thema's
+                        (NL- en Spaanse feestdagen, seizoenen, Spaanse oogsttijden).
+                        getThemesForRange/getUpcomingThemes berekenen wat er deze
+                        week of binnenkort speelt; LearningActivity.themeKey koppelt
+                        een leeractiviteit aan een thema (zie "Herfstcollage maken").
     data/              Data layer: vertaalt Prisma-rijen naar planning-engine input,
                         roept de engine aan, persisteert het resultaat (WeekPlan,
                         ScheduleBlock, Conflict, Deviation) en biedt read-modellen
@@ -126,6 +131,19 @@ Zie `scripts/test-plan.ts`, `scripts/test-intentions.ts` en
 - Kindmodus toont alleen wat voor een kind relevant is (dagritme + eigen
   taak + eigen leeractiviteit — nooit werk/afspraken van een ouder), met
   één-tap afvinken.
+- **"School afgelast" melden** (knop op de weekweergave): maakt direct een
+  suppressing `SchoolEvent` aan voor die dag en herplant meteen — de
+  schoolroutine verdwijnt, de leeractiviteit die voor die dag/kind gepland
+  stond blijft gewoon staan (of schuift naar de vrijgekomen tijd), zonder
+  dat je zelf iets hoeft te verplaatsen. Zie `scripts/e2e-cancel-school.ts`.
+- **Thema's** (`lib/themes/catalog.ts`): Nederlandse en Spaanse feestdagen/
+  tradities, de meteorologische seizoenen en Spaanse oogsttijden (vendimia,
+  aceituna, sinaasappels) worden per week zichtbaar in het "Dit seizoen"-
+  blok op de weekweergave, inclusief een "over N dagen"-melding voor wat
+  eraan komt. Leeractiviteiten kunnen aan een thema gekoppeld worden
+  (`LearningActivity.themeKey`) — het voorbeeldgezin heeft zo een
+  herfst-geknutseld ("Herfstcollage maken") voor Milo, die ook meteen de
+  material→boodschappenlijst-logica laat zien (lijm ontbreekt).
 
 ## Deployment
 

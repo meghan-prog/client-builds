@@ -262,7 +262,7 @@ async function main() {
   // ---------------------------------------------------------------------
   // MATERIALS / INVENTORY
   // ---------------------------------------------------------------------
-  const materialNames = ["papier", "potlood", "boek", "letterkaarten", "dobbelsteen"];
+  const materialNames = ["papier", "potlood", "boek", "letterkaarten", "dobbelsteen", "bladeren", "schaar", "lijm"];
   const materials: Record<string, { id: string }> = {};
   for (const name of materialNames) {
     materials[name] = await prisma.material.create({ data: { name, category: "leren" } });
@@ -273,6 +273,9 @@ async function main() {
     boek: "present",
     letterkaarten: "present",
     dobbelsteen: "missing",
+    bladeren: "present",
+    schaar: "present",
+    lijm: "missing",
   };
   for (const [name, status] of Object.entries(inventoryStatus)) {
     await prisma.inventoryItem.create({
@@ -420,6 +423,76 @@ async function main() {
       });
     }
     activities.push({ id: activity.id, weekday: a.weekday });
+  }
+
+  // ---------------------------------------------------------------------
+  // LEARNING GOAL #2 (Milo): seizoensgebonden, laat het thema-systeem zien
+  // ---------------------------------------------------------------------
+  const seasonGoal = await prisma.learningGoal.create({
+    data: {
+      childId: son.id,
+      title: "De seizoenen ontdekken",
+      description: "Milo ontdekt dit jaar wat er in elk seizoen verandert in de natuur — te beginnen met de herfst.",
+      startDate: schoolYearStart,
+      endDate: schoolYearEnd,
+      desiredSkillsText: "Kleuren en vormen benoemen, natuurmateriaal herkennen, een kleine knutselopdracht afmaken.",
+      progress: 0,
+    },
+  });
+  const seasonYearSkill = await prisma.learningSkill.create({
+    data: {
+      goalId: seasonGoal.id,
+      period: "year",
+      title: "De seizoenen ontdekken",
+      periodStart: schoolYearStart,
+      periodEnd: schoolYearEnd,
+    },
+  });
+  const seasonMonthSkill = await prisma.learningSkill.create({
+    data: {
+      goalId: seasonGoal.id,
+      parentSkillId: seasonYearSkill.id,
+      period: "month",
+      title: "Herfst ontdekken",
+      periodStart: monthStart,
+      periodEnd: monthEnd,
+    },
+  });
+  const seasonWeekSkill = await prisma.learningSkill.create({
+    data: {
+      goalId: seasonGoal.id,
+      parentSkillId: seasonMonthSkill.id,
+      period: "week",
+      title: "Herfstkleuren en -materiaal",
+      periodStart: weekStart,
+      periodEnd: weekEnd,
+    },
+  });
+  const herfstcollage = await prisma.learningActivity.create({
+    data: {
+      skillId: seasonWeekSkill.id,
+      title: "Herfstcollage maken",
+      icon: "🍂",
+      ageRangeMin: 2,
+      ageRangeMax: 5,
+      durationMinutes: 20,
+      instructions: j([
+        "Verzamel samen bladeren buiten.",
+        "Leg de bladeren in een mooi patroon op het papier.",
+        "Plak de bladeren vast met lijm.",
+        "Laat het knutselwerk drogen en hang het op.",
+      ]),
+      prepMinutes: 5,
+      location: "Buiten + thuis",
+      difficulty: "makkelijk",
+      preferredWeekday: 4,
+      themeKey: "herfst_nl",
+    },
+  });
+  for (const mName of ["bladeren", "papier", "schaar", "lijm"]) {
+    await prisma.learningActivityMaterial.create({
+      data: { activityId: herfstcollage.id, materialId: materials[mName].id },
+    });
   }
 
   // ---------------------------------------------------------------------

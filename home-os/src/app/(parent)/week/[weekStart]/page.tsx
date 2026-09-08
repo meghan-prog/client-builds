@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { addDays, format } from "date-fns";
 import { getPrimaryFamilyId } from "@/lib/data/family";
+import { getChildrenForFamily } from "@/lib/data/children";
 import { getWeekPlanView, getWeeklyIntention } from "@/lib/data/planning";
+import { getThemesForRange, getUpcomingThemes } from "@/lib/themes/catalog";
 import { weekDates } from "@/lib/planning-engine";
 import { categoryStyle } from "@/lib/ui/category-styles";
 import { capitalize, dayMonthLabel, weekdayLabel } from "@/lib/ui/format";
+import SchoolCancellationQuickReport from "@/components/SchoolCancellationQuickReport";
+import ThemeCard from "@/components/ThemeCard";
 import {
   acceptConflictAction,
   dismissConflictAction,
@@ -19,9 +23,12 @@ export default async function WeekPage({ params }: { params: Promise<{ weekStart
   const familyId = await getPrimaryFamilyId();
   const { blocks, conflicts, deviations } = await getWeekPlanView(familyId, weekStart);
   const intention = await getWeeklyIntention(familyId, weekStart);
+  const children = await getChildrenForFamily(familyId);
 
   const dates = weekDates(weekStart);
   const weekEnd = dates[6];
+  const themes = getThemesForRange(dates[0], weekEnd);
+  const upcomingThemes = getUpcomingThemes(weekEnd, 21).filter((u) => !themes.some((t) => t.key === u.key));
   const prevWeek = format(addDays(new Date(weekStart + "T00:00:00"), -7), "yyyy-MM-dd");
   const nextWeek = format(addDays(new Date(weekStart + "T00:00:00"), 7), "yyyy-MM-dd");
   const todayISO = format(new Date(), "yyyy-MM-dd");
@@ -65,8 +72,11 @@ export default async function WeekPage({ params }: { params: Promise<{ weekStart
               ✨ Genereer opnieuw
             </button>
           </form>
+          <SchoolCancellationQuickReport familyChildren={children.map((c) => ({ id: c.id, name: c.name }))} />
         </div>
       </div>
+
+      <ThemeCard themes={themes} upcoming={upcomingThemes} />
 
       {/* Deze week anders */}
       {deviations.length > 0 && (

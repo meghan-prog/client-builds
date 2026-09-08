@@ -10,7 +10,7 @@ import {
   toggleHouseholdTaskCompletion,
   toggleShoppingItem,
 } from "@/lib/data/shopping-tasks";
-import { uploadAndParseSchoolCalendar } from "@/lib/data/school";
+import { reportSchoolCancellation, uploadAndParseSchoolCalendar } from "@/lib/data/school";
 import { toggleRoutineCompletion } from "@/lib/data/kids";
 import { createWorkProfile, setDefaultWorkProfile } from "@/lib/data/settings";
 import type { DocumentParseInput } from "@/lib/ai/document-parser";
@@ -110,6 +110,15 @@ export async function addShoppingItemAction(name: string) {
   if (name.trim().length === 0) return;
   await addManualShoppingItem(familyId, name.trim());
   revalidatePath("/shopping");
+}
+
+export async function reportSchoolCancellationAction(dateISO: string, childId: string | null, reason: string) {
+  const familyId = await getPrimaryFamilyId();
+  const { weekStart } = await reportSchoolCancellation(familyId, dateISO, childId, reason || undefined);
+  revalidatePath(`/week/${weekStart}`);
+  revalidatePath(`/week/${weekStart}/${dateISO}`);
+  revalidatePath("/school");
+  return { weekStart };
 }
 
 export async function createWorkProfileAction(parentId: string, name: string) {

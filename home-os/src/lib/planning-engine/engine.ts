@@ -52,6 +52,7 @@ const SUPPRESSING_SCHOOL_EVENT_TYPES = new Set([
   "holiday",
   "free_day",
   "school_trip",
+  "school_cancelled",
 ]);
 
 function mapRoutineCategory(category: string): BlockCategory {
@@ -74,6 +75,8 @@ function schoolEventIcon(type: SchoolEventInput["type"]): string {
       return "🌤️";
     case "school_activity":
       return "🎭";
+    case "school_cancelled":
+      return "🚫";
     default:
       return "🏫";
   }
@@ -93,6 +96,8 @@ function schoolEventDescription(type: SchoolEventInput["type"]): string {
       return "Vrije dag";
     case "school_activity":
       return "Schoolactiviteit";
+    case "school_cancelled":
+      return "Op het laatste moment afgelast";
     default:
       return "";
   }

@@ -1,5 +1,7 @@
+import { startOfWeek, format } from "date-fns";
 import { prisma } from "@/lib/db";
 import { getDocumentParsingService, type DocumentParseInput } from "@/lib/ai/document-parser";
+import { generateAndPersistWeekPlan } from "@/lib/data/planning";
 
 export async function getSchoolYearForFamily(familyId: string) {
   return prisma.schoolYear.findFirst({
@@ -58,4 +60,41 @@ export async function uploadAndParseSchoolCalendar(
 
 export async function getSchoolCalendarUploads() {
   return prisma.schoolCalendarUpload.findMany({ orderBy: { createdAt: "desc" }, take: 20 });
+}
+
+/**
+ * Ad-hoc, same-day/next-day "school is cancelled" report — distinct from the
+ * school's own planned calendar (studiedag, vakantie, ...). Creates a
+ * suppressing SchoolEvent for the date and immediately regenerates that
+ * week's plan, so the freed-up time is re-evaluated straight away: the
+ * school block disappears and anything still queued for the child's
+ * learning goal gets a chance to fill the newly open afternoon, exactly
+ * like any other regeneration.
+ */
+export async function reportSchoolCancellation(
+  familyId: string,
+  dateISO: string,
+  childId: string | null,
+  reason?: string
+) {
+  const schoolYear = await prisma.schoolYear.findFirstOrThrow({ where: { familyId }, orderBy: { startDate: "desc" } });
+  const date = new Date(dateISO + "T00:00:00");
+
+  const event = await prisma.schoolEvent.create({
+    data: {
+      schoolYearId: schoolYear.id,
+      childId,
+      type: "school_cancelled",
+      title: "School afgelast",
+      startDate: date,
+      endDate: date,
+      source: "manual",
+      rawText: reason,
+    },
+  });
+
+  const weekStart = format(startOfWeek(date, { weekStartsOn: 1 }), "yyyy-MM-dd");
+  await generateAndPersistWeekPlan(familyId, weekStart);
+
+  return { event, weekStart };
 }

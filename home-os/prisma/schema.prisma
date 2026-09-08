@@ -281,6 +281,7 @@ model LearningActivity {
   location        String  @default("Thuis")
   difficulty      String  @default("makkelijk") // makkelijk | gemiddeld | uitdagend
   preferredWeekday Int?   // 1..7 (ISO, Monday=1) — where this activity best fits in the week's rhythm
+  themeKey        String? // links to a cultural/seasonal theme in lib/themes/catalog.ts, e.g. "herfst_nl"
 
   materials LearningActivityMaterial[]
   scheduledInstances ScheduledActivity[]

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 import { getLearningGoalDetail } from "@/lib/data/learning";
+import { getThemeByKey } from "@/lib/themes/catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +52,7 @@ export default async function LearningGoalDetailPage({ params }: { params: Promi
                     {week.activities.map((act) => {
                       const done = act.scheduledInstances.some((si) => si.status === "done");
                       const instance = act.scheduledInstances[0];
+                      const theme = act.themeKey ? getThemeByKey(act.themeKey) : undefined;
                       const body = (
                         <span
                           className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs ${
@@ -58,6 +60,7 @@ export default async function LearningGoalDetailPage({ params }: { params: Promi
                           }`}
                         >
                           {done ? "✓" : act.icon} {act.title}
+                          {theme && <span title={theme.title}>{theme.icon}</span>}
                         </span>
                       );
                       return instance ? (

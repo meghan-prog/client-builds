@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getScheduledActivityDetail } from "@/lib/data/learning";
+import { getThemeByKey } from "@/lib/themes/catalog";
 import { completeActivityAction } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
@@ -19,6 +20,7 @@ export default async function ActivityDetailPage({
   const goal = skill.goal;
   const isDone = scheduledActivity.status === "done";
   const missingMaterials = materials.filter((m) => m.status === "missing");
+  const theme = activity.themeKey ? getThemeByKey(activity.themeKey) : undefined;
 
   const backHref = week ? `/week/${week}` : "/learning";
 
@@ -34,6 +36,11 @@ export default async function ActivityDetailPage({
         </Link>
         <span>›</span>
         <span className="rounded-full bg-surface-muted px-2.5 py-1">{skill.title}</span>
+        {theme && (
+          <span className="rounded-full bg-[#FBF1DE] px-2.5 py-1 font-medium text-[#8A6A25]">
+            {theme.icon} {theme.title}
+          </span>
+        )}
       </div>
 
       <div className="card p-5 md:p-8">
