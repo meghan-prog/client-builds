@@ -1,7 +1,7 @@
 // Home OS data model
-// SQLite for local/dev simplicity. Swap `provider`/`url` for Postgres in production —
-// the schema intentionally avoids SQLite-only features so that migration is a config change,
-// not a rewrite.
+// SQLite for local/dev simplicity. In production (see src/lib/db.ts) the same
+// schema can instead be served over a libSQL/Turso connection via a Prisma
+// driver adapter — a normal env-var connection, no schema change needed.
 
 generator client {
   provider = "prisma-client-js"

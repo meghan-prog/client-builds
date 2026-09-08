@@ -170,7 +170,28 @@ Zie `scripts/test-plan.ts`, `scripts/test-intentions.ts` en
 
 ## Deployment
 
-Standaard Next.js App Router app. Voor productie: zet `DATABASE_URL` op een
-Postgres-connectiestring (bv. via Vercel Postgres of Neon), draai
-`prisma migrate deploy`, en deploy zoals elke Next.js-app (Vercel is de
-snelste weg).
+Een standaard Next.js App Router app met server actions — draait op elke
+host met een normale Node.js-runtime (Netlify, Railway, Render, een
+goedkope VPS, Vercel). Voor de database: zet `TURSO_DATABASE_URL` en
+`TURSO_AUTH_TOKEN` (een gratis [Turso](https://turso.tech)-database —
+libSQL, dus SQLite-compatibel, geen schemawijziging nodig) en `src/lib/db.ts`
+gebruikt die automatisch via een Prisma driver adapter in plaats van het
+lokale bestand. Draai daarna `npx prisma migrate deploy` tegen die Turso-URL
+en `npm run build && npm start`.
+
+Dit pad is getest: op een gewone Node.js-runtime is de libSQL-adapter
+bevestigd te werken tegen een echte, geseede database (niet alleen dat de
+client opstart, maar een echte query die de juiste data teruggeeft).
+
+**Cloudflare Workers werkt op dit moment niet.** Is geprobeerd via
+`@opennextjs/cloudflare` (de `next build`-stap zelf lukt prima, de hele app
+compileert naar een geldige Worker) — maar Prisma's client moet daar zijn
+WASM-engine gebruiken in plaats van zijn normale binary, en dat schakelt
+niet aan: OpenNext's bundler geeft niet de juiste conditie door bij het
+resolven van Prisma's package, en de documented workaround (rechtstreeks
+`@prisma/client/wasm` importeren) breekt op een ontbrekend bestand in deze
+Prisma-versie. Dit is bevestigd door de app daadwerkelijk te bouwen en te
+draaien onder `wrangler dev`, niet alleen door documentatie te lezen.
+Cloudflare Workers blijft een reële optie voor een versie van deze app
+zonder Prisma (bv. Drizzle + D1), maar niet als drop-in vervanging van de
+huidige datalaag.
