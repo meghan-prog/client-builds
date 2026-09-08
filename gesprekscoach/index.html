@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gesprekscoach — Live AI-copiloot voor je verkoopgesprekken</title>
+<meta name="description" content="Gesprekscoach luistert live mee met je verkoop- of sollicitatiegesprek, geeft realtime suggesties in het Nederlands en schrijft na afloop je CRM-notities en follow-up mail.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f1117;
+    --ink-soft: #3d4151;
+    --ink-muted: #6b7080;
+    --surface: #ffffff;
+    --surface-2: #f5f6f8;
+    --surface-3: #eef0f4;
+    --accent: #2563eb;
+    --accent-light: #eff4ff;
+    --accent-hover: #1d4ed8;
+    --success: #16a34a;
+    --success-light: #ecfdf3;
+    --danger: #dc2626;
+    --danger-light: #fef2f2;
+    --border: #e2e5ec;
+    --font-display: 'Sora', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--surface);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .nav-logo .dot { color: var(--accent); }
+  .nav-logo .parent {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.15s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-primary:disabled { background: var(--ink-muted); cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--ink-soft); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: var(--surface-2); color: var(--ink); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover { background: #b91c1c; }
+  .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.8rem; }
+
+  /* HERO */
+  .hero {
+    padding: 5.5rem 2rem 4rem;
+    max-width: 780px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 0.3rem 0.9rem;
+    border-radius: 999px;
+    margin-bottom: 1.75rem;
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+
+  .hero p {
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    max-width: 560px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.75;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-btns .btn { padding: 0.75rem 1.75rem; font-size: 0.925rem; }
+
+  /* SECTION SHARED */
+  section { padding: 5rem 2rem; max-width: 1080px; margin: 0 auto; }
+  .section-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+  .section-sub {
+    font-size: 1rem;
+    color: var(--ink-soft);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  /* HOE HET WERKT */
+  .hoe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.25rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.75rem;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); border-color: var(--accent); }
+  .card-icon {
+    width: 40px; height: 40px;
+    background: var(--accent-light);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+  .card h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.5rem; }
+  .card p { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.65; }
+
+  /* DEMO */
+  .demo-section { background: var(--surface-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .demo-shell {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .demo-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .demo-status { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: var(--ink-soft); }
+  .rec-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--ink-muted);
+  }
+  .rec-dot.live { background: var(--danger); animation: pulse 1.4s infinite; }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(220,38,38,0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(220,38,38,0); }
+    100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+  }
+  @media (max-width: 800px) {
+    .demo-grid { grid-template-columns: 1fr; }
+  }
+
+  .panel { padding: 1.5rem; }
+  .panel + .panel { border-left: 1px solid var(--border); }
+  @media (max-width: 800px) {
+    .panel + .panel { border-left: none; border-top: 1px solid var(--border); }
+  }
+
+  .panel-title {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 0.9rem;
+  }
+
+  .transcript-box {
+    height: 260px;
+    overflow-y: auto;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .transcript-box .interim { color: var(--ink-muted); font-style: italic; }
+  .transcript-empty { color: var(--ink-muted); }
+
+  .scorecard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+  .score-item { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.85rem 0.75rem; }
+  .score-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin-bottom: 0.4rem; }
+  .score-value { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--ink); margin-bottom: 0.4rem; }
+  .score-bar { height: 5px; background: var(--surface-3); border-radius: 999px; overflow: hidden; }
+  .score-bar-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.4s ease; width: 0%; }
+
+  .suggestion-feed { display: flex; flex-direction: column; gap: 0.75rem; max-height: 230px; overflow-y: auto; }
+  .suggestion-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.9rem 1rem;
+    background: var(--surface);
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .suggestion-card .tag { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.15rem 0.55rem; border-radius: 999px; margin-bottom: 0.5rem; }
+  .tag-vraag { color: var(--accent); background: var(--accent-light); }
+  .tag-bezwaar { color: var(--danger); background: var(--danger-light); }
+  .tag-koopsignaal-sterk { color: var(--success); background: var(--success-light); }
+  .tag-koopsignaal-zwak { color: #b45309; background: #fffbeb; }
+  .suggestion-card p { font-size: 0.88rem; color: var(--ink); line-height: 1.55; }
+  .suggestion-empty { font-size: 0.85rem; color: var(--ink-muted); }
+
+  .demo-note { font-size: 0.78rem; color: var(--ink-muted); padding: 1rem 1.5rem; border-top: 1px solid var(--border); }
+
+  /* REPORT */
+  .report { padding: 1.5rem; border-top: 1px solid var(--border); background: var(--surface-2); display: none; }
+  .report.show { display: block; }
+  .report-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .report-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+  .report-card h4 { font-family: var(--font-display); font-size: 0.85rem; font-weight: 700; color: var(--ink); margin-bottom: 0.6rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  .report-card p, .report-card li { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.6; }
+  .report-card ul { padding-left: 1.1rem; }
+  .copy-btn { background: transparent; border: 1px solid var(--border); color: var(--ink-muted); font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 6px; cursor: pointer; }
+  .copy-btn:hover { background: var(--surface-2); color: var(--ink); }
+
+  /* PRIVACY */
+  .privacy { background: var(--surface); }
+  .privacy-inner { max-width: 780px; margin: 0 auto; text-align: center; }
+  .privacy p { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.75; }
+
+  footer { border-top: 1px solid var(--border); padding: 2.5rem 2rem; text-align: center; }
+  footer p { font-size: 0.8rem; color: var(--ink-muted); }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Gesprekscoach<span class="dot">.</span><span class="parent">door Winst.ai</span></a>
+  <ul class="nav-links">
+    <li><a href="#hoe-het-werkt">Hoe het werkt</a></li>
+    <li><a href="#demo">Live demo</a></li>
+    <li><a href="#privacy">Privacy</a></li>
+  </ul>
+  <a href="#demo" class="btn btn-primary">Start gratis demo</a>
+</nav>
+
+<header class="hero">
+  <div class="hero-badge">🎙️ AI-gesprekscoach — volledig in het Nederlands</div>
+  <h1>Jouw <em>copiloot</em><br>in elk verkoopgesprek.</h1>
+  <p>Gesprekscoach luistert live mee met je gesprek, fluistert de beste volgende vraag en objection-handling op het juiste moment, en schrijft na afloop je CRM-notities en follow-up mail — allemaal getraind op natuurlijk, Nederlands verkooptaalgebruik.</p>
+  <div class="hero-btns">
+    <a href="#demo" class="btn btn-primary">Probeer de live demo</a>
+    <a href="#hoe-het-werkt" class="btn btn-ghost">Hoe werkt het?</a>
+  </div>
+</header>
+
+<section id="hoe-het-werkt">
+  <div class="section-eyebrow">Hoe het werkt</div>
+  <h2 class="section-title">Realtime coaching, geen review achteraf.</h2>
+  <p class="section-sub">Gesprekscoach draait mee terwijl jij praat — geen aparte app op je telefoon, geen vertraging.</p>
+  <div class="hoe-grid">
+    <div class="card">
+      <div class="card-icon">🎧</div>
+      <h3>Live meeluisteren</h3>
+      <p>Nederlandse spraakherkenning transcribeert het gesprek in real time, direct in je browser.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💡</div>
+      <h3>Slimme suggesties</h3>
+      <p>Op het juiste moment de beste vervolgvraag, een tip om een bezwaar te pareren, of een seintje bij een koopsignaal.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>Live scorecard</h3>
+      <p>Zie tijdens het gesprek hoe je scoort op luisteren, structuur en tempo — en stuur meteen bij.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📝</div>
+      <h3>Automatisch verslag</h3>
+      <p>Na het gesprek: een samenvatting, CRM-klare notities en een concept follow-up mail, klaar om te versturen.</p>
+    </div>
+  </div>
+</section>
+
+<section id="demo" class="demo-section">
+  <div class="section-eyebrow">Live demo</div>
+  <h2 class="section-title">Probeer het zelf — praat gewoon een verkoopgesprek na.</h2>
+  <p class="section-sub">Klik op start, geef je browser toegang tot de microfoon en voer (of naspeel) een stukje gesprek in het Nederlands. Rechts verschijnen live coaching-tips.</p>
+
+  <div class="demo-shell">
+    <div class="demo-toolbar">
+      <div class="demo-status">
+        <span class="rec-dot" id="recDot"></span>
+        <span id="statusText">Klaar om te starten</span>
+      </div>
+      <div style="display:flex; gap:0.6rem;">
+        <button class="btn btn-primary" id="startBtn">▶ Start gesprek</button>
+        <button class="btn btn-danger" id="stopBtn" disabled>■ Stop &amp; genereer verslag</button>
+      </div>
+    </div>
+
+    <div class="demo-grid">
+      <div class="panel">
+        <div class="panel-title">Transcript</div>
+        <div class="transcript-box" id="transcriptBox">
+          <span class="transcript-empty">Het transcript van het gesprek verschijnt hier zodra je op start klikt…</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Live scorecard</div>
+        <div class="scorecard">
+          <div class="score-item">
+            <div class="score-label">Luisteren</div>
+            <div class="score-value" id="scoreLuisteren">–</div>
+            <div class="score-bar"><div class="score-bar-fill" id="barLuisteren"></div></div>
+          </div>
+          <div class="score-item">
+            <div class="score-label">Structuur</div>
+            <div class="score-value" id="scoreStructuur">–</div>
+            <div class="score-bar"><div class="score-bar-fill" id="barStructuur"></div></div>
+          </div>
+          <div class="score-item">
+            <div class="score-label">Tempo</div>
+            <div class="score-value" id="scoreTempo">–</div>
+            <div class="score-bar"><div class="score-bar-fill" id="barTempo"></div></div>
+          </div>
+        </div>
+        <div class="panel-title">Coaching-tips</div>
+        <div class="suggestion-feed" id="suggestionFeed">
+          <div class="suggestion-empty">Zodra er genoeg gesprek is opgenomen, verschijnen hier live tips.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="report" id="reportPanel">
+      <div class="panel-title">Gespreksverslag</div>
+      <div class="report-grid" id="reportGrid"></div>
+    </div>
+
+    <div class="demo-note">
+      Werkt het beste in Chrome of Edge (Web Speech API vereist). Er wordt geen audio opgeslagen — alleen de live tekst van het gesprek wordt tijdelijk verwerkt om coaching-tips te genereren.
+    </div>
+  </div>
+</section>
+
+<section id="privacy" class="privacy">
+  <div class="privacy-inner">
+    <div class="section-eyebrow" style="text-align:center;">Privacy</div>
+    <h2 class="section-title">Geen opnames, geen opslag van audio.</h2>
+    <p>Spraak wordt lokaal in je browser omgezet naar tekst. Alleen de tekst van het lopende gesprek wordt naar onze server gestuurd om een coaching-tip of eindverslag te genereren — er wordt geen audio verzonden of bewaard, en transcripten worden niet permanent opgeslagen.</p>
+  </div>
+</section>
+
+<footer>
+  <p>Gesprekscoach — een product van <a href="https://winst.ai">Winst.ai</a>. AI Implementatie &amp; Automatisering.</p>
+</footer>
+
+<script>
+(function () {
+  var SpeechRecognitionImpl = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  var startBtn = document.getElementById('startBtn');
+  var stopBtn = document.getElementById('stopBtn');
+  var statusText = document.getElementById('statusText');
+  var recDot = document.getElementById('recDot');
+  var transcriptBox = document.getElementById('transcriptBox');
+  var suggestionFeed = document.getElementById('suggestionFeed');
+  var reportPanel = document.getElementById('reportPanel');
+  var reportGrid = document.getElementById('reportGrid');
+
+  var recognition = null;
+  var isRunning = false;
+  var finalTranscript = '';
+  var sinceLastCoachCall = '';
+  var lastCoachCallAt = 0;
+  var coachRequestInFlight = false;
+  var COACH_MIN_INTERVAL_MS = 8000;
+  var COACH_MIN_NEW_CHARS = 60;
+
+  function setStatus(text) { statusText.textContent = text; }
+
+  function renderTranscript(interim) {
+    var html = '';
+    if (!finalTranscript && !interim) {
+      html = '<span class="transcript-empty">Het transcript van het gesprek verschijnt hier zodra je op start klikt…</span>';
+    } else {
+      html = escapeHtml(finalTranscript);
+      if (interim) html += '<span class="interim"> ' + escapeHtml(interim) + '</span>';
+    }
+    transcriptBox.innerHTML = html;
+    transcriptBox.scrollTop = transcriptBox.scrollHeight;
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function setScore(id, barId, value) {
+    var v = Math.max(0, Math.min(10, Number(value) || 0));
+    document.getElementById(id).textContent = v + '/10';
+    document.getElementById(barId).style.width = (v * 10) + '%';
+  }
+
+  function addSuggestionCard(data) {
+    var empty = suggestionFeed.querySelector('.suggestion-empty');
+    if (empty) empty.remove();
+
+    var card = document.createElement('div');
+    card.className = 'suggestion-card';
+
+    var koopClass = data.koopsignaal === 'sterk' ? 'tag-koopsignaal-sterk' : (data.koopsignaal === 'zwak' ? 'tag-koopsignaal-zwak' : '');
+
+    var body = '<p>' + escapeHtml(data.volgende_vraag || '') + '</p>';
+
+    if (data.bezwaar_tip) {
+      body += '<div class="tag tag-bezwaar" style="margin-top:0.6rem;">Bezwaar-tip</div><p>' + escapeHtml(data.bezwaar_tip) + '</p>';
+    }
+    if (koopClass) {
+      body += '<div class="tag ' + koopClass + '" style="margin-top:0.6rem;">Koopsignaal: ' + escapeHtml(data.koopsignaal) + '</div>';
+    }
+
+    card.innerHTML = '<span class="tag tag-vraag">Volgende vraag</span>' + body;
+
+    suggestionFeed.insertBefore(card, suggestionFeed.firstChild);
+
+    while (suggestionFeed.children.length > 5) {
+      suggestionFeed.removeChild(suggestionFeed.lastChild);
+    }
+
+    if (data.score) {
+      setScore('scoreLuisteren', 'barLuisteren', data.score.luisteren);
+      setScore('scoreStructuur', 'barStructuur', data.score.structuur);
+      setScore('scoreTempo', 'barTempo', data.score.tempo);
+    }
+  }
+
+  function maybeRequestCoaching() {
+    var now = Date.now();
+    if (coachRequestInFlight) return;
+    if (sinceLastCoachCall.trim().length < COACH_MIN_NEW_CHARS) return;
+    if (now - lastCoachCallAt < COACH_MIN_INTERVAL_MS) return;
+
+    var windowText = finalTranscript.slice(-1500);
+    lastCoachCallAt = now;
+    sinceLastCoachCall = '';
+    coachRequestInFlight = true;
+
+    fetch('/api/coach', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ transcript: windowText })
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('coach api status ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        if (data && !data.error) addSuggestionCard(data);
+      })
+      .catch(function (err) {
+        console.error('Coaching-aanvraag mislukt:', err);
+      })
+      .finally(function () {
+        coachRequestInFlight = false;
+      });
+  }
+
+  function initRecognition() {
+    recognition = new SpeechRecognitionImpl();
+    recognition.lang = 'nl-NL';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onresult = function (event) {
+      var interim = '';
+      for (var i = event.resultIndex; i < event.results.length; i++) {
+        var result = event.results[i];
+        if (result.isFinal) {
+          finalTranscript += (finalTranscript ? ' ' : '') + result[0].transcript.trim();
+          sinceLastCoachCall += ' ' + result[0].transcript.trim();
+        } else {
+          interim += result[0].transcript;
+        }
+      }
+      renderTranscript(interim);
+      maybeRequestCoaching();
+    };
+
+    recognition.onerror = function (event) {
+      console.error('Spraakherkenning fout:', event.error);
+      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+        setStatus('Geen toegang tot microfoon — check je browserinstellingen.');
+        stopDemo(false);
+      } else if (event.error === 'no-speech') {
+        // negeren, blijft luisteren
+      } else {
+        setStatus('Spraakherkenning haperde, probeer opnieuw te starten.');
+      }
+    };
+
+    recognition.onend = function () {
+      if (isRunning) {
+        try { recognition.start(); } catch (e) { /* al bezig */ }
+      }
+    };
+  }
+
+  function startDemo() {
+    if (!SpeechRecognitionImpl) {
+      setStatus('Live transcriptie wordt niet ondersteund in deze browser. Gebruik Chrome of Edge.');
+      return;
+    }
+    finalTranscript = '';
+    sinceLastCoachCall = '';
+    lastCoachCallAt = 0;
+    renderTranscript('');
+    reportPanel.classList.remove('show');
+    reportGrid.innerHTML = '';
+    suggestionFeed.innerHTML = '<div class="suggestion-empty">Zodra er genoeg gesprek is opgenomen, verschijnen hier live tips.</div>';
+
+    if (!recognition) initRecognition();
+    try {
+      recognition.start();
+    } catch (e) {
+      console.error(e);
+    }
+    isRunning = true;
+    recDot.classList.add('live');
+    setStatus('Luistert mee…');
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+  }
+
+  function stopDemo(generateReport) {
+    isRunning = false;
+    recDot.classList.remove('live');
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+
+    if (recognition) {
+      try { recognition.stop(); } catch (e) { /* noop */ }
+    }
+
+    if (generateReport === false) return;
+
+    if (!finalTranscript.trim()) {
+      setStatus('Geen gesprek opgenomen.');
+      return;
+    }
+
+    setStatus('Verslag wordt gegenereerd…');
+    fetch('/api/summary', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ transcript: finalTranscript.slice(-8000) })
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('summary api status ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        if (data && data.error) throw new Error(data.error);
+        renderReport(data);
+        setStatus('Verslag klaar.');
+      })
+      .catch(function (err) {
+        console.error('Verslag genereren mislukt:', err);
+        setStatus('Kon geen verslag genereren (controleer de serverconfiguratie).');
+      });
+  }
+
+  function copyToClipboard(text, btn) {
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(text).then(function () {
+      var original = btn.textContent;
+      btn.textContent = 'Gekopieerd!';
+      setTimeout(function () { btn.textContent = original; }, 1500);
+    }).catch(function () {});
+  }
+
+  function reportCard(title, contentHtml, copyText) {
+    var card = document.createElement('div');
+    card.className = 'report-card';
+    var headerHtml = '<h4>' + escapeHtml(title) + (copyText ? ' <button class="copy-btn" type="button">Kopieer</button>' : '') + '</h4>';
+    card.innerHTML = headerHtml + contentHtml;
+    if (copyText) {
+      var btn = card.querySelector('.copy-btn');
+      btn.addEventListener('click', function () { copyToClipboard(copyText, btn); });
+    }
+    return card;
+  }
+
+  function renderReport(data) {
+    reportGrid.innerHTML = '';
+
+    reportGrid.appendChild(reportCard(
+      'Samenvatting',
+      '<p>' + escapeHtml(data.samenvatting || '') + '</p>',
+      data.samenvatting || ''
+    ));
+
+    var stappenHtml = '<ul>' + (data.volgende_stappen || []).map(function (s) {
+      return '<li>' + escapeHtml(s) + '</li>';
+    }).join('') + '</ul>';
+    reportGrid.appendChild(reportCard('Volgende stappen', stappenHtml, (data.volgende_stappen || []).join('\n')));
+
+    reportGrid.appendChild(reportCard(
+      'CRM-notities',
+      '<p>' + escapeHtml(data.crm_notities || '').replace(/\n/g, '<br>') + '</p>',
+      data.crm_notities || ''
+    ));
+
+    var email = data.follow_up_email || {};
+    var emailHtml = '<p><strong>Onderwerp:</strong> ' + escapeHtml(email.onderwerp || '') + '</p><p style="margin-top:0.5rem;">' + escapeHtml(email.tekst || '').replace(/\n/g, '<br>') + '</p>';
+    var emailCopy = 'Onderwerp: ' + (email.onderwerp || '') + '\n\n' + (email.tekst || '');
+    reportGrid.appendChild(reportCard('Follow-up e-mail', emailHtml, emailCopy));
+
+    reportPanel.classList.add('show');
+    reportPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  startBtn.addEventListener('click', startDemo);
+  stopBtn.addEventListener('click', function () { stopDemo(true); });
+
+  if (!SpeechRecognitionImpl) {
+    setStatus('Live transcriptie wordt niet ondersteund in deze browser. Gebruik Chrome of Edge.');
+    startBtn.disabled = true;
+  }
+})();
+</script>
+
+</body>
+</html>

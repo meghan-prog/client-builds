@@ -1,0 +1,42 @@
+name: Deploy Gesprekscoach
+
+on:
+  push:
+    branches: [main]
+    paths: ['gesprekscoach/**']
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Wrangler
+        run: npm install -g wrangler@latest
+
+      - name: Create Pages project
+        run: |
+          curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CF_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"name":"gesprekscoach","production_branch":"main"}' || true
+
+      - name: Deploy Gesprekscoach
+        run: |
+          npx wrangler pages deploy gesprekscoach \
+            --project-name=gesprekscoach \
+            --branch=main \
+            --commit-dirty=true
+
+      - name: Done
+        run: |
+          echo "================================================"
+          echo "  Gedeployed naar het gesprekscoach.pages.dev project."
+          echo "  BELANGRIJK: zet de secret ANTHROPIC_API_KEY nog handmatig"
+          echo "  (zie gesprekscoach/README.md) — die staat NIET in dit repo."
+          echo "================================================"
