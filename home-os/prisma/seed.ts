@@ -1,12 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import { addDays, format, startOfWeek } from "date-fns";
 
-const prisma = new PrismaClient();
-
 const iso = (d: Date) => format(d, "yyyy-MM-dd");
 const j = (arr: unknown) => JSON.stringify(arr);
 
-async function main() {
+/**
+ * Exported so it can be reused against any PrismaClient instance — the CLI
+ * entrypoint below (`tsx prisma/seed.ts`, local SQLite) and
+ * `scripts/setup-turso.ts` (one-shot production setup, Turso) both call
+ * this with their own client rather than duplicating the seed data.
+ */
+export async function seedHomeOS(prisma: PrismaClient) {
   console.log("Seeding Home OS for jullie eigen gezin...");
 
   await prisma.deviation.deleteMany();
@@ -550,11 +554,15 @@ async function main() {
   console.log(`  Deze week start: ${iso(weekStart)}`);
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+const isMainModule = process.argv[1]?.endsWith("seed.ts");
+if (isMainModule) {
+  const prisma = new PrismaClient();
+  seedHomeOS(prisma)
+    .catch((e) => {
+      console.error(e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+}
