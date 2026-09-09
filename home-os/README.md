@@ -176,8 +176,48 @@ goedkope VPS, Vercel). Voor de database: zet `TURSO_DATABASE_URL` en
 `TURSO_AUTH_TOKEN` (een gratis [Turso](https://turso.tech)-database —
 libSQL, dus SQLite-compatibel, geen schemawijziging nodig) en `src/lib/db.ts`
 gebruikt die automatisch via een Prisma driver adapter in plaats van het
-lokale bestand. Draai daarna `npx prisma migrate deploy` tegen die Turso-URL
-en `npm run build && npm start`.
+lokale bestand.
+
+### Naar Netlify (aanbevolen voor thuisgebruik — gratis)
+
+Dit zijn stappen die alleen jij kunt zetten (vragen jouw accounts):
+
+1. **Turso-database aanmaken** — ga naar <https://turso.tech>, maak een
+   gratis account en een database aan (via hun dashboard, of de CLI:
+   `turso db create home-os`). Noteer de database-URL
+   (`turso db show home-os --url`) en maak een token
+   (`turso db tokens create home-os`).
+2. **Schema naar Turso zetten** — Prisma's eigen `migrate deploy` spreekt
+   niet betrouwbaar het libsql-protocol, dus voer de migratiebestanden
+   rechtstreeks uit via de Turso CLI (`brew install tursodatabase/tap/turso`
+   of zie hun install-instructies), op volgorde:
+   ```bash
+   for f in prisma/migrations/*/migration.sql; do
+     turso db shell home-os < "$f"
+   done
+   ```
+   Dit zijn dezelfde SQL-bestanden die lokaal `dev.db` hebben opgebouwd —
+   puur SQLite-DDL, dus dit werkt betrouwbaar.
+3. **(Optioneel) voorbeelddata laden** — of begin leeg en vul het gezin
+   later zelf; zie de opmerking hieronder.
+4. **Netlify-site aanmaken** — log in op <https://app.netlify.com>,
+   "Add new site" → "Import an existing project" → kies deze GitHub-repo,
+   branch `claude/home-os-family-planning-5dwru2` (of `main` na een merge),
+   base directory `home-os`.
+5. **Environment variables instellen** — in Netlify: Site configuration →
+   Environment variables → voeg toe: `TURSO_DATABASE_URL` en
+   `TURSO_AUTH_TOKEN` (dezelfde waarden als stap 1).
+6. **Deploy** — Netlify herkent Next.js automatisch (build command staat al
+   in `netlify.toml`) en bouwt de app. Bij elke push naar de branch
+   deployt Netlify automatisch opnieuw.
+
+> **Let op — voorbeelddata:** de seed (`npx prisma db seed`) vult de app met
+> een fictief voorbeeldgezin (Sofie, Milo). Voor eigen gebruik kun je ofwel
+> `prisma/seed.ts` aanpassen met jullie eigen namen/leerdoelen vóór je
+> seedt, ofwel leeg beginnen en de gegevens rechtstreeks in de database
+> zetten (bv. via Prisma Studio: `npx prisma studio` lokaal, verbonden met
+> de Turso-URL) — er is nu nog geen "nieuw gezin aanmaken"-scherm in de app
+> zelf.
 
 Dit pad is getest: op een gewone Node.js-runtime is de libSQL-adapter
 bevestigd te werken tegen een echte, geseede database (niet alleen dat de

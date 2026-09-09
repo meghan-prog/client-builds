@@ -1,0 +1,14 @@
+[build]
+  command = "npm run build"
+
+# Netlify auto-detects Next.js (App Router, server actions included) and
+# applies its official Next.js Runtime during build — no plugin entry
+# needed here. This file just pins the build command explicitly.
+#
+# Required environment variables (set in Netlify: Site configuration ->
+# Environment variables):
+#   TURSO_DATABASE_URL   libsql://<your-db>.turso.io
+#   TURSO_AUTH_TOKEN     from `turso db tokens create <your-db>`
+#
+# Without these the app falls back to a local SQLite file, which does not
+# persist on Netlify's serverless functions — set them before first deploy.
