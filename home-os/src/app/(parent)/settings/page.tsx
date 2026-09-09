@@ -1,6 +1,8 @@
 import { getPrimaryFamily } from "@/lib/data/family";
 import { getWorkProfilesForFamily } from "@/lib/data/settings";
+import { getOrCreateFamilyCalendar } from "@/lib/data/calendar-sync";
 import { createWorkProfileAction, setDefaultWorkProfileAction } from "@/app/actions";
+import CalendarFeedConnect from "@/components/CalendarFeedConnect";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +11,7 @@ const DAY_LABELS = ["", "Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
 export default async function SettingsPage() {
   const family = await getPrimaryFamily();
   const parents = await getWorkProfilesForFamily(family.id);
+  const calendar = await getOrCreateFamilyCalendar(family.id);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-10">
@@ -19,6 +22,11 @@ export default async function SettingsPage() {
         <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-ink-soft">Gezin</h2>
         <p className="text-sm text-ink">{family.name}</p>
       </section>
+
+      <CalendarFeedConnect
+        icsFeedUrl={calendar.icsFeedUrl}
+        lastSyncedAt={calendar.lastSyncedAt ? calendar.lastSyncedAt.toISOString() : null}
+      />
 
       {parents.map((parent) => (
         <section key={parent.id} className="mb-8">

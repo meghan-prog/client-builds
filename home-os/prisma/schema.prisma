@@ -137,6 +137,11 @@ model Calendar {
   type     String // family | appointments
   name     String
 
+  // Optional external subscription (Google/Apple/Outlook "secret iCal
+  // address") — set via Instellingen, synced by src/lib/data/calendar-sync.ts.
+  icsFeedUrl   String?
+  lastSyncedAt DateTime?
+
   events CalendarEvent[]
 }
 
@@ -153,7 +158,14 @@ model CalendarEvent {
   overrulesRoutine Boolean @default(false)
   notes      String?
 
+  // Set when this event came from an iCal sync rather than being added
+  // manually/by the assistant, so a re-sync only ever touches its own rows.
+  source       String  @default("manual") // manual | ics_sync
+  externalUid  String? // ICS UID, or "UID::yyyy-MM-dd" for one occurrence of a recurring event
+
   createdAt DateTime @default(now())
+
+  @@unique([calendarId, externalUid])
 }
 
 // ---------------------------------------------------------------------------

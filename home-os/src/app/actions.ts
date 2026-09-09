@@ -14,6 +14,7 @@ import { reportSchoolCancellation, uploadAndParseSchoolCalendar } from "@/lib/da
 import { toggleRoutineCompletion } from "@/lib/data/kids";
 import { createWorkProfile, setDefaultWorkProfile } from "@/lib/data/settings";
 import { applyAgentAction, dismissAgentAction, sendUserMessage } from "@/lib/data/agent";
+import { connectCalendarFeed, disconnectCalendarFeed, syncCalendarFeed } from "@/lib/data/calendar-sync";
 import type { DocumentParseInput } from "@/lib/ai/document-parser";
 
 export async function regenerateWeekPlanAction(weekStart: string) {
@@ -151,6 +152,28 @@ export async function createWorkProfileAction(parentId: string, name: string) {
 
 export async function setDefaultWorkProfileAction(parentId: string, workProfileId: string) {
   await setDefaultWorkProfile(parentId, workProfileId);
+  revalidatePath("/settings");
+}
+
+export async function connectCalendarFeedAction(icsFeedUrl: string) {
+  const familyId = await getPrimaryFamilyId();
+  const { importedCount, weekStart } = await connectCalendarFeed(familyId, icsFeedUrl);
+  revalidatePath("/settings");
+  revalidatePath(`/week/${weekStart}`);
+  return { importedCount };
+}
+
+export async function syncCalendarFeedAction() {
+  const familyId = await getPrimaryFamilyId();
+  const { importedCount, weekStart } = await syncCalendarFeed(familyId);
+  revalidatePath("/settings");
+  revalidatePath(`/week/${weekStart}`);
+  return { importedCount };
+}
+
+export async function disconnectCalendarFeedAction() {
+  const familyId = await getPrimaryFamilyId();
+  await disconnectCalendarFeed(familyId);
   revalidatePath("/settings");
 }
 

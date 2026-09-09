@@ -167,6 +167,20 @@ Zie `scripts/test-plan.ts`, `scripts/test-intentions.ts` en
   deze week op tandenpoetsen" → vraagt voor wie (bij >1 kind) → voorstel
   met 4 activiteiten → toepassen → leerdoel + activiteiten aangemaakt en
   ingepland, zichtbaar in de weekplanning en op `/learning`.
+- **Agenda koppelen** (`/settings`, zie `scripts/test-calendar-sync.ts`):
+  koppel jullie echte Google-, Apple/iCloud- of Outlook-agenda via het
+  "geheime adres in iCal-indeling" (geen OAuth/API-sleutels nodig — elke
+  provider biedt dit als export-URL aan). Home OS haalt die feed op met
+  `node-ical`, zet 'm om naar `CalendarEvent`-rijen (incl. het uitrekenen
+  van herhalende afspraken via RRULE) en herplant meteen de huidige week.
+  Elke sync ververst een venster van 14 dagen terug tot 180 dagen vooruit
+  — bewerkingen/verwijderingen in de bron worden dus meegenomen, terwijl
+  handmatig toegevoegde afspraken (`source: "manual"`) nooit worden
+  aangeraakt. Eenmalig koppelen via de knop op `/settings`; daarna een
+  handmatige "Nu synchroniseren" (geen achtergrond-cronjob in deze versie
+  — op een host met scheduled functions kan `syncCalendarFeed` daar
+  triggeren). Alleen-lezen: Home OS schrijft nooit terug naar jullie
+  agenda.
 
 ## Deployment
 
