@@ -7,7 +7,7 @@ const iso = (d: Date) => format(d, "yyyy-MM-dd");
 const j = (arr: unknown) => JSON.stringify(arr);
 
 async function main() {
-  console.log("Seeding Home OS demo family...");
+  console.log("Seeding Home OS for jullie eigen gezin...");
 
   await prisma.deviation.deleteMany();
   await prisma.conflict.deleteMany();
@@ -41,39 +41,47 @@ async function main() {
   // ---------------------------------------------------------------------
   // FAMILY
   // ---------------------------------------------------------------------
-  const family = await prisma.family.create({ data: { name: "Familie Eckenbach" } });
+  const family = await prisma.family.create({ data: { name: "Ons gezin" } });
 
-  const parent = await prisma.parent.create({
+  const meghan = await prisma.parent.create({
     data: {
       familyId: family.id,
       name: "Meghan",
       email: "meghan.eckenbach@gmail.com",
-      kidModePin: "1234",
     },
   });
 
-  const daughter = await prisma.child.create({
+  const david = await prisma.parent.create({
     data: {
       familyId: family.id,
-      name: "Sofie",
-      birthDate: new Date("2020-04-12"),
+      name: "David",
+      // Placeholder — er is nog geen scherm om dit in de app zelf aan te passen.
+      email: "david@thuis.local",
+    },
+  });
+
+  const lois = await prisma.child.create({
+    data: {
+      familyId: family.id,
+      name: "Loïs",
+      birthDate: new Date("2021-10-15"),
       avatarEmoji: "👧",
       colorHex: "#D98C7A",
     },
   });
 
-  const son = await prisma.child.create({
+  const may = await prisma.child.create({
     data: {
       familyId: family.id,
-      name: "Milo",
-      birthDate: new Date("2022-11-03"),
-      avatarEmoji: "👦",
-      colorHex: "#7C9885",
+      name: "May",
+      birthDate: new Date("2023-12-15"),
+      avatarEmoji: "👶",
+      colorHex: "#B08FD9",
     },
   });
 
   // ---------------------------------------------------------------------
-  // BASE: routine template catalog + this family's routines
+  // BASE: routine template catalog + dit gezin se routines
   // ---------------------------------------------------------------------
   const templateDefs = [
     { key: "wake_up", title: "Opstaan", defaultIcon: "☀️", defaultCategory: "wake" },
@@ -99,6 +107,9 @@ async function main() {
   const weekdays = [1, 2, 3, 4, 5];
   const allDays = [1, 2, 3, 4, 5, 6, 7];
 
+  // Tijden zoals opgegeven: opstaan 07:30, vertrek school 08:45, thuiskomst
+  // 14:00-14:30, 1,5 uur middag voor educatieve activiteiten (dus tot 16:00),
+  // avondeten 18:00-18:30, bedroutine vanaf 19:15.
   const routineDefs: {
     key: string;
     title: string;
@@ -109,29 +120,29 @@ async function main() {
     days: number[];
     freeSpace?: boolean;
   }[] = [
-    { key: "wake_up", title: "Opstaan", category: "wake", icon: "☀️", start: "07:00", end: "07:20", days: allDays },
-    { key: "breakfast", title: "Ontbijt", category: "meal", icon: "🥣", start: "07:20", end: "07:45", days: allDays },
-    { key: "dress", title: "Aankleden", category: "hygiene", icon: "👕", start: "07:45", end: "08:00", days: allDays },
-    { key: "brush_teeth", title: "Tandenpoetsen", category: "hygiene", icon: "🪥", start: "08:00", end: "08:05", days: allDays },
-    { key: "pack_bag", title: "Tas pakken", category: "hygiene", icon: "🎒", start: "08:05", end: "08:15", days: weekdays },
-    { key: "to_school", title: "Naar school", category: "school", icon: "🚶", start: "08:15", end: "08:30", days: weekdays },
-    { key: "school", title: "School", category: "school", icon: "🏫", start: "08:30", end: "15:00", days: weekdays },
-    { key: "pickup", title: "Ophalen", category: "school", icon: "🚗", start: "15:00", end: "15:30", days: weekdays },
-    { key: "snack", title: "Snack", category: "snack", icon: "🍎", start: "15:30", end: "15:45", days: weekdays },
+    { key: "wake_up", title: "Opstaan", category: "wake", icon: "☀️", start: "07:30", end: "07:50", days: allDays },
+    { key: "breakfast", title: "Ontbijt", category: "meal", icon: "🥣", start: "07:50", end: "08:10", days: allDays },
+    { key: "dress", title: "Aankleden", category: "hygiene", icon: "👕", start: "08:10", end: "08:25", days: allDays },
+    { key: "brush_teeth", title: "Tandenpoetsen", category: "hygiene", icon: "🪥", start: "08:25", end: "08:30", days: allDays },
+    { key: "pack_bag", title: "Tas pakken", category: "hygiene", icon: "🎒", start: "08:30", end: "08:45", days: weekdays },
+    { key: "to_school", title: "Naar school", category: "school", icon: "🚶", start: "08:45", end: "09:00", days: weekdays },
+    { key: "school", title: "School", category: "school", icon: "🏫", start: "09:00", end: "14:00", days: weekdays },
+    { key: "pickup", title: "Ophalen", category: "school", icon: "🚗", start: "14:00", end: "14:30", days: weekdays },
+    { key: "snack", title: "Snack", category: "snack", icon: "🍎", start: "14:30", end: "14:45", days: weekdays },
     {
       key: "afternoon",
       title: "Middag",
       category: "afternoon",
       icon: "🌿",
-      start: "15:30",
-      end: "17:30",
+      start: "14:30",
+      end: "16:00",
       days: weekdays,
       freeSpace: true,
     },
     { key: "dinner", title: "Avondeten", category: "meal", icon: "🍽️", start: "18:00", end: "18:30", days: allDays },
-    { key: "shower", title: "Douchen", category: "hygiene", icon: "🛁", start: "18:30", end: "18:45", days: allDays },
-    { key: "reading", title: "Lezen", category: "bedtime", icon: "📖", start: "18:45", end: "19:00", days: allDays },
-    { key: "bedtime", title: "Bedtijd", category: "bedtime", icon: "🌙", start: "19:00", end: "19:15", days: allDays },
+    { key: "shower", title: "Douchen", category: "hygiene", icon: "🛁", start: "19:15", end: "19:30", days: allDays },
+    { key: "reading", title: "Lezen", category: "bedtime", icon: "📖", start: "19:30", end: "19:45", days: allDays },
+    { key: "bedtime", title: "Bedtijd", category: "bedtime", icon: "🌙", start: "19:45", end: "20:00", days: allDays },
   ];
 
   for (const r of routineDefs) {
@@ -151,7 +162,8 @@ async function main() {
   }
 
   // ---------------------------------------------------------------------
-  // SCHOOL YEAR
+  // SCHOOL YEAR — placeholder Nederlands schooljaar; vervang via de
+  // upload-functie op /school zodra jullie de echte schoolkalender hebben.
   // ---------------------------------------------------------------------
   const schoolYearStart = new Date("2026-09-01");
   const schoolYearEnd = new Date("2027-07-16");
@@ -164,12 +176,6 @@ async function main() {
     },
   });
 
-  // Anchor a few events to the *current* real week so the app is immediately
-  // compelling to open, matching the spec's own "wat is er anders" example.
-  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
-  const wednesdayThisWeek = addDays(weekStart, 2);
-  const fridayThisWeek = addDays(weekStart, 4);
-
   const schoolEventDefs: {
     type: string;
     title: string;
@@ -177,9 +183,9 @@ async function main() {
     end: Date;
     childId?: string | null;
   }[] = [
-    { type: "study_day", title: "Studiedag", start: wednesdayThisWeek, end: wednesdayThisWeek, childId: null },
+    { type: "study_day", title: "Studiedag", start: addDays(schoolYearStart, 15), end: addDays(schoolYearStart, 15), childId: null },
     { type: "parent_evening", title: "Ouderavond", start: addDays(schoolYearStart, 20), end: addDays(schoolYearStart, 20), childId: null },
-    { type: "school_trip", title: "Schoolreis", start: addDays(schoolYearStart, 38), end: addDays(schoolYearStart, 38), childId: daughter.id },
+    { type: "school_trip", title: "Schoolreis", start: addDays(schoolYearStart, 38), end: addDays(schoolYearStart, 38), childId: lois.id },
     { type: "holiday", title: "Herfstvakantie", start: addDays(schoolYearStart, 48), end: addDays(schoolYearStart, 52), childId: null },
     { type: "holiday", title: "Kerstvakantie", start: addDays(schoolYearStart, 112), end: addDays(schoolYearStart, 126), childId: null },
     { type: "study_day", title: "Studiedag", start: addDays(schoolYearStart, 137), end: addDays(schoolYearStart, 137), childId: null },
@@ -201,66 +207,31 @@ async function main() {
     });
   }
 
-  // A birthday appointment this week (Friday) on the family's general calendar.
-  const familyCalendar = await prisma.calendar.create({
+  // Leeg gezinskalender — jullie eigen afspraken voeg je toe via de
+  // assistent of de zondagse input.
+  await prisma.calendar.create({
     data: { familyId: family.id, type: "family", name: "Gezinskalender" },
   });
-  await prisma.calendarEvent.create({
-    data: {
-      calendarId: familyCalendar.id,
-      title: "Verjaardag opa",
-      type: "birthday",
-      date: fridayThisWeek,
-      startTime: "16:00",
-      endTime: "18:00",
-      overrulesRoutine: false,
-    },
-  });
-
-  // Deliberately clashes with the default Tuesday work block (09:00-15:00) so
-  // the conflict-detection feature has a real example to show, matching the
-  // spec's own worked example (werk 09:00-12:00 + oudergesprek 10:00).
-  const tuesdayThisWeek = addDays(weekStart, 1);
-  await prisma.calendarEvent.create({
-    data: {
-      calendarId: familyCalendar.id,
-      title: "Oudergesprek",
-      type: "appointment",
-      date: tuesdayThisWeek,
-      startTime: "10:00",
-      endTime: "10:30",
-      overrulesRoutine: false,
-    },
-  });
 
   // ---------------------------------------------------------------------
-  // WORK
+  // WORK — Meghan werkt op werkdagen 09:30-13:30. David's werktijden zijn
+  // nog niet ingevuld; voeg toe via Instellingen zodra bekend.
   // ---------------------------------------------------------------------
   const normalProfile = await prisma.workProfile.create({
-    data: { parentId: parent.id, name: "Normale week", isDefault: true },
+    data: { parentId: meghan.id, name: "Normale week", isDefault: true },
   });
-  for (const day of [1, 2, 3]) {
+  for (const day of weekdays) {
     await prisma.workBlock.create({
-      data: { workProfileId: normalProfile.id, dayOfWeek: day, startTime: "09:00", endTime: "15:00", label: "Werk" },
+      data: { workProfileId: normalProfile.id, dayOfWeek: day, startTime: "09:30", endTime: "13:30", label: "Werk" },
     });
   }
-  await prisma.workProfile.create({ data: { parentId: parent.id, name: "Launch week", isDefault: false } });
-  await prisma.workProfile.create({ data: { parentId: parent.id, name: "Vakantieweek", isDefault: false } });
-
-  // An incidental deviation: a longer work day this Thursday (not in the default profile).
-  const thursdayThisWeek = addDays(weekStart, 3);
-  await prisma.workBlock.create({
-    data: {
-      workProfileId: normalProfile.id,
-      date: thursdayThisWeek,
-      startTime: "09:00",
-      endTime: "17:00",
-      label: "Langere werkdag",
-    },
-  });
+  await prisma.workProfile.create({ data: { parentId: meghan.id, name: "Launch week", isDefault: false } });
+  await prisma.workProfile.create({ data: { parentId: meghan.id, name: "Vakantieweek", isDefault: false } });
 
   // ---------------------------------------------------------------------
-  // MATERIALS / INVENTORY
+  // MATERIALS / INVENTORY — "missing" hier is een aanname (niet elk gezin
+  // heeft een zandloper of plaque-tabletten klaarliggen); via de
+  // boodschappenlijst zet je dat recht zodra iets daadwerkelijk gekocht is.
   // ---------------------------------------------------------------------
   const materialNames = ["papier", "potlood", "boek", "letterkaarten", "dobbelsteen", "bladeren", "schaar", "lijm"];
   const materials: Record<string, { id: string }> = {};
@@ -284,13 +255,18 @@ async function main() {
   }
 
   // ---------------------------------------------------------------------
-  // LEARNING GOAL: jaar -> maand -> week -> activiteiten
+  // LEERDOEL — Loïs: leren lezen en schrijven (jaar -> maand -> week -> activiteiten)
   // ---------------------------------------------------------------------
-  const goal = await prisma.learningGoal.create({
+  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const weekEnd = addDays(weekStart, 6);
+  const monthStart = new Date(weekStart.getFullYear(), weekStart.getMonth(), 1);
+  const monthEnd = new Date(weekStart.getFullYear(), weekStart.getMonth() + 1, 0);
+
+  const loisGoal = await prisma.learningGoal.create({
     data: {
-      childId: daughter.id,
+      childId: lois.id,
       title: "Dit schooljaar leren lezen en schrijven",
-      description: "Sofie leert dit schooljaar letters herkennen, woorden lezen en haar eerste woorden schrijven.",
+      description: "Loïs leert dit schooljaar letters herkennen, woorden lezen en haar eerste woorden schrijven.",
       startDate: schoolYearStart,
       endDate: schoolYearEnd,
       desiredSkillsText: "Letters herkennen, klanken koppelen, korte woorden lezen, eigen naam en korte woorden schrijven.",
@@ -298,9 +274,9 @@ async function main() {
     },
   });
 
-  const yearSkill = await prisma.learningSkill.create({
+  const loisYearSkill = await prisma.learningSkill.create({
     data: {
-      goalId: goal.id,
+      goalId: loisGoal.id,
       period: "year",
       title: "Leren lezen en schrijven",
       periodStart: schoolYearStart,
@@ -308,12 +284,10 @@ async function main() {
     },
   });
 
-  const monthStart = new Date(weekStart.getFullYear(), weekStart.getMonth(), 1);
-  const monthEnd = new Date(weekStart.getFullYear(), weekStart.getMonth() + 1, 0);
-  const monthSkill = await prisma.learningSkill.create({
+  const loisMonthSkill = await prisma.learningSkill.create({
     data: {
-      goalId: goal.id,
-      parentSkillId: yearSkill.id,
+      goalId: loisGoal.id,
+      parentSkillId: loisYearSkill.id,
       period: "month",
       title: "Letters herkennen",
       periodStart: monthStart,
@@ -321,11 +295,10 @@ async function main() {
     },
   });
 
-  const weekEnd = addDays(weekStart, 6);
-  const weekSkill = await prisma.learningSkill.create({
+  const loisWeekSkill = await prisma.learningSkill.create({
     data: {
-      goalId: goal.id,
-      parentSkillId: monthSkill.id,
+      goalId: loisGoal.id,
+      parentSkillId: loisMonthSkill.id,
       period: "week",
       title: "M + S herkennen en M schrijven",
       periodStart: weekStart,
@@ -333,7 +306,7 @@ async function main() {
     },
   });
 
-  const activityDefs: {
+  const loisActivityDefs: {
     title: string;
     icon: string;
     duration: number;
@@ -351,7 +324,7 @@ async function main() {
         "Leg de letterkaarten open op tafel.",
         "Zoek samen de letter M tussen de andere letters.",
         "Benoem drie woorden die met M beginnen.",
-        "Laat het kind de M drie keer aanwijzen in het boek.",
+        "Laat Loïs de M drie keer aanwijzen in het boek.",
       ],
       materials: ["letterkaarten"],
       difficulty: "makkelijk",
@@ -391,7 +364,7 @@ async function main() {
       weekday: 5,
       instructions: [
         "Gooi met de dobbelsteen.",
-        "Bij elk getal noemt het kind een woord met M.",
+        "Bij elk getal noemt Loïs een woord met M.",
         "Schrijf de gevonden woorden samen op.",
         "Vier het einde van de week met een klein applaus.",
       ],
@@ -400,11 +373,10 @@ async function main() {
     },
   ];
 
-  const activities: { id: string; weekday: number }[] = [];
-  for (const a of activityDefs) {
+  for (const a of loisActivityDefs) {
     const activity = await prisma.learningActivity.create({
       data: {
-        skillId: weekSkill.id,
+        skillId: loisWeekSkill.id,
         title: a.title,
         icon: a.icon,
         ageRangeMin: 4,
@@ -422,59 +394,59 @@ async function main() {
         data: { activityId: activity.id, materialId: materials[mName].id },
       });
     }
-    activities.push({ id: activity.id, weekday: a.weekday });
   }
 
   // ---------------------------------------------------------------------
-  // LEARNING GOAL #2 (Milo): seizoensgebonden, laat het thema-systeem zien
+  // LEERDOEL — May (bijna 3): leeftijdspassend voorstel, kleuren en vormen
   // ---------------------------------------------------------------------
-  const seasonGoal = await prisma.learningGoal.create({
+  const mayGoal = await prisma.learningGoal.create({
     data: {
-      childId: son.id,
-      title: "De seizoenen ontdekken",
-      description: "Milo ontdekt dit jaar wat er in elk seizoen verandert in de natuur — te beginnen met de herfst.",
+      childId: may.id,
+      title: "Kleuren en vormen ontdekken",
+      description: "May ontdekt kleuren, vormen en de wereld om haar heen — te beginnen met de herfst.",
       startDate: schoolYearStart,
       endDate: schoolYearEnd,
-      desiredSkillsText: "Kleuren en vormen benoemen, natuurmateriaal herkennen, een kleine knutselopdracht afmaken.",
+      desiredSkillsText: "Kleuren benoemen, vormen herkennen, natuurmateriaal ontdekken, een kleine knutselopdracht afmaken.",
       progress: 0,
     },
   });
-  const seasonYearSkill = await prisma.learningSkill.create({
+  const mayYearSkill = await prisma.learningSkill.create({
     data: {
-      goalId: seasonGoal.id,
+      goalId: mayGoal.id,
       period: "year",
-      title: "De seizoenen ontdekken",
+      title: "Kleuren en vormen ontdekken",
       periodStart: schoolYearStart,
       periodEnd: schoolYearEnd,
     },
   });
-  const seasonMonthSkill = await prisma.learningSkill.create({
+  const mayMonthSkill = await prisma.learningSkill.create({
     data: {
-      goalId: seasonGoal.id,
-      parentSkillId: seasonYearSkill.id,
+      goalId: mayGoal.id,
+      parentSkillId: mayYearSkill.id,
       period: "month",
-      title: "Herfst ontdekken",
+      title: "Herfstkleuren ontdekken",
       periodStart: monthStart,
       periodEnd: monthEnd,
     },
   });
-  const seasonWeekSkill = await prisma.learningSkill.create({
+  const mayWeekSkill = await prisma.learningSkill.create({
     data: {
-      goalId: seasonGoal.id,
-      parentSkillId: seasonMonthSkill.id,
+      goalId: mayGoal.id,
+      parentSkillId: mayMonthSkill.id,
       period: "week",
-      title: "Herfstkleuren en -materiaal",
+      title: "Rood en geel herkennen",
       periodStart: weekStart,
       periodEnd: weekEnd,
     },
   });
+
   const herfstcollage = await prisma.learningActivity.create({
     data: {
-      skillId: seasonWeekSkill.id,
+      skillId: mayWeekSkill.id,
       title: "Herfstcollage maken",
       icon: "🍂",
       ageRangeMin: 2,
-      ageRangeMax: 5,
+      ageRangeMax: 4,
       durationMinutes: 20,
       instructions: j([
         "Verzamel samen bladeren buiten.",
@@ -485,7 +457,7 @@ async function main() {
       prepMinutes: 5,
       location: "Buiten + thuis",
       difficulty: "makkelijk",
-      preferredWeekday: 4,
+      preferredWeekday: 2,
       themeKey: "herfst_nl",
     },
   });
@@ -495,8 +467,30 @@ async function main() {
     });
   }
 
+  await prisma.learningActivity.create({
+    data: {
+      skillId: mayWeekSkill.id,
+      title: "Kleuren zoektocht",
+      icon: "🌈",
+      ageRangeMin: 2,
+      ageRangeMax: 4,
+      durationMinutes: 15,
+      instructions: j([
+        "Kies twee kleuren: rood en geel.",
+        "Loop samen door huis op zoek naar rode dingen.",
+        "Loop samen door huis op zoek naar gele dingen.",
+        "Leg de gevonden spullen in twee groepjes en benoem de kleuren samen.",
+      ]),
+      prepMinutes: 0,
+      location: "Thuis",
+      difficulty: "makkelijk",
+      preferredWeekday: 5,
+    },
+  });
+
   // ---------------------------------------------------------------------
-  // HOUSEHOLD TASKS
+  // HUISHOUDELIJKE TAKEN — niet expliciet opgegeven, dit zijn voorbeelden;
+  // pas ze aan via de assistent of Prisma Studio.
   // ---------------------------------------------------------------------
   await prisma.householdTask.create({
     data: {
@@ -505,7 +499,7 @@ async function main() {
       icon: "🛒",
       category: "shopping",
       daysOfWeek: j([2]),
-      preferredTime: "17:00",
+      preferredTime: "16:15",
       durationMinutes: 45,
       isRequired: true,
     },
@@ -517,7 +511,7 @@ async function main() {
       icon: "🧺",
       category: "household",
       daysOfWeek: j([1, 3, 5]),
-      preferredTime: "19:15",
+      preferredTime: "20:00",
       durationMinutes: 20,
       isRequired: true,
     },
@@ -529,10 +523,10 @@ async function main() {
       icon: "🧸",
       category: "household",
       daysOfWeek: j(weekdays),
-      preferredTime: "16:30",
+      preferredTime: "17:30",
       durationMinutes: 10,
       isRequired: false,
-      assignedChildId: daughter.id,
+      assignedChildId: lois.id,
     },
   });
   await prisma.householdTask.create({
@@ -545,15 +539,15 @@ async function main() {
       preferredTime: "17:50",
       durationMinutes: 10,
       isRequired: false,
-      assignedChildId: son.id,
+      assignedChildId: may.id,
     },
   });
 
   console.log("Seed complete:");
-  console.log(`  Family: ${family.name} (${family.id})`);
-  console.log(`  Children: ${daughter.name}, ${son.name}`);
-  console.log(`  This week starts: ${iso(weekStart)}`);
-  console.log(`  Learning activities seeded for week skill "${weekSkill.title}": ${activities.length}`);
+  console.log(`  Gezin: ${family.name} (${family.id})`);
+  console.log(`  Ouders: ${meghan.name}, ${david.name}`);
+  console.log(`  Kinderen: ${lois.name} (${lois.birthDate.toDateString()}), ${may.name} (${may.birthDate.toDateString()})`);
+  console.log(`  Deze week start: ${iso(weekStart)}`);
 }
 
 main()
