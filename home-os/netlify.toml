@@ -2,6 +2,16 @@
   command = "npm run build"
   publish = ".next"
 
+[build.environment]
+  # SITE_PASSWORD ends up copied into Next.js' Turbopack build cache
+  # (.next/cache/...) because it's read via process.env in a server file —
+  # that's expected and harmless (the cache is never served to the browser,
+  # only src/proxy.ts reads the value, server-side). Netlify's secret
+  # scanner can't tell "build cache artifact" from "shipped to the client",
+  # so it flags this by default; this tells it that specific value is fine.
+  # Other secrets (TURSO_AUTH_TOKEN, ANTHROPIC_API_KEY, ...) stay scanned.
+  SECRETS_SCAN_OMIT_KEYS = "SITE_PASSWORD"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
