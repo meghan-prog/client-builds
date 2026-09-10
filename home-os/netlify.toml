@@ -1,0 +1,36 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # SITE_PASSWORD ends up copied into Next.js' Turbopack build cache
+  # (.next/cache/...) because it's read via process.env in a server file —
+  # that's expected and harmless (the cache is never served to the browser,
+  # only src/proxy.ts reads the value, server-side). Netlify's secret
+  # scanner can't tell "build cache artifact" from "shipped to the client",
+  # so it flags this by default; this tells it that specific value is fine.
+  # Other secrets (TURSO_AUTH_TOKEN, ANTHROPIC_API_KEY, ...) stay scanned.
+  SECRETS_SCAN_OMIT_KEYS = "SITE_PASSWORD"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Explicit plugin entry (rather than relying on auto-detection) because
+# this repo has a "base directory" set in Netlify's UI — auto-detection
+# of the Next.js Runtime can be unreliable in that setup.
+#
+# Required environment variables (set in Netlify: Site configuration ->
+# Environment variables):
+#   TURSO_DATABASE_URL   libsql://<your-db>.turso.io
+#   TURSO_AUTH_TOKEN     from `turso db tokens create <your-db>`
+#   SITE_PASSWORD        protects the whole site with HTTP Basic Auth
+#                         (src/proxy.ts) — set before the first deploy,
+#                         this is a family app with real personal data.
+#   SITE_USERNAME         optional, defaults to "gezin"
+#   ANTHROPIC_API_KEY     enables the real AI assistant (Claude) on /assistant
+#                         — from console.anthropic.com. Without it, the
+#                         assistant falls back to a simple rule-based mock
+#                         that only understands a few fixed phrases.
+#
+# Without TURSO_DATABASE_URL/TURSO_AUTH_TOKEN the app falls back to a local
+# SQLite file, which does not persist on Netlify's serverless functions.

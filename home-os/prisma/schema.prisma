@@ -1,0 +1,520 @@
+// Home OS data model
+// SQLite for local/dev simplicity. In production (see src/lib/db.ts) the same
+// schema can instead be served over a libSQL/Turso connection via a Prisma
+// driver adapter — a normal env-var connection, no schema change needed.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// FAMILY / PEOPLE
+// ---------------------------------------------------------------------------
+
+model Family {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  parents         Parent[]
+  children        Child[]
+  routines        Routine[]
+  calendars       Calendar[]
+  schoolYears     SchoolYear[]
+  householdTasks  HouseholdTask[]
+  shoppingItems   ShoppingItem[]
+  inventoryItems  InventoryItem[]
+  weeklyIntentions WeeklyIntention[]
+  weekPlans       WeekPlan[]
+  scheduleBlocks  ScheduleBlock[]
+  agentMessages   AgentMessage[]
+}
+
+model Parent {
+  id       String  @id @default(cuid())
+  familyId String
+  family   Family  @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  name     String
+  email    String  @unique
+  kidModePin String? // simple PIN to leave kids mode; auth is otherwise mocked for MVP
+
+  workProfiles WorkProfile[]
+
+  createdAt DateTime @default(now())
+}
+
+model Child {
+  id         String   @id @default(cuid())
+  familyId   String
+  family     Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  name       String
+  birthDate  DateTime
+  avatarEmoji String  @default("🧒")
+  colorHex   String   @default("#7C9885")
+
+  learningGoals      LearningGoal[]
+  scheduledActivities ScheduledActivity[]
+  routineLinks       RoutineChild[]
+  taskCompletions    HouseholdTaskCompletion[]
+  scheduleBlocks     ScheduleBlock[]
+
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// BASE: routines & templates
+// ---------------------------------------------------------------------------
+
+// Reusable, family-independent library of routine archetypes (seedable catalog).
+model RoutineTemplate {
+  id            String   @id @default(cuid())
+  key           String   @unique // e.g. "wake_up", "breakfast", "school", "bedtime"
+  title         String
+  defaultIcon   String
+  defaultCategory String // wake | meal | hygiene | school | pickup | snack | afternoon | dinner | reading | bedtime | household
+  defaultDurationMinutes Int @default(15)
+
+  routines Routine[]
+}
+
+// A family's concrete instantiation of the base/standard routine.
+model Routine {
+  id          String   @id @default(cuid())
+  familyId    String
+  family      Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  templateId  String?
+  template    RoutineTemplate? @relation(fields: [templateId], references: [id])
+
+  title       String
+  category    String   // wake | meal | hygiene | school | pickup | snack | afternoon | dinner | reading | bedtime | household
+  icon        String   @default("🔹")
+  startTime   String   // "08:00"
+  endTime     String   // "08:30"
+  daysOfWeek  String   // JSON array of ISO weekday ints [1..7], 1=Monday
+  isFreeSpaceBlock Boolean @default(false) // marks protected "free space" windows (e.g. afternoon)
+  isActive    Boolean  @default(true)
+  notes       String?
+
+  children    RoutineChild[]
+  completions RoutineCompletion[]
+
+  createdAt DateTime @default(now())
+}
+
+model RoutineCompletion {
+  id        String   @id @default(cuid())
+  routineId String
+  routine   Routine  @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  childId   String?
+  date      DateTime
+  completedAt DateTime @default(now())
+
+  @@unique([routineId, childId, date])
+}
+
+model RoutineChild {
+  routineId String
+  routine   Routine @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  childId   String
+  child     Child   @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  @@id([routineId, childId])
+}
+
+// ---------------------------------------------------------------------------
+// GENERIC CALENDAR (appointments, family events — not school/work specific)
+// ---------------------------------------------------------------------------
+
+model Calendar {
+  id       String @id @default(cuid())
+  familyId String
+  family   Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  type     String // family | appointments
+  name     String
+
+  // Optional external subscription (Google/Apple/Outlook "secret iCal
+  // address") — set via Instellingen, synced by src/lib/data/calendar-sync.ts.
+  icsFeedUrl   String?
+  lastSyncedAt DateTime?
+
+  events CalendarEvent[]
+}
+
+model CalendarEvent {
+  id         String   @id @default(cuid())
+  calendarId String
+  calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+
+  title      String
+  type       String   // appointment | visit | birthday | trip | other
+  date       DateTime
+  startTime  String?
+  endTime    String?
+  overrulesRoutine Boolean @default(false)
+  notes      String?
+
+  // Set when this event came from an iCal sync rather than being added
+  // manually/by the assistant, so a re-sync only ever touches its own rows.
+  source       String  @default("manual") // manual | ics_sync
+  externalUid  String? // ICS UID, or "UID::yyyy-MM-dd" for one occurrence of a recurring event
+
+  createdAt DateTime @default(now())
+
+  @@unique([calendarId, externalUid])
+}
+
+// ---------------------------------------------------------------------------
+// SCHOOL
+// ---------------------------------------------------------------------------
+
+model SchoolYear {
+  id        String   @id @default(cuid())
+  familyId  String
+  family    Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  label     String   // "2026-2027"
+  startDate DateTime
+  endDate   DateTime
+
+  events SchoolEvent[]
+
+  createdAt DateTime @default(now())
+}
+
+model SchoolEvent {
+  id           String   @id @default(cuid())
+  schoolYearId String
+  schoolYear   SchoolYear @relation(fields: [schoolYearId], references: [id], onDelete: Cascade)
+  childId      String?  // null = applies to whole school / all children
+
+  type      String   // school_day | study_day | holiday | school_trip | parent_evening | free_day | school_activity
+  title     String
+  startDate DateTime
+  endDate   DateTime // equal to startDate for single-day events
+  source    String   @default("manual") // manual | school_calendar_upload
+  rawText   String?
+
+  createdAt DateTime @default(now())
+}
+
+model SchoolCalendarUpload {
+  id            String   @id @default(cuid())
+  fileName      String
+  fileType      String   // pdf | csv | xlsx | image
+  status        String   @default("processing") // processing | parsed | failed
+  extractedCount Int     @default(0)
+  createdAt     DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// WORK
+// ---------------------------------------------------------------------------
+
+model WorkProfile {
+  id        String  @id @default(cuid())
+  parentId  String
+  parent    Parent  @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  name      String  // "Normale week" | "Launch week" | "Vakantieweek"
+  isDefault Boolean @default(false)
+
+  blocks WorkBlock[]
+
+  createdAt DateTime @default(now())
+}
+
+model WorkBlock {
+  id            String  @id @default(cuid())
+  workProfileId String
+  workProfile   WorkProfile @relation(fields: [workProfileId], references: [id], onDelete: Cascade)
+
+  dayOfWeek Int?     // 1..7, for recurring blocks within the profile
+  date      DateTime? // set instead of dayOfWeek for a one-off deviation
+  startTime String
+  endTime   String
+  label     String  @default("Werk")
+}
+
+// ---------------------------------------------------------------------------
+// LEARNING
+// ---------------------------------------------------------------------------
+
+model LearningGoal {
+  id          String   @id @default(cuid())
+  childId     String
+  child       Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  desiredSkillsText String? // free text summary of desired skills
+  progress    Float    @default(0) // 0..1, derived from completed activities but cached here
+
+  skills      LearningSkill[]
+
+  createdAt DateTime @default(now())
+}
+
+// Hierarchical breakdown: year goal -> month goal -> week goal
+model LearningSkill {
+  id            String   @id @default(cuid())
+  goalId        String
+  goal          LearningGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  parentSkillId String?
+  parentSkill   LearningSkill? @relation("SkillHierarchy", fields: [parentSkillId], references: [id])
+  children      LearningSkill[] @relation("SkillHierarchy")
+
+  period      String   // year | month | week
+  title       String
+  periodStart DateTime
+  periodEnd   DateTime
+  progress    Float    @default(0)
+
+  activities LearningActivity[]
+
+  createdAt DateTime @default(now())
+}
+
+model LearningActivity {
+  id          String   @id @default(cuid())
+  skillId     String
+  skill       LearningSkill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  title           String
+  icon            String  @default("🎓")
+  ageRangeMin     Int     @default(3)
+  ageRangeMax     Int     @default(12)
+  durationMinutes Int     @default(15)
+  instructions    String  // JSON array of step strings
+  prepMinutes     Int     @default(0)
+  location        String  @default("Thuis")
+  difficulty      String  @default("makkelijk") // makkelijk | gemiddeld | uitdagend
+  preferredWeekday Int?   // 1..7 (ISO, Monday=1) — where this activity best fits in the week's rhythm
+  themeKey        String? // links to a cultural/seasonal theme in lib/themes/catalog.ts, e.g. "herfst_nl"
+
+  materials LearningActivityMaterial[]
+  scheduledInstances ScheduledActivity[]
+
+  createdAt DateTime @default(now())
+}
+
+model LearningActivityMaterial {
+  id         String @id @default(cuid())
+  activityId String
+  activity   LearningActivity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  materialId String
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  quantity   String?
+
+  @@unique([activityId, materialId])
+}
+
+// A learning activity placed on the calendar for a specific child/date by the planning engine.
+model ScheduledActivity {
+  id          String   @id @default(cuid())
+  learningActivityId String
+  learningActivity   LearningActivity @relation(fields: [learningActivityId], references: [id], onDelete: Cascade)
+  childId     String
+  child       Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  date      DateTime
+  startTime String
+  endTime   String
+  status    String   @default("planned") // planned | done | skipped
+  completedAt DateTime?
+
+  scheduleBlock ScheduleBlock?
+
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// MATERIALS / INVENTORY / SHOPPING
+// ---------------------------------------------------------------------------
+
+model Material {
+  id       String @id @default(cuid())
+  name     String @unique
+  category String @default("overig")
+
+  activityLinks LearningActivityMaterial[]
+  inventoryItems InventoryItem[]
+  shoppingItems ShoppingItem[]
+}
+
+model InventoryItem {
+  id         String   @id @default(cuid())
+  familyId   String
+  family     Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  materialId String
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  status     String   @default("unknown") // present | missing | unknown
+  updatedAt  DateTime @updatedAt
+
+  @@unique([familyId, materialId])
+}
+
+model ShoppingItem {
+  id         String   @id @default(cuid())
+  familyId   String
+  family     Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  materialId String?
+  material   Material? @relation(fields: [materialId], references: [id])
+  name       String
+  reason     String?  // human-readable "why is this on my list"
+  sourceType String   @default("manual") // manual | activity
+  sourceScheduledActivityId String?
+  neededByDate DateTime?
+  status     String   @default("pending") // pending | bought
+  addedAt    DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// HOUSEHOLD TASKS
+// ---------------------------------------------------------------------------
+
+model HouseholdTask {
+  id          String   @id @default(cuid())
+  familyId    String
+  family      Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  title       String
+  icon        String   @default("🧺")
+  category    String   @default("household")
+  daysOfWeek  String   // JSON array of ISO weekday ints
+  preferredTime String @default("18:30")
+  durationMinutes Int  @default(15)
+  isRequired  Boolean  @default(true)
+  assignedChildId String?
+  assignedParentId String?
+
+  completions HouseholdTaskCompletion[]
+  scheduleBlocks ScheduleBlock[]
+
+  createdAt DateTime @default(now())
+}
+
+model HouseholdTaskCompletion {
+  id       String   @id @default(cuid())
+  taskId   String
+  task     HouseholdTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  childId  String?
+  child    Child?   @relation(fields: [childId], references: [id])
+  date     DateTime
+  completedAt DateTime @default(now())
+
+  @@unique([taskId, date])
+}
+
+// ---------------------------------------------------------------------------
+// SUNDAY / WEEKLY INTENTIONS
+// ---------------------------------------------------------------------------
+
+model WeeklyIntention {
+  id            String   @id @default(cuid())
+  familyId      String
+  family        Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  weekStartDate DateTime
+  rawText       String
+  parsedItems   String?  // JSON array of ParsedIntentionItem
+  createdAt     DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// PLANNING ENGINE OUTPUT
+// ---------------------------------------------------------------------------
+
+model WeekPlan {
+  id            String   @id @default(cuid())
+  familyId      String
+  family        Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  weekStartDate DateTime
+  generatedAt   DateTime @default(now())
+  version       Int      @default(1)
+
+  blocks    ScheduleBlock[]
+  conflicts Conflict[]
+  deviations Deviation[]
+
+  @@unique([familyId, weekStartDate, version])
+}
+
+model ScheduleBlock {
+  id         String   @id @default(cuid())
+  weekPlanId String
+  weekPlan   WeekPlan @relation(fields: [weekPlanId], references: [id], onDelete: Cascade)
+  familyId   String
+  family     Family   @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  date      DateTime
+  startTime String
+  endTime   String
+  category  String   // school | work | routine | household | learning | activity | free | appointment
+  title     String
+  icon      String   @default("🔹")
+  childId   String?
+  child     Child?   @relation(fields: [childId], references: [id])
+
+  sourceType String  // routine | school_event | work_block | calendar_event | scheduled_activity | household_task | intention | free_space
+  sourceId   String?
+
+  scheduledActivityId String? @unique
+  scheduledActivity ScheduledActivity? @relation(fields: [scheduledActivityId], references: [id])
+  householdTaskId String?
+  householdTask   HouseholdTask? @relation(fields: [householdTaskId], references: [id])
+
+  isFreeSpace Boolean @default(false)
+  hasConflict Boolean @default(false)
+  isDeviation Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+model Conflict {
+  id          String   @id @default(cuid())
+  weekPlanId  String
+  weekPlan    WeekPlan @relation(fields: [weekPlanId], references: [id], onDelete: Cascade)
+  date        DateTime
+  description String
+  blockATitle String
+  blockBTitle String
+  suggestion  String?  // JSON: proposed adjusted times
+  status      String   @default("open") // open | accepted | adjusted | dismissed
+
+  createdAt DateTime @default(now())
+}
+
+model Deviation {
+  id         String   @id @default(cuid())
+  weekPlanId String
+  weekPlan   WeekPlan @relation(fields: [weekPlanId], references: [id], onDelete: Cascade)
+  date       DateTime
+  icon       String   @default("✨")
+  title      String
+  description String?
+
+  createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// ASSISTANT — one ongoing conversation thread per family
+// ---------------------------------------------------------------------------
+
+model AgentMessage {
+  id       String @id @default(cuid())
+  familyId String
+  family   Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  role    String // user | assistant
+  content String
+
+  // Present on an assistant message that proposes (or asks about) an action.
+  actionType    String? // clarify_child | cancel_school | create_learning_focus | add_activities
+  actionPayload String? // JSON, shape depends on actionType
+  actionStatus  String? // proposed | applied | dismissed | resolved
+
+  createdAt DateTime @default(now())
+}
