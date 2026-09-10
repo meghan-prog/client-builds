@@ -1,9 +1,12 @@
 [build]
   command = "npm run build"
 
-# Netlify auto-detects Next.js (App Router, server actions included) and
-# applies its official Next.js Runtime during build — no plugin entry
-# needed here. This file just pins the build command explicitly.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Explicit plugin entry (rather than relying on auto-detection) because
+# this repo has a "base directory" set in Netlify's UI — auto-detection
+# of the Next.js Runtime can be unreliable in that setup.
 #
 # Required environment variables (set in Netlify: Site configuration ->
 # Environment variables):
