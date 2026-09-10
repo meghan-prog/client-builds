@@ -17,6 +17,10 @@
 #                         (src/proxy.ts) — set before the first deploy,
 #                         this is a family app with real personal data.
 #   SITE_USERNAME         optional, defaults to "gezin"
+#   ANTHROPIC_API_KEY     enables the real AI assistant (Claude) on /assistant
+#                         — from console.anthropic.com. Without it, the
+#                         assistant falls back to a simple rule-based mock
+#                         that only understands a few fixed phrases.
 #
 # Without TURSO_DATABASE_URL/TURSO_AUTH_TOKEN the app falls back to a local
 # SQLite file, which does not persist on Netlify's serverless functions.

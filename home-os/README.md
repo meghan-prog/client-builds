@@ -109,17 +109,22 @@ aanpassen in `prisma/schema.prisma`, niet een herontwerp.
   abstractie. Herkent een vaste set trefwoorden (tandarts, boodschappen,
   strand, zwemles, werk(en), verjaardag, oudergesprek, bezoek, sport) en
   weekdagnamen; geen tijdsherkenning uit vrije tekst.
-- **Assistent** (`src/lib/ai/agent.ts` + `src/lib/ai/activity-suggester.ts`):
-  een regel-gebaseerde NLU die schoolafmeldingen, "focus deze week op X" en
-  activiteiten-verzoeken herkent (incl. een "voor wie?"-vervolgvraag als er
-  meerdere kinderen zijn), en een activiteitenbibliotheek die voor
-  "tandenpoetsen" met curated content komt en voor elk ander onderwerp met
-  plausibele generieke ideeën. Achter dezelfde soort interface + factory-
-  functie (`getHomeAgentService`) — een echte implementatie zou hier de
-  Claude Messages API met tool use aanroepen (elke `AgentActionType` wordt
-  een tool-definitie) en dezelfde `AgentReply`-vorm teruggeven; de chat-UI
-  en de actie-uitvoering (`src/lib/data/agent.ts`) hoeven dan niet te
-  veranderen.
+- **Assistent** (`src/lib/ai/agent.ts`): begrijpt vrije Nederlandse tekst via
+  de echte Claude Messages API met tool use (`ClaudeHomeAgentService`) zodra
+  `ANTHROPIC_API_KEY` gezet is — drie tools (`report_school_cancellation`,
+  `create_learning_focus`, `add_calendar_event`), elk een `AgentActionType`.
+  Het model berekent zelf relatieve datums ("morgen", "volgende week
+  woensdag") uit de meegegeven datum van vandaag, vraagt door in gewone
+  tekst als iets onduidelijk is (bv. voor welk kind), en voert nooit zelf
+  iets door — het stelt alleen voor; de gebruiker bevestigt via de knop in
+  de chat-UI. Zonder `ANTHROPIC_API_KEY` valt de app terug op
+  `RuleBasedHomeAgentService`, een regel-gebaseerde NLU die alleen een
+  vaste set letterlijke zinnen herkent (`getHomeAgentService()` kiest
+  automatisch). De activiteitenbibliotheek (`src/lib/ai/activity-suggester.ts`)
+  blijft in beide gevallen curated content voor "tandenpoetsen" en
+  plausibele generieke ideeën voor elk ander onderwerp — dat blok is bewust
+  niet aan de LLM overgelaten, zodat de kwaliteit en materiaallijst-koppeling
+  voorspelbaar blijven.
 - **Authenticatie**: er is één gezin (`getPrimaryFamilyId`), geen
   login/sessiebeheer. Dat is bewust de enige plek die je hoeft aan te
   passen om echte multi-tenant auth (bv. NextAuth) aan te sluiten.
@@ -221,7 +226,10 @@ Dit zijn stappen die alleen jij kunt zetten (vragen jouw accounts):
    Environment variables → voeg toe: `TURSO_DATABASE_URL` en
    `TURSO_AUTH_TOKEN` (dezelfde waarden als stap 1), plus `SITE_PASSWORD`
    (zelf verzinnen — dit beveiligt de hele site met een wachtwoordscherm,
-   zie hieronder) en optioneel `SITE_USERNAME` (standaard `gezin`).
+   zie hieronder) en optioneel `SITE_USERNAME` (standaard `gezin`). Voeg ook
+   `ANTHROPIC_API_KEY` toe (van <https://console.anthropic.com>) om de
+   echte AI-assistent op `/assistant` aan te zetten — zonder deze key blijft
+   die pagina werken met de eenvoudige regel-gebaseerde versie.
 5. **Deploy** — Netlify herkent Next.js automatisch (build command staat al
    in `netlify.toml`) en bouwt de app. Bij elke push naar de branch
    deployt Netlify automatisch opnieuw.

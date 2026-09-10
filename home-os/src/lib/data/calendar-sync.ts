@@ -41,6 +41,29 @@ export async function disconnectCalendarFeed(familyId: string) {
   await prisma.calendar.update({ where: { id: calendar.id }, data: { icsFeedUrl: null, lastSyncedAt: null } });
 }
 
+/** Adds a one-off appointment (e.g. via the assistant) and replans the affected week. */
+export async function addManualCalendarEvent(
+  familyId: string,
+  input: { title: string; dateISO: string; startTime?: string | null; endTime?: string | null; type?: string; notes?: string }
+) {
+  const calendar = await getOrCreateFamilyCalendar(familyId);
+  await prisma.calendarEvent.create({
+    data: {
+      calendarId: calendar.id,
+      title: input.title,
+      type: input.type ?? "appointment",
+      date: new Date(input.dateISO + "T00:00:00"),
+      startTime: input.startTime ?? null,
+      endTime: input.endTime ?? null,
+      notes: input.notes ?? null,
+      source: "manual",
+    },
+  });
+  const weekStart = format(startOfWeek(new Date(input.dateISO + "T00:00:00"), { weekStartsOn: 1 }), "yyyy-MM-dd");
+  await generateAndPersistWeekPlan(familyId, weekStart);
+  return { weekStart };
+}
+
 /**
  * Fetches the family's subscribed iCal feed (Google/Apple/Outlook "secret
  * address in iCal format") and mirrors it into CalendarEvent rows for the

@@ -4,6 +4,7 @@ import { getHomeAgentService, type AgentContext } from "@/lib/ai/agent";
 import { ageFromBirthDate } from "@/lib/data/children";
 import { createLearningFocus } from "@/lib/data/learning";
 import { reportSchoolCancellation } from "@/lib/data/school";
+import { addManualCalendarEvent } from "@/lib/data/calendar-sync";
 
 export async function getConversation(familyId: string) {
   return prisma.agentMessage.findMany({ where: { familyId }, orderBy: { createdAt: "asc" } });
@@ -81,6 +82,25 @@ export async function applyAgentAction(messageId: string) {
         familyId: message.familyId,
         role: "assistant",
         content: `Toegevoegd! Ik heb ${activities.length} activiteiten rond "${topic}" ingepland deze week.`,
+      },
+    });
+    return { applied: true as const, weekStart };
+  }
+
+  if (message.actionType === "add_calendar_event") {
+    const { weekStart } = await addManualCalendarEvent(message.familyId, {
+      title: payload.title as string,
+      dateISO: payload.dateISO as string,
+      startTime: payload.startTime as string | null,
+      endTime: payload.endTime as string | null,
+      notes: payload.notes as string | undefined,
+    });
+    await prisma.agentMessage.update({ where: { id: messageId }, data: { actionStatus: "applied" } });
+    await prisma.agentMessage.create({
+      data: {
+        familyId: message.familyId,
+        role: "assistant",
+        content: `Toegevoegd aan de agenda: "${payload.title}" op ${payload.dateISO}.`,
       },
     });
     return { applied: true as const, weekStart };

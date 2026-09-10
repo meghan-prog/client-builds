@@ -1,19 +1,22 @@
 // Home OS assistant — abstraction layer.
 //
-// The MVP ships a rule-based mock so the full conversational loop (report,
-// clarify, propose, apply) works end-to-end today: report a school
-// cancellation, set a learning focus for the week, ask for activity ideas.
-// Swap `getHomeAgentService()` for a real implementation later — e.g. the
-// Claude Messages API with tool use, where each `AgentActionType` below
-// becomes a tool definition and the model's tool call becomes the
-// `actionPayload` — and nothing else in the app needs to change: the chat
-// UI and the action-execution code (src/lib/data/agent.ts) only ever look
-// at the `AgentReply` shape, never at how it was produced.
+// Two implementations: a rule-based mock (pattern matching on fixed
+// phrases — the original MVP, kept as a no-API-key fallback) and
+// ClaudeHomeAgentService, which uses the real Claude Messages API with
+// tool use so it understands free-form Dutch instead of fixed phrases.
+// `getHomeAgentService()` picks whichever is available. Both only ever
+// produce the `AgentReply` shape below — the chat UI and the action-
+// execution code (src/lib/data/agent.ts) never know which one answered.
 
+import Anthropic from "@anthropic-ai/sdk";
 import { addDays, format } from "date-fns";
 import { getActivitySuggesterService, type SuggestedActivity } from "./activity-suggester";
 
-export type AgentActionType = "clarify_child" | "cancel_school" | "create_learning_focus";
+export type AgentActionType =
+  | "clarify_child"
+  | "cancel_school"
+  | "create_learning_focus"
+  | "add_calendar_event";
 
 export interface AgentContextChild {
   id: string;
@@ -249,6 +252,151 @@ export class RuleBasedHomeAgentService implements HomeAgentService {
   }
 }
 
+const CLAUDE_TOOLS: Anthropic.Tool[] = [
+  {
+    name: "report_school_cancellation",
+    description:
+      "Meld dat school niet doorgaat op een specifieke dag, zodat de schoolroutine die dag verdwijnt uit de planning en de week opnieuw wordt ingepland. Gebruik een concrete datum (YYYY-MM-DD), zelf berekend uit relatieve woorden als 'morgen' aan de hand van vandaag's datum.",
+    input_schema: {
+      type: "object",
+      properties: {
+        dateISO: { type: "string", description: "Datum waarop school niet doorgaat, formaat YYYY-MM-DD." },
+        childId: {
+          type: "string",
+          description:
+            "ID van het specifieke kind waar dit over gaat, alleen als het niet voor alle kinderen geldt. Leeg laten als het om school in het algemeen gaat.",
+        },
+      },
+      required: ["dateISO"],
+    },
+  },
+  {
+    name: "create_learning_focus",
+    description:
+      "Stel een leerfocus/thema in voor deze week voor één of meer kinderen, of bedenk leuke leeractiviteiten rond een onderwerp. Dit haalt passende activiteiten op en stelt voor ze aan de weekplanning toe te voegen.",
+    input_schema: {
+      type: "object",
+      properties: {
+        topic: { type: "string", description: "Het onderwerp/de vaardigheid, bijv. 'tandenpoetsen'." },
+        childIds: {
+          type: "array",
+          items: { type: "string" },
+          description: "IDs van de kinderen waar dit voor is.",
+        },
+      },
+      required: ["topic", "childIds"],
+    },
+  },
+  {
+    name: "add_calendar_event",
+    description:
+      "Voeg een eenmalige afspraak of geplande activiteit toe aan de gezinsagenda op een specifieke datum, bijv. een boodschap, uitje, of afspraak.",
+    input_schema: {
+      type: "object",
+      properties: {
+        title: { type: "string", description: "Korte titel van de afspraak." },
+        dateISO: { type: "string", description: "Datum, formaat YYYY-MM-DD." },
+        startTime: { type: "string", description: "Starttijd HH:MM, leeg laten als er geen specifieke tijd is." },
+        endTime: { type: "string", description: "Eindtijd HH:MM, leeg laten als er geen specifieke tijd is." },
+        notes: { type: "string", description: "Eventuele extra details, leeg laten als niet van toepassing." },
+      },
+      required: ["title", "dateISO"],
+    },
+  },
+];
+
+function claudeSystemPrompt(context: AgentContext): string {
+  const childrenList = context.children.map((c) => `- ${c.name} (id: ${c.id}, ${c.ageYears} jaar)`).join("\n");
+  return `Je bent de assistent in Home OS, een Nederlandstalige gezinsplanner-app. Je praat kort, warm en to-the-point in het Nederlands met de ouders.
+
+Vandaag is ${context.todayISO} (YYYY-MM-DD).
+
+Kinderen in dit gezin:
+${childrenList || "(geen kinderen bekend)"}
+
+Wat je kunt:
+- Schoolafmeldingen doorvoeren (report_school_cancellation)
+- Een leerfocus voor de week instellen of activiteiten bedenken (create_learning_focus)
+- Een eenmalige afspraak toevoegen aan de agenda (add_calendar_event)
+
+Regels:
+- Bereken relatieve datums ("morgen", "volgende week woensdag") zelf op basis van vandaag's datum hierboven.
+- Roep een tool pas aan als je zeker genoeg bent wat de gebruiker bedoelt; vraag anders kort door in gewone tekst (bijv. voor welk kind, of welke datum/tijd).
+- Als een bericht meerdere losse verzoeken bevat, behandel dan alleen het meest concrete/duidelijke verzoek nu, en vraag de gebruiker de rest in een apart bericht te sturen.
+- Schrijf bij elke tool-aanroep ook een korte begeleidende tekst die samenvat wat je gaat doen en om bevestiging vraagt (de gebruiker moet nog op een knop klikken voordat het echt wordt doorgevoerd — jij voert niets zelf uit).
+- Geef nooit puur een tool-aanroep zonder begeleidende tekst.`;
+}
+
+function toAnthropicHistory(history: AgentHistoryMessage[]): Anthropic.MessageParam[] {
+  return history
+    .filter((m) => m.content.trim().length > 0)
+    .map((m) => ({ role: m.role, content: m.content }));
+}
+
+export class ClaudeHomeAgentService implements HomeAgentService {
+  private client = new Anthropic();
+
+  async respond(userMessage: string, context: AgentContext): Promise<AgentReply> {
+    let response: Anthropic.Message;
+    try {
+      response = await this.client.messages.create({
+        model: "claude-opus-5",
+        max_tokens: 2048,
+        output_config: { effort: "low" },
+        system: claudeSystemPrompt(context),
+        tools: CLAUDE_TOOLS,
+        messages: [...toAnthropicHistory(context.history), { role: "user", content: userMessage }],
+      });
+    } catch (error) {
+      const detail = error instanceof Anthropic.APIError ? error.message : String(error);
+      return { message: `Sorry, de assistent is even niet bereikbaar (${detail}). Probeer het straks nog eens.` };
+    }
+
+    const textBlocks = response.content.filter((b): b is Anthropic.TextBlock => b.type === "text");
+    const message = textBlocks.map((b) => b.text).join("\n").trim();
+    const toolUse = response.content.find((b): b is Anthropic.ToolUseBlock => b.type === "tool_use");
+
+    if (!toolUse) {
+      return { message: message || "Sorry, daar weet ik zo niet direct raad mee." };
+    }
+
+    const input = toolUse.input as Record<string, unknown>;
+
+    if (toolUse.name === "report_school_cancellation") {
+      return {
+        message,
+        actionType: "cancel_school",
+        actionPayload: { dateISO: input.dateISO as string, childId: (input.childId as string) || null },
+      };
+    }
+
+    if (toolUse.name === "add_calendar_event") {
+      return {
+        message,
+        actionType: "add_calendar_event",
+        actionPayload: {
+          title: input.title as string,
+          dateISO: input.dateISO as string,
+          startTime: (input.startTime as string) || null,
+          endTime: (input.endTime as string) || null,
+          notes: (input.notes as string) || null,
+        },
+      };
+    }
+
+    if (toolUse.name === "create_learning_focus") {
+      const topic = input.topic as string;
+      const childIds = (input.childIds as string[]) ?? [];
+      const targetChildren = context.children.filter((c) => childIds.includes(c.id));
+      const reply = await buildLearningFocusReply(topic, targetChildren.length > 0 ? targetChildren : context.children);
+      return { ...reply, message: message || reply.message };
+    }
+
+    return { message: message || "Sorry, daar weet ik zo niet direct raad mee." };
+  }
+}
+
 export function getHomeAgentService(): HomeAgentService {
+  if (process.env.ANTHROPIC_API_KEY) return new ClaudeHomeAgentService();
   return new RuleBasedHomeAgentService();
 }

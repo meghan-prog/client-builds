@@ -36,6 +36,7 @@ function renderContent(content: string) {
 const ACTION_LABELS: Record<string, { execute: string; dismiss: string }> = {
   cancel_school: { execute: "✅ Doorvoeren", dismiss: "Negeren" },
   create_learning_focus: { execute: "✅ Toevoegen aan planning", dismiss: "Negeren" },
+  add_calendar_event: { execute: "✅ Toevoegen aan agenda", dismiss: "Negeren" },
 };
 
 function ActionCard({ message }: { message: ChatMessage }) {
