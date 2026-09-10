@@ -219,10 +219,20 @@ Dit zijn stappen die alleen jij kunt zetten (vragen jouw accounts):
    base directory `home-os`.
 4. **Environment variables instellen** — in Netlify: Site configuration →
    Environment variables → voeg toe: `TURSO_DATABASE_URL` en
-   `TURSO_AUTH_TOKEN` (dezelfde waarden als stap 1).
+   `TURSO_AUTH_TOKEN` (dezelfde waarden als stap 1), plus `SITE_PASSWORD`
+   (zelf verzinnen — dit beveiligt de hele site met een wachtwoordscherm,
+   zie hieronder) en optioneel `SITE_USERNAME` (standaard `gezin`).
 5. **Deploy** — Netlify herkent Next.js automatisch (build command staat al
    in `netlify.toml`) en bouwt de app. Bij elke push naar de branch
    deployt Netlify automatisch opnieuw.
+
+> **Toegang beperken:** de deploy-URL is een normale publieke URL — zonder
+> extra maatregel kan iedereen die 'm heeft (of raadt) bij jullie
+> gezinsdata. `src/proxy.ts` zet daarom een simpele HTTP Basic
+> Auth-wachtwoordscherm voor de hele app zodra `SITE_PASSWORD` gezet is
+> (browsers onthouden het na de eerste keer inloggen). Zonder
+> `SITE_PASSWORD` blijft de site open — handig voor lokale ontwikkeling,
+> maar zorg dat 'm gezet is vóór de allereerste productie-deploy.
 
 > **Gezinsdata wijzigen:** `scripts/setup-turso.ts` laadt exact wat er in
 > `prisma/seed.ts` staat. Pas dat bestand aan en draai het setup-script

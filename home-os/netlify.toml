@@ -13,6 +13,10 @@
 # Environment variables):
 #   TURSO_DATABASE_URL   libsql://<your-db>.turso.io
 #   TURSO_AUTH_TOKEN     from `turso db tokens create <your-db>`
+#   SITE_PASSWORD        protects the whole site with HTTP Basic Auth
+#                         (src/proxy.ts) — set before the first deploy,
+#                         this is a family app with real personal data.
+#   SITE_USERNAME         optional, defaults to "gezin"
 #
-# Without these the app falls back to a local SQLite file, which does not
-# persist on Netlify's serverless functions — set them before first deploy.
+# Without TURSO_DATABASE_URL/TURSO_AUTH_TOKEN the app falls back to a local
+# SQLite file, which does not persist on Netlify's serverless functions.
